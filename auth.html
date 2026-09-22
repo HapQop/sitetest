@@ -19,12 +19,24 @@
     .auth-form { display:grid; gap:14px; }
     .auth-field { display:grid; gap:7px; }
     .auth-field label { color:#c2bbb7; font-size:12px; font-weight:750; }
+    .auth-input-wrap { position:relative; }
     .auth-field input { width:100%; min-height:43px; padding:0 12px; border:1px solid #3b3532; border-radius:8px; color:#f5f0ed; background:#0d0d0d; font:600 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
+    .auth-input-wrap input { padding-right:46px; }
     .auth-field input::placeholder { color:#706a67; }
     .auth-field input:focus-visible { border-color:var(--orange); }
+    .password-toggle { position:absolute; top:50%; right:8px; display:grid; width:32px; height:32px; place-items:center; padding:0; border:0; border-radius:7px; color:#8e8782; background:transparent; cursor:pointer; transform:translateY(-50%); transition:color .18s ease,background .18s ease,transform .18s ease; }
+    .password-toggle:hover,.password-toggle:focus-visible { color:var(--orange); background:rgba(255,157,92,.12); outline:none; }
+    .password-toggle:active { transform:translateY(-50%) scale(.9); }
+    .password-toggle svg { grid-area:1/1; width:18px; height:18px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; transition:opacity .18s ease,transform .18s ease; }
+    .password-toggle .eye-closed { opacity:0; transform:scale(.65) rotate(-12deg); }
+    .password-toggle.is-visible .eye-open { opacity:0; transform:scale(.65) rotate(12deg); }
+    .password-toggle.is-visible .eye-closed { opacity:1; transform:scale(1) rotate(0); }
     .auth-form button { min-height:43px; margin-top:3px; border:1px solid var(--orange); border-radius:8px; color:#21140c; background:var(--orange); font:850 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; transition:background .18s ease,transform .18s ease; }
     .auth-form button:hover:not(:disabled) { transform:translateY(-1px); background:#ffb077; }
     .auth-form button:disabled { cursor:wait; opacity:.65; }
+    .auth-form .password-toggle { min-height:32px; margin:0; border:0; color:#8e8782; background:transparent; font:inherit; }
+    .auth-form .password-toggle:hover:not(:disabled),.auth-form .password-toggle:focus-visible { transform:translateY(-50%); border:0; color:var(--orange); background:rgba(255,157,92,.12); outline:none; }
+    .auth-form .password-toggle:active { transform:translateY(-50%) scale(.9); }
     .auth-note { margin-top:14px; color:#8e8885; font-size:12px; line-height:1.5; }
     .auth-switch { display:inline-block; margin-top:14px; color:var(--orange); font-size:12px; font-weight:750; text-underline-offset:3px; }
     .auth-status { min-height:19px; margin-top:16px; color:#aaa5a2; font-size:12px; line-height:1.5; }
@@ -32,7 +44,7 @@
     .auth-status.is-success { color:var(--success); }
     .auth-code { letter-spacing:.25em; text-align:center; }
     @media (max-width:560px) { main { margin-top:30px; } .auth-card { padding:20px; } .auth-card h1 { font-size:28px; } }
-    @media (prefers-reduced-motion:reduce) { .auth-form button { transition:none; } }
+    @media (prefers-reduced-motion:reduce) { .auth-form button,.password-toggle,.password-toggle svg { transition:none; } }
   </style>
   <link rel="stylesheet" href="site-header.css">
   <link rel="stylesheet" href="site-footer.css">
@@ -61,7 +73,7 @@
       <div class="auth-view" data-auth-view="login">
         <form class="auth-form" data-auth-form="login">
           <div class="auth-field"><label for="login-identifier">Email or username</label><input id="login-identifier" name="identifier" autocomplete="username" required></div>
-          <div class="auth-field"><label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" required></div>
+          <div class="auth-field"><label for="login-password">Password</label><div class="auth-input-wrap"><input id="login-password" name="password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-toggle data-target="login-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 1-3.3 3.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
           <button type="submit">Continue with email verification</button>
         </form>
         <p class="auth-note">A six-digit code is required after your password is accepted.</p>
@@ -69,11 +81,11 @@
       </div>
 
       <div class="auth-view" data-auth-view="register" hidden>
-        <form class="auth-form" data-auth-form="register">
-          <div class="auth-field"><label for="register-username">Username</label><input id="register-username" name="username" autocomplete="username" minlength="3" required></div>
-          <div class="auth-field"><label for="register-email">Email</label><input id="register-email" name="email" type="email" autocomplete="email" required></div>
-          <div class="auth-field"><label for="register-password">Password</label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
-          <div class="auth-field"><label for="register-confirm">Confirm password</label><input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+        <form class="auth-form" data-auth-form="register" autocomplete="off">
+          <div class="auth-field"><label for="register-username">Username</label><input id="register-username" name="username" autocomplete="nickname" autocapitalize="none" spellcheck="false" minlength="3" required></div>
+          <div class="auth-field"><label for="register-email">Email</label><input id="register-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required></div>
+          <div class="auth-field"><label for="register-password">Password</label><div class="auth-input-wrap"><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-toggle data-target="register-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 1-3.3 3.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
+          <div class="auth-field"><label for="register-confirm">Confirm password</label><div class="auth-input-wrap"><input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-toggle data-target="register-confirm" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 1-3.3 3.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
           <button type="submit">Create account</button>
         </form>
         <a class="auth-switch" href="auth.html?mode=login">Already have an account? Login</a>
@@ -98,7 +110,7 @@
       <div class="auth-view" data-auth-view="reset" hidden>
         <form class="auth-form" data-auth-form="reset">
           <div class="auth-field"><label for="reset-code">Six-digit recovery code</label><input class="auth-code" id="reset-code" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></div>
-          <div class="auth-field"><label for="reset-password">New password</label><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
+          <div class="auth-field"><label for="reset-password">New password</label><div class="auth-input-wrap"><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-toggle data-target="reset-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 1-3.3 3.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
           <button type="submit">Reset password</button>
         </form>
       </div>

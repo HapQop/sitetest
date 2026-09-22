@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin | CheatBlox</title>
+  <link rel="stylesheet" href="site-header.css">
+  <link rel="stylesheet" href="site-footer.css">
+  <style>
+    :root { --orange:#ff9d5c; --panel:#151515; --border:#39322e; --muted:#aaa5a2; }
+    main { width:min(1120px,calc(100% - 40px)); margin:54px auto 90px; }
+    .admin-intro { display:flex; align-items:end; justify-content:space-between; gap:18px; }
+    .admin-intro h1 { color:#fff; font-size:36px; letter-spacing:-1px; }
+    .admin-intro p { margin-top:8px; color:var(--muted); font-size:14px; }
+    .admin-user { color:#d7c2b4; font-size:12px; text-align:right; }
+    .admin-status { min-height:20px; margin-top:18px; color:var(--muted); font-size:13px; }
+    .admin-status.is-error { color:#ff8179; }
+    .admin-status.is-success { color:#62d497; }
+    .admin-table-wrap { margin-top:22px; overflow:auto; border:1px solid var(--border); border-radius:14px; background:var(--panel); box-shadow:0 18px 38px rgba(0,0,0,.25); }
+    .admin-table { width:100%; min-width:740px; border-collapse:collapse; }
+    .admin-table th,.admin-table td { padding:13px 15px; border-bottom:1px solid #302b28; text-align:left; }
+    .admin-table th { color:#bdb4af; background:#1d1a18; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .admin-table td { color:#f2eeeb; font-size:13px; }
+    .admin-table tr:last-child td { border-bottom:0; }
+    .admin-product { font-weight:800; }
+    .admin-plan { color:#aaa5a2; }
+    .admin-input { width:120px; min-height:37px; padding:0 10px; border:1px solid #4a403a; border-radius:8px; color:#fff; background:#0e0e0e; font:700 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
+    .admin-input:focus-visible { border-color:var(--orange); outline:2px solid rgba(255,157,92,.25); outline-offset:2px; }
+    .admin-available { display:inline-flex; align-items:center; gap:8px; color:#d5cbc5; cursor:pointer; }
+    .admin-available input { width:17px; height:17px; accent-color:var(--orange); }
+    .admin-save { min-height:37px; padding:0 13px; border:1px solid var(--orange); border-radius:8px; color:#24150b; background:var(--orange); font:800 12px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; }
+    .admin-save:hover:not(:disabled) { background:#ffb077; }
+    .admin-save:disabled { cursor:wait; opacity:.6; }
+    .admin-empty { padding:34px 20px; color:var(--muted); text-align:center; }
+    .admin-login { display:inline-flex; min-height:40px; align-items:center; margin-top:18px; padding:0 14px; border:1px solid var(--orange); border-radius:9px; color:#24150b; background:var(--orange); font-weight:800; text-decoration:none; }
+    @media (max-width:650px) { main { width:calc(100% - 28px); margin-top:36px; } .admin-intro { align-items:start; flex-direction:column; } .admin-user { text-align:left; } }
+  </style>
+  <script src="site-footer.js" defer></script>
+  <script src="site-i18n.js" defer></script>
+  <script src="site-currency.js" defer></script>
+  <script src="site-orbs.js" defer></script>
+  <script src="admin.js" defer></script>
+</head>
+<body data-page="admin">
+  <nav class="site-header" aria-label="Primary navigation">
+    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <div class="site-nav"><a href="index.html" data-i18n="nav-home">Home</a><a href="scripts.html" data-i18n="nav-scripts">Scripts</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a></div>
+    <div class="site-controls"><div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div><a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a></div>
+  </nav>
+  <main>
+    <div class="admin-intro"><div><h1>Admin panel</h1><p>Manage product prices and availability.</p></div><p class="admin-user" data-admin-user></p></div>
+    <p class="admin-status" data-admin-status role="status" aria-live="polite">Checking access...</p>
+    <div data-admin-content hidden>
+      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Product</th><th>Plan</th><th>Price USD</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead><tbody data-admin-rows></tbody></table><p class="admin-empty" data-admin-empty hidden>No products configured.</p></div>
+    </div>
+    <a class="admin-login" href="auth.html?mode=login" data-admin-login hidden>Sign in as admin</a>
+  </main>
+</body>
+</html>

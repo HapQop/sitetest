@@ -1,5 +1,8 @@
 (() => {
   const storageKey = "cheatblox-currency";
+  const ratesStorageKey = "cheatblox-currency-rates";
+  const ratesApiUrl = "https://open.er-api.com/v6/latest/USD";
+  const ratesCacheTtl = 6 * 60 * 60 * 1000;
   const currencies = [
     { code: "USD", symbol: "$", name: "US Dollar", rate: 1, digits: 2 },
     { code: "EUR", symbol: "€", name: "Euro", rate: 0.92, digits: 2 },
@@ -40,6 +43,47 @@
     });
     window.CheatBloxCurrency = { format: formatPrice, code: selected.code };
     document.dispatchEvent(new CustomEvent("currencychange", { detail: selected }));
+  }
+
+  function applyRates(rates) {
+    let changed = false;
+    currencies.forEach((currency) => {
+      const rate = Number(rates[currency.code]);
+      if (!Number.isFinite(rate) || rate <= 0) return;
+      currency.rate = rate;
+      changed = true;
+    });
+    if (changed) applyCurrency();
+  }
+
+  function readCachedRates() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(ratesStorageKey) || "null");
+      if (!cached || Date.now() - cached.savedAt > ratesCacheTtl) return null;
+      return cached.rates;
+    } catch {
+      return null;
+    }
+  }
+
+  async function refreshRates() {
+    const cachedRates = readCachedRates();
+    if (cachedRates) applyRates(cachedRates);
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+    try {
+      const response = await fetch(ratesApiUrl, { signal: controller.signal, headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error(`Rates request failed: ${response.status}`);
+      const data = await response.json();
+      if (data.result !== "success" || !data.rates || typeof data.rates !== "object") throw new Error("Rates response is invalid");
+      localStorage.setItem(ratesStorageKey, JSON.stringify({ savedAt: Date.now(), rates: data.rates }));
+      applyRates(data.rates);
+    } catch {
+      // Static rates remain active when the remote service is unavailable.
+    } finally {
+      window.clearTimeout(timeout);
+    }
   }
 
   function createMenu(controls) {
@@ -90,6 +134,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".site-controls").forEach(createMenu);
     applyCurrency();
+    refreshRates();
     document.addEventListener("click", (event) => {
       if (!event.target.closest(".currency-menu")) closeMenus();
     });

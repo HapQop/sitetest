@@ -5,6 +5,23 @@
   let challengeId = "";
   let resetEmail = "";
 
+  document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const input = document.getElementById(button.dataset.target);
+      if (!input) return;
+      const isVisible = input.type === "text";
+      input.type = isVisible ? "password" : "text";
+      button.classList.toggle("is-visible", !isVisible);
+      button.setAttribute("aria-pressed", String(!isVisible));
+      const label = document.documentElement.lang === "ru"
+        ? (isVisible ? "Показать пароль" : "Скрыть пароль")
+        : (isVisible ? "Show password" : "Hide password");
+      button.setAttribute("aria-label", label);
+      button.title = label;
+      input.focus();
+    });
+  });
+
   function showStatus(message, type = "") {
     status.textContent = message;
     status.className = `auth-status${type ? ` is-${type}` : ""}`;
@@ -24,8 +41,14 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.error || "Authentication request failed.");
+    const contentType = response.headers.get("content-type") || "";
+    const result = contentType.includes("application/json") ? await response.json().catch(() => ({})) : {};
+    if (!response.ok) {
+      const fallback = response.status === 404
+        ? "Authentication API is not deployed. Redeploy the project with the api/auth function."
+        : `Authentication request failed (${response.status}).`;
+      throw new Error(result.error || fallback);
+    }
     return result;
   }
 
