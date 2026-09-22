@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheatBlox — Reviews</title>
+    <style>
+        :root { --orange:#ff9d5c; --page:#080808; --panel:#151515; --border:#303030; --muted:#9c9c9c; }
+        * { box-sizing:border-box; margin:0; }
+        body { min-height:100vh; overflow-x:hidden; color:#f8f8f8; background:radial-gradient(circle at 14% 14%,rgba(255,157,92,.12),transparent 30%),var(--page); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+        main { width:min(900px,calc(100% - 40px)); margin:50px auto 72px; }
+        .reviews-heading h1 { color:#fff; font-size:31px; font-weight:800; letter-spacing:-.8px; }
+        .reviews-heading p { max-width:850px; margin-top:22px; color:#9f9996; font-size:14px; line-height:1.55; }
+        .review-card { margin-top:22px; padding:18px; border:1px solid #302d2b; border-radius:14px; background:rgba(21,21,21,.9); box-shadow:0 18px 34px rgba(0,0,0,.22); }
+        .review-form { display:grid; gap:14px; }
+        .review-input,.review-textarea { width:100%; border:1px solid #3a3735; border-radius:10px; color:#eee9e6; background:#232323; font:600 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif; }
+        .review-input { min-height:49px; padding:0 14px; }
+        .review-textarea { min-height:114px; padding:13px 14px; resize:vertical; }
+        .review-input::placeholder,.review-textarea::placeholder { color:#77716e; }
+        .review-input:focus-visible,.review-textarea:focus-visible { border-color:var(--orange); outline:2px solid rgba(255,157,92,.24); outline-offset:2px; }
+        .review-user-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; }
+        .anonymous-toggle { position:relative; display:inline-flex; align-items:center; gap:9px; color:#d1cbc7; font-size:13px; font-weight:700; white-space:nowrap; cursor:pointer; }
+        .anonymous-toggle input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+        .anonymous-toggle__box { display:grid; width:22px; height:22px; place-items:center; border:1px solid #4a4039; border-radius:6px; color:var(--orange); background:#23201e; transition:border-color .18s ease,background .18s ease,box-shadow .18s ease; }
+        .anonymous-toggle__box svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:2.2; opacity:0; transform:scale(.7); transition:opacity .16s ease,transform .16s ease; }
+        .anonymous-toggle input:checked + .anonymous-toggle__box { border-color:var(--orange); background:rgba(255,157,92,.14); box-shadow:0 0 0 2px rgba(255,157,92,.1); }
+        .anonymous-toggle input:checked + .anonymous-toggle__box svg { opacity:1; transform:scale(1); }
+        .anonymous-toggle input:focus-visible + .anonymous-toggle__box { outline:2px solid #fff; outline-offset:2px; }
+        .rating-row { display:flex; gap:8px; }
+        .rating-button { display:grid; width:42px; height:42px; place-items:center; border:1px solid #454545; border-radius:10px; color:#8b8784; background:#292929; cursor:pointer; transition:color .18s ease,border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease; }
+        .rating-button:hover,.rating-button:focus-visible { border-color:#8a6a54; color:#d6a077; background:#342b26; }
+        .rating-button.is-selected { border-color:var(--orange); color:#21140c; background:var(--orange); box-shadow:0 6px 14px rgba(255,157,92,.18); }
+        .rating-button.is-animating { animation:rating-pop .34s ease both; }
+        .rating-button svg { width:20px; height:20px; fill:currentColor; }
+        @keyframes rating-pop { 0% { transform:scale(.82) rotate(-8deg); } 60% { transform:scale(1.13) rotate(3deg); } 100% { transform:scale(1) rotate(0); } }
+        .rating-button:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+        .review-submit { min-height:52px; border:1px solid var(--orange); border-radius:10px; color:#21140c; background:var(--orange); font:850 16px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; transition:background .18s ease,transform .18s ease; }
+        .review-submit:hover,.review-submit:focus-visible { background:#ffb077; transform:translateY(-1px); }
+        .review-submit:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+        .empty-reviews { display:flex; width:max-content; max-width:100%; align-items:center; gap:10px; margin:20px auto 0; padding:14px 25px; border:1px solid #2d2d2d; border-radius:999px; color:#a29b97; background:#141414; font-size:14px; font-weight:800; }
+        .empty-reviews svg { width:18px; height:18px; fill:none; stroke:var(--orange); stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
+        @media (max-width:620px) { main { width:calc(100% - 28px); margin-top:34px; } .review-user-row { grid-template-columns:1fr; align-items:start; } .review-card { padding:14px; } }
+        @media (prefers-reduced-motion:reduce) { .review-submit { transition:none; } }
+    </style>
+    <link rel="stylesheet" href="site-header.css">
+      <link rel="stylesheet" href="site-footer.css">
+  <script src="site-footer.js" defer></script><script src="site-i18n.js" defer></script><script src="site-currency.js" defer></script>
+    <script src="site-orbs.js" defer></script>
+</head>
+<body data-page="reviews">
+    <nav class="site-header" aria-label="Primary navigation">
+        <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+        <div class="site-nav">
+            <a href="index.html" data-i18n="nav-home">Home</a><a href="scripts.html" data-i18n="nav-scripts">Scripts</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a class="active" href="reviews.html" aria-current="page" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a>
+        </div>
+        <div class="site-controls">
+            <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="reviews-heading">
+            <h1 data-i18n="reviews">Reviews</h1>
+            <p data-i18n="reviews-intro">Share your experience. Only buyers with a paid order can review — enter your order ID from the success page or email.</p>
+        </header>
+        <section class="review-card" aria-label="Review form">
+            <form class="review-form">
+                <input class="review-input" type="text" name="orderId" placeholder="Paid order ID (required)" aria-label="Paid order ID" required>
+                <div class="review-user-row">
+                    <input class="review-input" type="text" name="discordUser" placeholder="Discord user (optional)" aria-label="Discord user">
+                    <label class="anonymous-toggle"><input type="checkbox" name="anonymous" data-anonymous-toggle><span class="anonymous-toggle__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><span data-i18n="reviews-anonymous">Stay anonymous</span></label>
+                </div>
+                <div class="rating-row" aria-label="Rating">
+                    <button class="rating-button" type="button" aria-label="1 star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></button>
+                    <button class="rating-button" type="button" aria-label="2 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></button>
+                    <button class="rating-button" type="button" aria-label="3 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></button>
+                    <button class="rating-button" type="button" aria-label="4 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></button>
+                    <button class="rating-button" type="button" aria-label="5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></button>
+                </div>
+                <textarea class="review-textarea" name="review" placeholder="Write your review..." aria-label="Write your review" required></textarea>
+                <button class="review-submit" type="button" data-i18n="reviews-post">Post Review</button>
+            </form>
+        </section>
+        <div class="empty-reviews"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><span data-i18n="reviews-empty">No reviews yet</span></div>
+    </main>
+    <script src="reviews.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheatBlox — Account</title>
+  <style>
+    :root { --orange:#ff9d5c; --page:#080808; --panel:#151515; --border:#303030; --muted:#9c9c9c; --danger:#ff6f69; --success:#48d391; }
+    * { box-sizing:border-box; margin:0; }
+    body { min-height:100vh; overflow-x:hidden; color:#f8f8f8; background:radial-gradient(circle at 16% 12%,rgba(255,157,92,.13),transparent 30%),var(--page); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(560px,calc(100% - 32px)); margin:52px auto 74px; }
+    .auth-card { padding:26px; border:1px solid #39322e; border-radius:16px; background:#151515; box-shadow:0 22px 44px rgba(0,0,0,.3); }
+    .auth-eyebrow { display:inline-flex; padding:5px 8px; border:1px solid rgba(255,157,92,.35); border-radius:7px; color:#ffc49d; background:rgba(255,157,92,.1); font-size:10px; font-weight:850; letter-spacing:.08em; text-transform:uppercase; }
+    .auth-card h1 { margin-top:14px; color:#fff; font-size:32px; letter-spacing:-1px; }
+    .auth-card > p { margin-top:8px; color:#aaa5a2; font-size:14px; line-height:1.5; }
+    .auth-form button:focus-visible,.auth-form input:focus-visible,.auth-switch:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+    .auth-view { margin-top:22px; }
+    .auth-view[hidden] { display:none; }
+    .auth-form { display:grid; gap:14px; }
+    .auth-field { display:grid; gap:7px; }
+    .auth-field label { color:#c2bbb7; font-size:12px; font-weight:750; }
+    .auth-field input { width:100%; min-height:43px; padding:0 12px; border:1px solid #3b3532; border-radius:8px; color:#f5f0ed; background:#0d0d0d; font:600 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
+    .auth-field input::placeholder { color:#706a67; }
+    .auth-field input:focus-visible { border-color:var(--orange); }
+    .auth-form button { min-height:43px; margin-top:3px; border:1px solid var(--orange); border-radius:8px; color:#21140c; background:var(--orange); font:850 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; transition:background .18s ease,transform .18s ease; }
+    .auth-form button:hover:not(:disabled) { transform:translateY(-1px); background:#ffb077; }
+    .auth-form button:disabled { cursor:wait; opacity:.65; }
+    .auth-note { margin-top:14px; color:#8e8885; font-size:12px; line-height:1.5; }
+    .auth-switch { display:inline-block; margin-top:14px; color:var(--orange); font-size:12px; font-weight:750; text-underline-offset:3px; }
+    .auth-status { min-height:19px; margin-top:16px; color:#aaa5a2; font-size:12px; line-height:1.5; }
+    .auth-status.is-error { color:var(--danger); }
+    .auth-status.is-success { color:var(--success); }
+    .auth-code { letter-spacing:.25em; text-align:center; }
+    @media (max-width:560px) { main { margin-top:30px; } .auth-card { padding:20px; } .auth-card h1 { font-size:28px; } }
+    @media (prefers-reduced-motion:reduce) { .auth-form button { transition:none; } }
+  </style>
+  <link rel="stylesheet" href="site-header.css">
+  <link rel="stylesheet" href="site-footer.css">
+  <script src="site-footer.js" defer></script>
+  <script src="site-i18n.js" defer></script>
+  <script src="site-currency.js" defer></script>
+  <script src="site-orbs.js" defer></script>
+  <script src="auth.js" defer></script>
+</head>
+<body data-page="auth">
+  <nav class="site-header" aria-label="Primary navigation">
+    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <div class="site-nav">
+      <a href="index.html" data-i18n="nav-home">Home</a><a href="scripts.html" data-i18n="nav-scripts">Scripts</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a>
+    </div>
+    <div class="site-controls">
+      <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+      <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+    </div>
+  </nav>
+  <main>
+    <section class="auth-card" aria-labelledby="auth-title">
+      <span class="auth-eyebrow">Secure account access</span>
+      <h1 id="auth-title">Account</h1>
+      <p>Register, sign in, or recover access with a verification code sent to your email.</p>
+      <div class="auth-view" data-auth-view="login">
+        <form class="auth-form" data-auth-form="login">
+          <div class="auth-field"><label for="login-identifier">Email or username</label><input id="login-identifier" name="identifier" autocomplete="username" required></div>
+          <div class="auth-field"><label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" required></div>
+          <button type="submit">Continue with email verification</button>
+        </form>
+        <p class="auth-note">A six-digit code is required after your password is accepted.</p>
+        <a class="auth-switch" href="auth.html?mode=forgot">Forgot password?</a>
+      </div>
+
+      <div class="auth-view" data-auth-view="register" hidden>
+        <form class="auth-form" data-auth-form="register">
+          <div class="auth-field"><label for="register-username">Username</label><input id="register-username" name="username" autocomplete="username" minlength="3" required></div>
+          <div class="auth-field"><label for="register-email">Email</label><input id="register-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="auth-field"><label for="register-password">Password</label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
+          <div class="auth-field"><label for="register-confirm">Confirm password</label><input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+          <button type="submit">Create account</button>
+        </form>
+        <a class="auth-switch" href="auth.html?mode=login">Already have an account? Login</a>
+      </div>
+
+      <div class="auth-view" data-auth-view="forgot" hidden>
+        <form class="auth-form" data-auth-form="forgot">
+          <div class="auth-field"><label for="forgot-email">Email</label><input id="forgot-email" name="email" type="email" autocomplete="email" required></div>
+          <button type="submit">Send recovery code</button>
+        </form>
+        <p class="auth-note">We will send a six-digit code to the account email if it exists.</p>
+        <a class="auth-switch" href="auth.html?mode=login">Back to login</a>
+      </div>
+
+      <div class="auth-view" data-auth-view="verify" hidden>
+        <form class="auth-form" data-auth-form="verify">
+          <div class="auth-field"><label for="verify-code">Six-digit verification code</label><input class="auth-code" id="verify-code" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></div>
+          <button type="submit">Verify code</button>
+        </form>
+      </div>
+
+      <div class="auth-view" data-auth-view="reset" hidden>
+        <form class="auth-form" data-auth-form="reset">
+          <div class="auth-field"><label for="reset-code">Six-digit recovery code</label><input class="auth-code" id="reset-code" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></div>
+          <div class="auth-field"><label for="reset-password">New password</label><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
+          <button type="submit">Reset password</button>
+        </form>
+      </div>
+
+      <p class="auth-status" data-auth-status role="status" aria-live="polite"></p>
+    </section>
+  </main>
+</body>
+</html>

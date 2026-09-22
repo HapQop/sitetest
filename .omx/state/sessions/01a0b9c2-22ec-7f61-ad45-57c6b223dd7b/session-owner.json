@@ -1,0 +1,14 @@
+{
+  "session_id": "01a0b9c2-22ec-7f61-ad45-57c6b223dd7b",
+  "native_session_id": "01a0b9c2-22ec-7f61-ad45-57c6b223dd7b",
+  "started_at": "2026-09-19T19:03:13.600Z",
+  "cwd": "C:\\Users\\1mmx1\\OneDrive\\Рабочий стол\\site",
+  "state_root": "C:\\Users\\1mmx1\\OneDrive\\Рабочий стол\\site\\.omx\\state\\sessions\\01a0b9c2-22ec-7f61-ad45-57c6b223dd7b",
+  "pid": 46268,
+  "platform": "win32",
+  "identity_schema_version": 2,
+  "process_identity": {
+    "platform": "win32",
+    "birth": "134343181747799770"
+  }
+}

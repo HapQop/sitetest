@@ -1,0 +1,14 @@
+{
+  "sessions": {
+    "01a0b9c2-22ec-7f61-ad45-57c6b223dd7b": {
+      "ordinary_no_progress_guard": {
+        "fingerprint": "ordinary|готово. - добавил версии по центру карточек и копирование с анимацией галочки. - добавил справа оранжевые кнопки «скачать». пока они отключены до получения файлов. - даты считаются от точных utc-времён: windows/mac — 4 дня, android — 8, ios — 2 дня назад. - проверил отображение на странице products. [products.html](c:/users/1mmx1/onedrive/рабочий%20стол/site/products.html:24) · [products.js](c:/users/1mmx1/onedrive/рабочий%20стол/site/products.js:1)",
+        "first_seen_at": "2026-09-19T19:37:31.007Z",
+        "last_seen_at": "2026-09-19T19:37:31.007Z",
+        "repeat_count": 1,
+        "last_turn_id": "01a0bb28-4fb0-7321-9a4b-2fd9363f4a7b",
+        "last_thread_id": null
+      }
+    }
+  }
+}

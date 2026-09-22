@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheatBlox — Contact</title>
+  <style>
+    :root { --page:#090909; --panel:#171717; --border:#303030; --discord:#5865f2; --telegram:#2aabee; }
+    * { box-sizing:border-box; margin:0; }
+    body { min-height:100vh; color:#f7f7f7; background:var(--page); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .navbar { display:flex; align-items:center; justify-content:center; gap:8px; width:fit-content; max-width:calc(100% - 32px); margin:40px auto 0; padding:8px 12px; border:1px solid #2a2a2a; border-radius:50px; background:#1a1a1a; }
+    .navbar a { padding:10px 18px; border-radius:40px; color:#a0a0a0; font-size:15px; font-weight:600; text-decoration:none; transition:.2s ease; }
+    .navbar a:hover,.navbar a.active { color:#fff; background:#2a2a2a; }
+    .navbar .brand { padding:0 8px; color:#fff; background:none; font-size:20px; font-weight:800; letter-spacing:-.6px; }
+    .navbar .brand span { color:#ff9d5c; }
+    main { width:min(860px,calc(100% - 40px)); margin:155px auto 0; }
+    .contacts { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .contact-card { position:relative; display:flex; min-height:185px; align-items:center; justify-content:space-between; overflow:hidden; padding:27px; border:1px solid var(--border); border-radius:22px; background:var(--panel); color:#fff; text-decoration:none; transition:transform .2s ease,border-color .2s ease,background .2s ease; }
+    .contact-card:hover { transform:translateY(-5px); }
+    .contact-card::after { position:absolute; right:-55px; bottom:-72px; width:190px; height:190px; border-radius:50%; content:""; opacity:.17; }
+    .discord:hover { border-color:var(--discord); background:#1a1b22; } .discord::after { right:auto; bottom:-185px; left:-80px; width:300px; height:300px; background:var(--discord); }
+    .telegram { cursor:default; } .telegram::after { background:var(--telegram); } .telegram:hover { border-color:#237caf; background:#151b1e; }
+    .contact-name { position:relative; z-index:1; font-size:25px; font-weight:800; letter-spacing:-.6px; }
+    .telegram .contact-name { color:#5ac4fa; }
+    .contact-icon { position:relative; z-index:1; display:grid; flex:0 0 58px; width:58px; height:58px; place-items:center; border-radius:17px; }
+    .discord .contact-name { color:#9ba4ff; } .discord .contact-icon { background:rgba(88,101,242,.22); color:#9ba4ff; } .telegram .contact-icon { background:rgba(42,171,238,.16); color:#5ac4fa; }
+    .contact-icon svg { display:block; width:32px; height:32px; fill:currentColor; }
+    .discord-mark { display:block; width:32px; height:32px; }
+    @media (max-width:650px) { .navbar { flex-wrap:wrap; justify-content:center; } .navbar a { padding:8px 12px; font-size:14px; } main { margin-top:65px; } .contacts { grid-template-columns:1fr; } }
+  </style>
+  <link rel="stylesheet" href="site-header.css">
+    <link rel="stylesheet" href="site-footer.css">
+  <script src="site-footer.js" defer></script><script src="site-i18n.js" defer></script><script src="site-currency.js" defer></script>
+  <script src="site-orbs.js" defer></script>
+</head>
+<body data-page="nav-contact">
+  <nav class="site-header" aria-label="Primary navigation">
+    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <div class="site-nav">
+      <a href="index.html" data-i18n="nav-home">Home</a><a href="scripts.html" data-i18n="nav-scripts">Scripts</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a class="active" href="contact.html" aria-current="page" data-i18n="nav-contact">Contact</a>
+    </div>
+    <div class="site-controls">
+      <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+      <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+    </div>
+  </nav>
+  <main>
+    <section class="contacts" aria-label="Наши контакты">
+      <a class="contact-card discord" href="https://discord.gg/Rq2sCnk2qC" target="_blank" rel="noopener noreferrer" aria-label="Открыть Discord">
+        <span class="contact-name">Discord</span>
+        <span class="contact-icon" aria-hidden="true"><img class="discord-mark" src="https://cdn.simpleicons.org/discord/9ba4ff" alt=""></span>
+      </a>
+      <a class="contact-card telegram" href="https://t.me/+N3v7ZoaFaVhmNTYy" target="_blank" rel="noopener noreferrer" aria-label="Открыть Telegram">
+        <span class="contact-name">Telegram</span>
+        <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 496 512"><path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm114.9 168.6-40.7 191.8c-3 13.6-11 16.9-22.3 10.5l-61.6-45.4-29.7 28.6c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-62.2 113.2-102.3c4.9-4.4-1.1-6.9-7.6-2.6L166.2 288.6l-60.1-18.8c-13.1-4.1-13.3-13.1 2.7-19.4l234.9-90.5c10.9-4.1 20.4 2.6 19.2 16.7z"/></svg></span>
+      </a>
+    </section>
+  </main>
+</body>
+</html>

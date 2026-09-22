@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheatBlox — Products</title>
+  <style>
+    :root { --orange:#ff9d5c; --page:#080808; --panel:#151515; --border:#303030; --muted:#9c9c9c; }
+    * { box-sizing:border-box; margin:0; }
+    body { min-height:100vh; overflow-x:hidden; color:#f8f8f8; background:var(--page); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(1120px,calc(100% - 40px)); margin:92px auto 0; text-align:center; }
+    .catalog-icon { display:inline-grid; width:34px; height:34px; margin-right:12px; place-items:center; vertical-align:middle; border:1px solid rgba(255,157,92,.55); border-radius:10px; color:var(--orange); background:rgba(255,157,92,.1); }
+    .catalog-icon svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
+    .catalog-title { display:flex; align-items:center; justify-content:center; color:#fff; font-size:42px; font-weight:820; letter-spacing:-1.5px; }
+    .catalog-copy { max-width:640px; margin:13px auto 0; color:var(--muted); font-size:15px; line-height:1.55; }
+    .game-tabs { display:flex; align-items:center; justify-content:center; gap:8px; width:fit-content; max-width:100%; margin:32px auto 0; padding:8px; border:1px solid var(--border); border-radius:16px; background:var(--panel); box-shadow:0 14px 30px rgba(0,0,0,.25); }
+    .catalog-toolbar { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:32px; }
+    .catalog-toolbar .game-tabs { margin:0; }
+    .catalog-search { width:min(260px,32vw); min-height:42px; padding:0 13px; border:1px solid #383331; border-radius:10px; color:#eee9e6; background:#171717; font:600 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
+    .catalog-search::placeholder { color:#77716e; }
+    .catalog-search:focus-visible { border-color:var(--orange); outline:2px solid rgba(255,157,92,.3); outline-offset:3px; }
+    .game-tab { display:inline-flex; min-height:42px; align-items:center; justify-content:center; gap:9px; padding:0 20px; border:1px solid transparent; border-radius:10px; color:#aaa; background:transparent; font:700 14px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; transition:color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease; }
+    .game-tab svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
+    .game-tab[data-product-filter="roblox"] svg { fill:currentColor; stroke:none; transform:rotate(-8deg); }
+    .game-tab:hover { color:#fff; background:#282828; }
+    .game-tab.is-active { color:#1a100a; background:var(--orange); box-shadow:0 7px 16px rgba(255,157,92,.22); }
+    .game-tab:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+    .catalog-products { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); justify-items:stretch; gap:14px; margin-top:30px; }
+    .store-card-link { display:block; width:100%; color:inherit; text-decoration:none; }
+    .store-card { width:100%; overflow:hidden; border:1px solid #3b3530; border-radius:18px; background:#151515; box-shadow:0 18px 36px rgba(0,0,0,.28); text-align:left; transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease; }
+    .store-card-link:hover .store-card, .store-card-link:focus-visible .store-card { border-color:rgba(255,157,92,.72); transform:translateY(-3px); box-shadow:0 22px 42px rgba(0,0,0,.36); }
+    .store-card-link:focus-visible { outline:2px solid #fff; outline-offset:5px; border-radius:20px; }
+    .store-card__visual { position:relative; display:flex; min-height:174px; align-items:center; justify-content:center; overflow:hidden; padding:22px 16px; background:radial-gradient(circle at 18% 18%,rgba(255,157,92,.2),transparent 38%),linear-gradient(135deg,#12100f,#070707 68%); }
+    .store-card__visual::before { position:absolute; inset:0; background:linear-gradient(135deg,transparent 47%,rgba(255,157,92,.1) 47.5%,transparent 48%); content:""; }
+    .store-card__meta { position:absolute; z-index:1; top:13px; right:13px; display:grid; justify-items:end; gap:5px; }
+    .store-card__type { padding:5px 7px; border:1px solid rgba(255,157,92,.62); border-radius:6px; color:#ffc49d; background:rgba(38,23,13,.78); font-size:10px; font-weight:800; }
+    .store-card__stock { color:#f3c09c; font-size:11px; font-weight:750; }
+    .store-card__stock.is-out { color:#ff8179; }
+    .roblox-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:14px; color:#fff; }
+    .roblox-product-mark__icon { width:70px; height:70px; flex:0 0 70px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
+    .roblox-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
+    .cosmic-product-mark,.volt-product-mark,.pottasium-product-mark,.real-product-mark,.lumen-product-mark,.wave-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:11px; color:#fff; }
+    .cosmic-product-mark__icon,.volt-product-mark__icon,.pottasium-product-mark__icon,.real-product-mark__icon,.lumen-product-mark__icon,.wave-product-mark__icon { width:78px; height:78px; flex:0 0 78px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
+    .volt-product-mark__icon { filter:drop-shadow(0 7px 12px rgba(255,157,92,.16)); }
+    .cosmic-product-mark strong,.volt-product-mark strong,.pottasium-product-mark strong,.real-product-mark strong,.lumen-product-mark strong,.wave-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
+    .store-card__body { padding:16px 17px 18px; }
+    .store-card__game { display:inline-block; padding:4px 7px; border-radius:6px; color:#c4c0bd; background:#242424; font-size:11px; font-weight:750; }
+    .store-card__body h2 { margin-top:12px; color:#fff; font-size:19px; letter-spacing:-.3px; }
+    .store-card__access { margin-top:5px; color:#aaa5a2; font-size:13px; font-weight:600; }
+    .store-card__price-row { display:flex; align-items:end; justify-content:space-between; margin-top:18px; padding-top:13px; border-top:1px solid rgba(255,255,255,.08); }
+    .store-card__price-label { display:block; color:#898481; font-size:10px; font-weight:850; letter-spacing:.1em; text-transform:uppercase; }
+    .store-card__price { display:block; margin-top:3px; color:#fff; font-size:25px; font-weight:850; letter-spacing:-.6px; }
+    .store-card__price-note { color:#ffad78; font-size:11px; font-weight:750; }
+    .catalog-empty { width:min(420px,100%); padding:40px 24px; border:1px dashed #3a342f; border-radius:16px; color:#938d89; background:rgba(21,21,21,.72); font-size:14px; line-height:1.5; }
+    .catalog-products > .catalog-empty { grid-column:1/-1; justify-self:center; }
+    .catalog-products [hidden] { display:none !important; }
+    @media (prefers-reduced-motion:reduce) { .game-tab,.store-card { transition:none; } }
+    @media (max-width:1100px) { .catalog-products { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:760px) { .catalog-products { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:560px) { .catalog-products { grid-template-columns:minmax(0,420px); justify-content:center; } }
+    @media (max-width:700px) { .catalog-toolbar { align-items:stretch; flex-direction:column; gap:12px; } .catalog-toolbar .game-tabs { width:100%; } .catalog-search { width:100%; } }
+    @media (max-width:560px) { main { width:calc(100% - 28px); margin-top:64px; } .catalog-title { font-size:34px; } .game-tabs { width:100%; flex-wrap:wrap; } .game-tab { flex:1 1 130px; padding:0 13px; } }
+  </style>
+  <link rel="stylesheet" href="site-header.css">
+    <link rel="stylesheet" href="site-footer.css">
+  <script src="site-footer.js" defer></script><script src="site-i18n.js" defer></script><script src="site-currency.js" defer></script>
+  <script src="site-orbs.js" defer></script>
+  <script src="catalog.js" defer></script>
+</head>
+<body data-page="products">
+  <nav class="site-header" aria-label="Primary navigation">
+    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <div class="site-nav">
+      <a href="index.html" data-i18n="nav-home">Home</a><a href="scripts.html" data-i18n="nav-scripts">Scripts</a><a class="active" href="products.html" aria-current="page" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a>
+    </div>
+    <div class="site-controls">
+      <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+      <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+    </div>
+  </nav>
+  <main>
+    <h1 class="catalog-title"><span class="catalog-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg></span><span data-i18n="products-catalog-title">All Products</span></h1>
+    <p class="catalog-copy" data-i18n="products-catalog-copy">Choose a game to view its available products.</p>
+    <div class="catalog-toolbar">
+      <div class="game-tabs" role="tablist" aria-label="Product game filter">
+        <button class="game-tab is-active" type="button" role="tab" aria-selected="true" data-product-filter="all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 7 4v10l-7 4-7-4V7l7-4Z"/><path d="m5 7 7 4 7-4M12 11v10"/></svg><span data-i18n="products-all">All Products</span></button>
+        <button class="game-tab" type="button" role="tab" aria-selected="false" data-product-filter="roblox"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5zM10 10h4v4h-4z" fill-rule="evenodd"/></svg><span>Roblox</span></button>
+        <button class="game-tab" type="button" role="tab" aria-selected="false" data-product-filter="cs2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg><span>CS2</span></button>
+      </div>
+      <input class="catalog-search" type="search" data-product-search data-i18n-placeholder="products-search-placeholder" placeholder="Search products" aria-label="Search products by name">
+    </div>
+    <section class="catalog-products" aria-live="polite">
+      <a class="store-card-link" href="isaeva.html" data-product-game="roblox" aria-label="Open Isaeva product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-stock">9 available</span></div>
+            <div class="roblox-product-mark" aria-label="Isaeva for Roblox"><img class="roblox-product-mark__icon" src="assets/isaeva-logo-red.png" alt=""><strong>Isaeva</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Isaeva</h2>
+            <p class="store-card__access" data-i18n="product-access">7-day access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="cosmic.html" data-product-game="roblox" aria-label="Open Cosmic product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out">0 available</span></div>
+            <div class="cosmic-product-mark" aria-label="Cosmic for Roblox"><img class="cosmic-product-mark__icon" src="assets/cosmic-logo.png" alt=""><strong>Cosmic</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Cosmic</h2>
+            <p class="store-card__access">Executor access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="3.99">$3.99</strong></div><span class="store-card__price-note" data-i18n="product-details">Details soon</span></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="volt.html" data-product-game="roblox" aria-label="Open Volt product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-volt-stock">2 available</span></div>
+            <div class="volt-product-mark" aria-label="Volt for Roblox"><img class="volt-product-mark__icon" src="assets/volt-logo.png" alt=""><strong>Volt</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Volt</h2>
+            <p class="store-card__access" data-i18n="product-volt-access">7-day access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="4.99">$4.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="pottasium.html" data-product-game="roblox" aria-label="Open Pottasium product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out" data-i18n="product-pottasium-stock">0 available</span></div>
+            <div class="pottasium-product-mark" aria-label="Pottasium for Roblox"><img class="pottasium-product-mark__icon" src="assets/pottasium-logo.png" alt=""><strong>Pottasium</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Pottasium</h2>
+            <p class="store-card__access" data-i18n="product-pottasium-access">Lifetime access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="18">$18.00</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="real.html" data-product-game="roblox" aria-label="Open Real product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-real-stock">Available</span></div>
+            <div class="real-product-mark" aria-label="Real for Roblox"><img class="real-product-mark__icon" src="assets/real-logo.png" alt=""><strong>Real</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Real</h2>
+            <p class="store-card__access" data-i18n="product-real-access">7-day access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="lumen.html" data-product-game="roblox" aria-label="Open Lumen product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-lumen-stock">Available</span></div>
+            <div class="lumen-product-mark" aria-label="Lumen for Roblox"><img class="lumen-product-mark__icon" src="assets/lumen-logo.png" alt=""><strong>Lumen</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Lumen</h2>
+            <p class="store-card__access" data-i18n="product-lumen-access">Lifetime access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="9.99">$9.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="wave.html" data-product-game="roblox" aria-label="Open Wave product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-wave-stock">Available</span></div>
+            <div class="wave-product-mark" aria-label="Wave for Roblox"><img class="wave-product-mark__icon" src="assets/wave-logo.png" alt=""><strong>Wave</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Wave</h2>
+            <p class="store-card__access" data-i18n="product-wave-access">7-day access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <p class="catalog-empty" data-empty-game="cs2" data-i18n="product-cs2-empty" hidden>CS2 products will be added soon.</p>
+      <p class="catalog-empty" data-search-empty data-i18n="products-no-matches" hidden>No products match your search.</p>
+    </section>
+  </main>
+</body>
+</html>
