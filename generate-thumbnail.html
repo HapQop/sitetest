@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Generate YouTube Thumbnail</title>
+</head>
+<body>
+    <canvas id="canvas" width="1280" height="720"></canvas>
+    <br>
+    <button onclick="downloadImage()">Download Thumbnail (1280x720)</button>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Gradient background
+        const gradient = ctx.createLinearGradient(0, 0, 1280, 720);
+        gradient.addColorStop(0, '#2d1520');
+        gradient.addColorStop(1, '#1a0f15');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1280, 720);
+
+        // Load images and draw
+        const logo = new Image();
+        const screenshot = new Image();
+
+        let imagesLoaded = 0;
+        function checkImagesLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === 2) {
+                drawThumbnail();
+            }
+        }
+
+        logo.onload = checkImagesLoaded;
+        screenshot.onload = checkImagesLoaded;
+
+        logo.src = 'assets/isaeva-logo-temp.png';
+        screenshot.src = 'assets/executor-screenshot.png';
+
+        function drawThumbnail() {
+            // Draw logo
+            ctx.drawImage(logo, 50, 40, 100, 100);
+
+            // Draw "ISAEVA" title
+            ctx.font = 'bold 72px Impact, Arial Black, sans-serif';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 4;
+            ctx.fillStyle = 'white';
+            ctx.strokeText('ISAEVA', 170, 110);
+            ctx.fillText('ISAEVA', 170, 110);
+
+            // Draw subtitle
+            ctx.font = '24px Arial, sans-serif';
+            ctx.fillStyle = '#cccccc';
+            ctx.fillText('ROBLOX EXECUTOR', 170, 145);
+
+            // Draw accent line
+            ctx.fillStyle = '#dc3c4c';
+            ctx.fillRect(170, 155, 250, 3);
+
+            // Draw "FREE"
+            ctx.font = 'bold 120px Impact, Arial Black, sans-serif';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 5;
+            ctx.fillStyle = '#ffe650';
+            ctx.strokeText('FREE', 50, 440);
+            ctx.fillText('FREE', 50, 440);
+
+            // Draw "TRIAL"
+            ctx.fillStyle = 'white';
+            ctx.strokeText('TRIAL', 50, 560);
+            ctx.fillText('TRIAL', 50, 560);
+
+            // Draw underline under TRIAL
+            ctx.fillStyle = '#dc3c4c';
+            ctx.fillRect(50, 580, 470, 5);
+
+            // Draw arrow pointing to FREE TRIAL
+            ctx.fillStyle = '#dc3c4c';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(540, 360); // arrow tip
+            ctx.lineTo(640, 320); // top
+            ctx.lineTo(610, 360); // middle
+            ctx.lineTo(640, 400); // bottom
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw screenshot with border
+            const screenshotWidth = 700;
+            const screenshotHeight = screenshot.height * (screenshotWidth / screenshot.width);
+            const screenshotX = 1280 - screenshotWidth - 40;
+            const screenshotY = (720 - screenshotHeight) / 2;
+
+            // Border
+            ctx.strokeStyle = '#dc3c4c';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(screenshotX - 2, screenshotY - 2, screenshotWidth + 4, screenshotHeight + 4);
+
+            // Screenshot
+            ctx.drawImage(screenshot, screenshotX, screenshotY, screenshotWidth, screenshotHeight);
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'isaeva-youtube-thumbnail-final.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>

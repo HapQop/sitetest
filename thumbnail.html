@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: Impact, Arial Black, sans-serif;
+        }
+        .container {
+            width: 1280px;
+            height: 720px;
+            background: linear-gradient(135deg, #2d1520 0%, #1a0f15 100%);
+            position: relative;
+            display: flex;
+        }
+        .left-section {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .title {
+            display: flex;
+            flex-direction: column;
+        }
+        .isaeva {
+            font-size: 72px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+        }
+        .subtitle {
+            font-size: 24px;
+            color: #cccccc;
+            font-family: Arial, sans-serif;
+            font-weight: normal;
+            margin-top: 8px;
+        }
+        .accent-line {
+            width: 250px;
+            height: 3px;
+            background: #dc3c4c;
+            margin-top: 10px;
+        }
+        .free-trial-section {
+            margin-top: auto;
+            margin-bottom: 60px;
+        }
+        .free {
+            font-size: 120px;
+            font-weight: 900;
+            color: #ffe650;
+            text-transform: uppercase;
+            line-height: 1;
+            text-shadow: 4px 4px 0 black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;
+            margin-bottom: -10px;
+        }
+        .trial {
+            font-size: 120px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            line-height: 1;
+            text-shadow: 4px 4px 0 black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;
+        }
+        .underline {
+            width: 470px;
+            height: 5px;
+            background: #dc3c4c;
+            margin-top: 10px;
+        }
+        .arrow {
+            position: absolute;
+            left: 540px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-15deg);
+            width: 0;
+            height: 0;
+            border-top: 40px solid transparent;
+            border-bottom: 40px solid transparent;
+            border-left: 100px solid #dc3c4c;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+        .arrow::before {
+            content: '';
+            position: absolute;
+            left: -103px;
+            top: -43px;
+            width: 0;
+            height: 0;
+            border-top: 43px solid transparent;
+            border-bottom: 43px solid transparent;
+            border-left: 103px solid white;
+        }
+        .screenshot {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 700px;
+            height: auto;
+            border: 4px solid #dc3c4c;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="header">
+                <div class="logo">
+                    <img src="assets/isaeva-logo-temp.png" alt="Isaeva Logo">
+                </div>
+                <div class="title">
+                    <div class="isaeva">ISAEVA</div>
+                    <div class="subtitle">ROBLOX EXECUTOR</div>
+                    <div class="accent-line"></div>
+                </div>
+            </div>
+
+            <div class="free-trial-section">
+                <div class="free">FREE</div>
+                <div class="trial">TRIAL</div>
+                <div class="underline"></div>
+            </div>
+        </div>
+
+        <div class="arrow"></div>
+
+        <img class="screenshot" src="assets/executor-screenshot.png" alt="Executor Interface">
+    </div>
+</body>
+</html>
