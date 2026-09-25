@@ -1,0 +1,84 @@
+/* Темная тема */
+body.dark-theme,
+.dark {
+  --page: #0f0f0f;
+  --panel: #1a1a1a;
+  --border: #2a2a2a;
+  --muted: #858585;
+  --text: #f8f8f8;
+}
+
+/* Переопределение цветов для темной темы */
+body.dark-theme {
+  background: var(--page);
+  color: var(--text);
+}
+
+body.dark-theme .site-header {
+  background: #1b1b1b;
+  border-color: #404040;
+}
+
+body.dark-theme .site-brand {
+  color: #fff;
+}
+
+body.dark-theme .site-nav a {
+  color: #bcbcbc;
+}
+
+body.dark-theme .site-nav a:hover,
+body.dark-theme .site-nav a:focus-visible,
+body.dark-theme .site-nav a.active {
+  color: var(--accent);
+}
+
+body.dark-theme .language-toggle {
+  background: #241d1a;
+  border-color: rgba(255, 157, 92, .35);
+}
+
+body.dark-theme .currency-trigger {
+  background: #241d1a;
+  border-color: rgba(255, 157, 92, .35);
+  color: #d5c4ba;
+}
+
+body.dark-theme .theme-toggle {
+  background: #241d1a;
+  border-color: rgba(255, 157, 92, .35);
+  color: #d5c4ba;
+}
+
+body.dark-theme .product,
+body.dark-theme .exploit-card {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+body.dark-theme .auth-card {
+  background: #151515;
+  border-color: #39322e;
+}
+
+body.dark-theme .exploit-search {
+  background: #151515;
+  border-color: #3a3633;
+  color: #f2eeeb;
+}
+
+body.dark-theme .exploit-filter-button {
+  background: #171717;
+  border-color: #3c3835;
+  color: #aaa5a2;
+}
+
+/* Плавные переходы для всех элементов при смене темы */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Исключаем анимации для интерактивных элементов */
+button, a, input, .language-slider {
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}

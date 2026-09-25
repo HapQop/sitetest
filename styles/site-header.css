@@ -1,6 +1,11 @@
 :root { --accent: #ff9d5c; }
 
 body { overflow-x: hidden; isolation: isolate; }
+
+/* Анимация смены языка */
+[data-i18n] { transition: opacity 0.15s ease; }
+body.language-transitioning [data-i18n] { opacity: 0.6; }
+
 html { scrollbar-color: #ff9d5c #111; scrollbar-width: thin; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #111; }
@@ -76,6 +81,40 @@ body > .site-header { z-index: 100; }
 .login-link:hover, .login-link:focus-visible { background: rgba(255, 157, 92, .13); }
 .register-link { border: 1px solid var(--accent); color: #17100b; background: var(--accent); }
 .register-link:hover, .register-link:focus-visible { transform: translateY(-1px); background: #ffb077; }
+
+/* Кнопка смены темы */
+.theme-toggle { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; padding: 0; border: 1px solid rgba(255, 157, 92, .35); border-radius: 13px; color: #d5c4ba; background: #241d1a; cursor: pointer; transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease; overflow: hidden; position: relative; }
+.theme-toggle:hover, .theme-toggle:focus-visible { border-color: rgba(255, 157, 92, .72); color: #fff; background: #30231d; }
+.theme-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.theme-toggle:active { transform: scale(0.95); }
+.theme-toggle svg { grid-area: 1/1; width: 20px; height: 20px; transition: opacity .3s ease, transform .3s ease; }
+.theme-toggle .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+.theme-toggle .moon-icon { opacity: 0; transform: rotate(90deg) scale(0.7); }
+.dark .theme-toggle .sun-icon, body.dark-theme .theme-toggle .sun-icon { opacity: 0; transform: rotate(-90deg) scale(0.7); }
+.dark .theme-toggle .moon-icon, body.dark-theme .theme-toggle .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+
+/* View Transition API для анимации смены темы */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
 
 .user-menu { display: flex; align-items: center; gap: 10px; }
 .user-name { color: #fff; font-size: 14px; font-weight: 700; }

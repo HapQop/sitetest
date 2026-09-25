@@ -77,10 +77,131 @@
             font-size: clamp(17px, 2vw, 22px);
             font-weight: 600;
         }
+        .faq-section {
+            width: min(1200px, calc(100% - 48px));
+            margin: 80px auto 120px;
+            padding: 80px 0;
+        }
+        .faq-header {
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+        .faq-header h2 {
+            color: #fff;
+            font-size: clamp(42px, 6vw, 56px);
+            font-weight: 850;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+        .faq-header h2 span {
+            color: #ff9d5c;
+        }
+        .faq-header p {
+            margin-top: 16px;
+            color: #999;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .faq-discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 24px;
+            padding: 12px 24px;
+            border: 1px solid rgba(255, 157, 92, 0.3);
+            border-radius: 12px;
+            color: #ff9d5c;
+            background: rgba(255, 157, 92, 0.08);
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .faq-discord-btn:hover {
+            border-color: #ff9d5c;
+            background: rgba(255, 157, 92, 0.15);
+        }
+        .faq-discord-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .faq-list {
+            display: grid;
+            gap: 12px;
+        }
+        .faq-item {
+            border: 1px solid #2a2a2a;
+            border-radius: 14px;
+            background: #141414;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+        .faq-item:hover {
+            border-color: #3a3a3a;
+        }
+        .faq-question {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px 28px;
+            border: none;
+            color: #fff;
+            background: transparent;
+            font-size: 17px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .faq-question:hover {
+            color: #ff9d5c;
+        }
+        .faq-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            color: #666;
+            transition: transform 0.3s ease, color 0.2s ease;
+        }
+        .faq-item.is-open .faq-icon {
+            color: #ff9d5c;
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-answer-content {
+            padding: 0 28px 24px;
+            color: #aaa;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        @media (max-width: 768px) {
+            .faq-section {
+                margin: 60px auto 80px;
+                padding: 40px 0;
+            }
+            .faq-header {
+                margin-bottom: 40px;
+            }
+            .faq-question {
+                padding: 18px 20px;
+                font-size: 16px;
+            }
+            .faq-answer-content {
+                padding: 0 20px 20px;
+                font-size: 14px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="../styles/site-header.css">
       <link rel="stylesheet" href="../styles/site-footer.css">
-      <script src="../scripts/site-footer.js" defer></script><script src="../scripts/site-i18n.js" defer></script><script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
+      <link rel="stylesheet" href="../styles/site-theme.css">
+      <script src="../scripts/site-footer.js" defer></script><script src="../scripts/site-i18n.js" defer></script><script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script><script src="../scripts/site-theme.js" defer></script>
     <script src="../scripts/site-orbs.js" defer></script>
 </head>
 <body data-page="nav-home">
@@ -92,6 +213,15 @@
         </div>
         <div class="site-controls">
             <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+            <button class="theme-toggle" type="button" aria-label="Toggle theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
             <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
         </div>
     </nav>
@@ -100,6 +230,116 @@
         <h1>Cheat<span>Blox</span></h1>
         <p data-i18n="home-tagline">Открой Максимум возможностей</p>
     </main>
+
+    <section class="faq-section">
+        <div class="faq-header">
+            <h2>Frequently Asked <span>Questions</span></h2>
+            <p>Can't find what you're looking for? Reach out on Discord and we'll get back to you fast.</p>
+            <a href="#" class="faq-discord-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                Ask on Discord
+            </a>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    How do I receive my key after purchase?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Your key is delivered instantly and automatically the moment your payment confirms. You'll receive it on-screen and via email - no waiting, no manual steps.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    Which executors do you sell?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">We offer premium executors including Wave, Synapse Z, and other top-tier options. Check our Products page for the full list with current pricing and features.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    What payment methods are accepted?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">We accept major credit cards, PayPal, cryptocurrency, and various other secure payment methods to make purchasing as convenient as possible.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    Is it safe to buy here?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Yes, absolutely. We use encrypted payment processing and never store your payment information. All transactions are secure and your data is protected.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    What if my key doesn't work?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Contact our support team immediately via Discord or email. We'll verify your purchase and provide a replacement key if there's a technical issue.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    How long does a key last?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Key duration depends on the plan you purchase - we offer daily, weekly, monthly, and lifetime options. Check the product page for specific duration details.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    Do you offer refunds?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Due to the digital nature of our products, we generally don't offer refunds. However, if there's a technical issue with your key, contact support and we'll work with you to resolve it.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" data-faq-toggle>
+                    Can I pay with Robux or FunPay?
+                    <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">We currently don't accept Robux or FunPay directly. Please use one of our supported payment methods listed on the checkout page.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.querySelectorAll('[data-faq-toggle]').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.closest('.faq-item');
+                const answer = item.querySelector('.faq-answer');
+                const isOpen = item.classList.contains('is-open');
+
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('is-open');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = '0';
+                    }
+                });
+
+                if (isOpen) {
+                    item.classList.remove('is-open');
+                    answer.style.maxHeight = '0';
+                } else {
+                    item.classList.add('is-open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -276,9 +276,19 @@ function setLanguage(language) {
   if (!dictionary) return;
 
   document.documentElement.lang = language;
+
+  // Добавляем класс для анимации
+  document.body.classList.add('language-transitioning');
+
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const translatedText = dictionary[element.dataset.i18n];
-    if (translatedText) element.textContent = translatedText;
+    if (translatedText) {
+      element.style.opacity = '0';
+      setTimeout(() => {
+        element.textContent = translatedText;
+        element.style.opacity = '1';
+      }, 150);
+    }
   });
 
   document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
@@ -293,6 +303,11 @@ function setLanguage(language) {
   const pageName = document.body.dataset.page;
   if (pageName) document.title = `CheatBlox — ${dictionary[pageName]}`;
   localStorage.setItem("cheatblox-language", language);
+
+  // Убираем класс после завершения анимации
+  setTimeout(() => {
+    document.body.classList.remove('language-transitioning');
+  }, 300);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
