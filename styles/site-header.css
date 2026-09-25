@@ -76,6 +76,12 @@ body > .site-header { z-index: 100; }
 .login-link:hover, .login-link:focus-visible { background: rgba(255, 157, 92, .13); }
 .register-link { border: 1px solid var(--accent); color: #17100b; background: var(--accent); }
 .register-link:hover, .register-link:focus-visible { transform: translateY(-1px); background: #ffb077; }
+
+.user-menu { display: flex; align-items: center; gap: 10px; }
+.user-name { color: #fff; font-size: 14px; font-weight: 700; }
+.logout-btn { display: inline-grid; min-height: 38px; place-items: center; padding: 0 14px; border: 1px solid rgba(255, 157, 92, .65); border-radius: 10px; color: var(--accent); background: transparent; font: inherit; font-size: 13px; font-weight: 800; line-height: 1; cursor: pointer; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.logout-btn:hover, .logout-btn:focus-visible { background: rgba(255, 157, 92, .13); }
+
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
 
 @media (max-width: 1040px) {

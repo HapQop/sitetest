@@ -61,12 +61,12 @@
     @media (max-width:700px) { .catalog-toolbar { align-items:stretch; flex-direction:column; gap:12px; } .catalog-toolbar .game-tabs { width:100%; } .catalog-search { width:100%; } }
     @media (max-width:560px) { main { width:calc(100% - 28px); margin-top:64px; } .catalog-title { font-size:34px; } .game-tabs { width:100%; flex-wrap:wrap; } .game-tab { flex:1 1 130px; padding:0 13px; } }
   </style>
-  <link rel="stylesheet" href="site-header.css">
-    <link rel="stylesheet" href="site-footer.css">
-  <script src="site-footer.js" defer></script><script src="site-i18n.js" defer></script><script src="site-currency.js" defer></script>
-  <script src="site-orbs.js" defer></script>
-  <script src="site-catalog.js" defer></script>
-  <script src="catalog.js" defer></script>
+  <link rel="stylesheet" href="../styles/site-header.css">
+    <link rel="stylesheet" href="../styles/site-footer.css">
+  <script src="../scripts/site-footer.js" defer></script><script src="../scripts/site-i18n.js" defer></script><script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
+  <script src="../scripts/site-orbs.js" defer></script>
+  <script src="../scripts/site-catalog.js" defer></script>
+  <script src="../scripts/catalog.js" defer></script>
 </head>
 <body data-page="products">
   <nav class="site-header" aria-label="Primary navigation">
@@ -95,7 +95,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-stock">9 available</span></div>
-            <div class="roblox-product-mark" aria-label="Isaeva for Roblox"><img class="roblox-product-mark__icon" src="assets/isaeva-logo-red.png" alt=""><strong>Isaeva</strong></div>
+            <div class="roblox-product-mark" aria-label="Isaeva for Roblox"><img class="roblox-product-mark__icon" src="../assets/isaeva-logo-red.png" alt=""><strong>Isaeva</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -109,7 +109,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out">0 available</span></div>
-            <div class="cosmic-product-mark" aria-label="Cosmic for Roblox"><img class="cosmic-product-mark__icon" src="assets/cosmic-logo.png" alt=""><strong>Cosmic</strong></div>
+            <div class="cosmic-product-mark" aria-label="Cosmic for Roblox"><img class="cosmic-product-mark__icon" src="../assets/cosmic-logo.png" alt=""><strong>Cosmic</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -123,7 +123,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-volt-stock">2 available</span></div>
-            <div class="volt-product-mark" aria-label="Volt for Roblox"><img class="volt-product-mark__icon" src="assets/volt-logo.png" alt=""><strong>Volt</strong></div>
+            <div class="volt-product-mark" aria-label="Volt for Roblox"><img class="volt-product-mark__icon" src="../assets/volt-logo.png" alt=""><strong>Volt</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -137,7 +137,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out" data-i18n="product-pottasium-stock">0 available</span></div>
-            <div class="pottasium-product-mark" aria-label="Potassium for Roblox"><img class="pottasium-product-mark__icon" src="assets/pottasium-logo.png" alt=""><strong>Potassium</strong></div>
+            <div class="pottasium-product-mark" aria-label="Potassium for Roblox"><img class="pottasium-product-mark__icon" src="../assets/pottasium-logo.png" alt=""><strong>Potassium</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -151,7 +151,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-real-stock">Available</span></div>
-            <div class="real-product-mark" aria-label="Real for Roblox"><img class="real-product-mark__icon" src="assets/real-logo.png" alt=""><strong>Real</strong></div>
+            <div class="real-product-mark" aria-label="Real for Roblox"><img class="real-product-mark__icon" src="../assets/real-logo.png" alt=""><strong>Real</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -165,7 +165,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-lumen-stock">Available</span></div>
-            <div class="lumen-product-mark" aria-label="Lumen for Roblox"><img class="lumen-product-mark__icon" src="assets/lumen-logo.png" alt=""><strong>Lumen</strong></div>
+            <div class="lumen-product-mark" aria-label="Lumen for Roblox"><img class="lumen-product-mark__icon" src="../assets/lumen-logo.png" alt=""><strong>Lumen</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
@@ -179,7 +179,7 @@
         <article class="store-card">
           <div class="store-card__visual">
             <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-wave-stock">Available</span></div>
-            <div class="wave-product-mark" aria-label="Wave for Roblox"><img class="wave-product-mark__icon" src="assets/wave-logo.png" alt=""><strong>Wave</strong></div>
+            <div class="wave-product-mark" aria-label="Wave for Roblox"><img class="wave-product-mark__icon" src="../assets/wave-logo.png" alt=""><strong>Wave</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>

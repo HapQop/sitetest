@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CheatBlox — Lumen</title>
+  <title>CheatBlox — Volt</title>
   <style>
     :root { --orange:#ff9d5c; --page:#080808; --panel:#151515; --panel-raised:#1b1b1b; --border:#303030; --muted:#9c9c9c; --green:#48d391; --red:#ff6f69; }
     * { box-sizing:border-box; margin:0; }
@@ -77,15 +77,15 @@
     @media (max-width:560px) { main { width:calc(100% - 28px); margin-bottom:56px; } .product-heading h1 { font-size:36px; } .logo-stage { min-height:240px; } .logo-stage img { width:min(78%,260px); } .info-grid { grid-template-columns:1fr; } .plan-panel { padding:18px; } }
     @media (prefers-reduced-motion:reduce) { .plan-switch button,.plan-panel,.select-plan,.back-link { transition:none; } }
   </style>
-  <link rel="stylesheet" href="site-header.css">
-  <link rel="stylesheet" href="site-footer.css">
-  <script src="site-footer.js" defer></script>
-  <script src="site-i18n.js" defer></script>
-  <script src="site-currency.js" defer></script>
-  <script src="site-orbs.js" defer></script>
-  <script src="site-catalog.js" defer></script>
+  <link rel="stylesheet" href="../styles/site-header.css">
+  <link rel="stylesheet" href="../styles/site-footer.css">
+  <script src="../scripts/site-footer.js" defer></script>
+  <script src="../scripts/site-i18n.js" defer></script>
+  <script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
+  <script src="../scripts/site-orbs.js" defer></script>
+  <script src="../scripts/site-catalog.js" defer></script>
 </head>
-<body data-page="lumen">
+<body data-page="volt">
   <nav class="site-header" aria-label="Primary navigation">
     <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
     <div class="site-nav">
@@ -99,13 +99,18 @@
   <main>
     <a class="back-link" href="products.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h10"/></svg><span data-i18n="product-back-catalog">Back to products</span></a>
     <header class="product-heading">
-      <div class="product-badges"><span class="product-badge" data-i18n="product-executor">Executor</span><span class="stock-badge" data-plan-stock>Available</span></div>
-      <h1>Lumen</h1>
-      <p data-plan-name>Lifetime access</p>
+      <div class="product-badges"><span class="product-badge" data-i18n="product-executor">Executor</span><span class="stock-badge" data-plan-stock>2 available</span></div>
+      <h1>Volt</h1>
+      <p data-plan-name>7-day access</p>
     </header>
+    <div class="plan-switch" role="tablist" aria-label="Choose access period">
+      <button class="is-active" type="button" role="tab" aria-selected="true" data-plan-option="weekly">Weekly</button>
+      <button type="button" role="tab" aria-selected="false" data-plan-option="monthly">30 days</button>
+      <button type="button" role="tab" aria-selected="false" data-plan-option="ninety">90 days</button>
+    </div>
     <div class="detail-grid">
       <section class="showcase" aria-labelledby="about-title">
-        <div class="logo-stage"><img src="assets/lumen-logo.png" alt="Lumen"></div>
+        <div class="logo-stage"><img src="../assets/volt-logo.png" alt="Volt"></div>
         <div class="rating-placeholder" aria-label="Product rating coming soon">
           <h2>Rating</h2>
           <div class="rating-placeholder__stars" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></div>
@@ -130,10 +135,10 @@
       </section>
       <aside class="plan-panel" aria-labelledby="choose-plan-title">
         <span class="eyebrow" data-i18n="product-starting-at">Starting at</span>
-        <strong class="plan-price" data-plan-price>$9.99</strong>
+        <strong class="plan-price" data-plan-price>$4.99</strong>
         <h2 id="choose-plan-title" data-i18n="product-choose-plan">Choose your plan</h2>
-        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Lifetime</span><span class="stock-badge" data-plan-summary-stock>Available</span><strong class="plan-summary__price" data-plan-summary-price>$9.99</strong></div>
-        <button class="select-plan" type="button" data-select-plan><span data-plan-label>Purchase Lifetime</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
+        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Weekly</span><span class="stock-badge" data-plan-summary-stock>2 available</span><strong class="plan-summary__price" data-plan-summary-price>$4.99</strong></div>
+        <button class="select-plan" type="button" data-select-plan><span data-plan-label>Purchase Weekly</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
         <p class="plan-message" data-plan-message data-i18n="product-available-message">Available now</p>
         <form class="promo-form" data-promo-form>
           <label class="promo-form__label" for="promo-code" data-i18n="product-promo-label">Promo code</label>
@@ -146,7 +151,9 @@
   <script>
     (() => {
       const plans = {
-        lifetime: { name: "Lifetime", access: "Lifetime access", price: 9.99, stock: "Available", available: true },
+        weekly: { name: "Weekly", access: "7-day access", price: 4.99, stock: "2 available", available: true },
+        monthly: { name: "30 days", access: "30-day access", price: 15, stock: "0 available", available: false },
+        ninety: { name: "90 days", access: "90-day access", price: 40, stock: "0 available", available: false },
       };
       const page = document.querySelector("main");
       const panel = document.querySelector(".plan-panel");
@@ -162,7 +169,7 @@
       const promoForm = document.querySelector("[data-promo-form]");
       const promoInput = document.querySelector("#promo-code");
       const promoMessage = document.querySelector("[data-promo-message]");
-      let currentPlanId = "lifetime";
+      let currentPlanId = "weekly";
 
       function formatPrice(amount) {
         return window.CheatBloxCurrency ? window.CheatBloxCurrency.format(amount) : `$${amount.toFixed(2)}`;
@@ -203,7 +210,7 @@
         promoMessage.classList.toggle("is-applied", Boolean(code));
         promoMessage.textContent = code ? "Promo code entered. Discount will be checked at checkout." : "Enter a promo code.";
       });
-      setPlan("lifetime");
+      setPlan("weekly");
     })();
   </script>
 </body>

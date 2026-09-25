@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:voxlis.com)",
+      "Bash(python3 -c ' *)",
+      "Bash(where python *)",
+      "Bash(py -c ' *)",
+      "Bash(py create_youtube_thumbnail.py)",
+      "Bash(cp \"C:/Users/1mmx1/AppData/Local/Temp/claude/F--site/a5f6c06c-7387-4417-b553-d1bbe2dbf07c/images/4.png\" \"F:/site/assets/executor-screenshot.png\")",
+      "Bash(py -m pip install --quiet pillow playwright)"
+    ]
+  }
+}

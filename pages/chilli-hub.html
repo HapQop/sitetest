@@ -63,12 +63,12 @@
     .comment-item { padding:12px 13px; border:1px solid #302d2b; border-radius:10px; color:#d4cfcc; background:#111; font-size:13px; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
     @media (max-width:620px) { main { width:calc(100% - 28px); margin-top:32px; } .script-heading { display:block; } .script-heading h1 { font-size:34px; } .script-heading__actions { margin-top:16px; justify-content:flex-start; } .script-platforms { justify-content:flex-start; margin-top:16px; } .description-card,.engagement-card { padding:18px; } .raw-card__top { padding:0 13px; } .raw-code { padding:15px 13px; } .comment-submit { justify-self:stretch; } }
   </style>
-  <link rel="stylesheet" href="site-header.css">
-  <link rel="stylesheet" href="site-footer.css">
-  <script src="site-footer.js" defer></script>
-  <script src="site-i18n.js" defer></script>
-  <script src="site-currency.js" defer></script>
-  <script src="site-orbs.js" defer></script>
+  <link rel="stylesheet" href="../styles/site-header.css">
+  <link rel="stylesheet" href="../styles/site-footer.css">
+  <script src="../scripts/site-footer.js" defer></script>
+  <script src="../scripts/site-i18n.js" defer></script>
+  <script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
+  <script src="../scripts/site-orbs.js" defer></script>
 </head>
 <body data-page="scripts">
   <nav class="site-header" aria-label="Primary navigation">
@@ -82,11 +82,11 @@
       <div><span class="script-heading__eyebrow">Roblox</span><span class="script-heading__badge">NO KEY</span><h1>Chilli Hub</h1><p>Description soon</p></div>
       <div class="script-heading__actions"><button class="favorite-button" type="button" data-script-favorite aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><span data-i18n="scripts-favorite">Favorite</span></button><div class="script-platforms" aria-label="Supported platforms"><span class="platform-badge platform-badge--pc"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="1"/><path d="M8 21h8M12 17v4"/></svg><span data-i18n="scripts-pc">PC</span></span><span class="platform-badge platform-badge--phone"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 18h4"/></svg><span data-i18n="scripts-phone">Phone</span></span></div></div>
     </header>
-    <figure class="script-hero"><img src="assets/chilli-hub.png" alt="Chilli Hub script preview"></figure>
+    <figure class="script-hero"><img src="../assets/chilli-hub.png" alt="Chilli Hub script preview"></figure>
     <section class="description-card"><h2 data-i18n="scripts-description-title">Description</h2><p>Description soon.</p></section>
     <section class="raw-card"><div class="raw-card__top"><h2 data-i18n="scripts-raw-title">View Raw</h2><div class="raw-actions"><button class="raw-action" type="button" data-copy-script data-i18n="scripts-copy">Copy</button><button class="raw-action raw-action--primary" type="button" data-download-script data-i18n="scripts-download">Download</button></div></div><pre class="raw-code"><code data-script-code>loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()</code></pre><p class="raw-status" data-raw-status aria-live="polite"></p></section>
     <section class="engagement-card"><div class="engagement-card__top"><div><div class="engagement-card__title"><h2 data-i18n="scripts-comments-title">Comments</h2><span class="engagement-card__count" data-comments-count>0</span></div><p data-i18n="scripts-community-copy">Share your reaction or leave a comment.</p></div></div><div class="engagement-actions"><button class="engagement-button" type="button" data-reaction="like" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Zm0 10h9.5a2 2 0 0 0 1.9-1.4l2.1-6.5A2 2 0 0 0 18.6 9H14l.7-3.4A2.9 2.9 0 0 0 11.9 2L7 10v10Z"/></svg><span data-i18n="scripts-like">Like</span><span class="engagement-button__count" data-reaction-count="like">0</span></button><button class="engagement-button" type="button" data-reaction="dislike" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M17 14V4h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3ZM17 4H7.5a2 2 0 0 0-1.9 1.4l-2.1 6.5A2 2 0 0 0 5.4 14H10l-.7 3.4A2.9 2.9 0 0 0 12.1 21l4.9-8V4Z"/></svg><span data-i18n="scripts-dislike">Dislike</span><span class="engagement-button__count" data-reaction-count="dislike">0</span></button></div><div class="comments-divider"></div><form class="comment-form" data-comment-form><textarea class="comment-input" data-comment-input data-i18n-placeholder="scripts-comment-placeholder" placeholder="Write a comment" maxlength="1000" required></textarea><button class="comment-submit" type="submit" data-i18n="scripts-comment-submit">Post Comment</button></form><p class="comments-empty" data-comments-empty data-i18n="scripts-no-comments">No comments yet</p><div class="comments-list" data-comments-list></div></section>
   </main>
-  <script src="chilli-hub.js" defer></script>
+  <script src="../scripts/chilli-hub.js" defer></script>
 </body>
 </html>

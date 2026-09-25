@@ -182,8 +182,9 @@ async function login(req, res) {
     const challengeId = await createChallenge({ type: "login", userId: user.id, email: user.email });
     return json(res, 200, { challengeId });
   }
-  const challengeId = await createChallenge({ type: "login", userId: user.id, email: user.email });
-  return json(res, 200, { challengeId });
+  // Для уже верифицированных пользователей сразу создаем сессию без кода
+  await issueSession(res, user.id);
+  return json(res, 200, { ok: true, user: { username: user.username, email: user.email } });
 }
 
 async function forgot(req, res) {
@@ -233,10 +234,34 @@ async function reset(req, res) {
   return json(res, 200, { ok: true });
 }
 
+async function getSession(req, res) {
+  const cookies = req.headers.cookie || "";
+  const match = cookies.match(/auth_session=([^;]+)/);
+  if (!match) return json(res, 401, { error: "Not authenticated." });
+  const token = match[1];
+  const session = await getJson(`auth:session:${digest(token)}`);
+  if (!session) return json(res, 401, { error: "Session expired." });
+  const user = await getJson(`auth:user:${session.userId}`);
+  if (!user) return json(res, 401, { error: "User not found." });
+  return json(res, 200, { ok: true, user: { username: user.username, email: user.email } });
+}
+
+async function logout(req, res) {
+  const cookies = req.headers.cookie || "";
+  const match = cookies.match(/auth_session=([^;]+)/);
+  if (match) {
+    await kv(["DEL", `auth:session:${digest(match[1])}`]);
+  }
+  res.setHeader("Set-Cookie", "auth_session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax");
+  return json(res, 200, { ok: true });
+}
+
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return json(res, 405, { error: "Method not allowed." });
   try {
     const action = String(req.query?.action || "").toLowerCase();
+    if (req.method === "GET" && action === "session") return await getSession(req, res);
+    if (req.method === "POST" && action === "logout") return await logout(req, res);
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed." });
     if (action === "register") return await register(req, res);
     if (action === "login") return await login(req, res);
     if (action === "forgot") return await forgot(req, res);

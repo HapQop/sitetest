@@ -69,6 +69,12 @@
         showStatus("Check your email for the six-digit verification code.", "success");
       } else if (mode === "login") {
         const result = await request("login", data);
+        if (result.ok && result.user) {
+          // Уже верифицированный пользователь - сразу логиним
+          showStatus("Login successful! Redirecting...", "success");
+          setTimeout(() => window.location.href = "index.html", 1000);
+          return;
+        }
         challengeId = result.challengeId;
         showView("verify");
         showStatus("Check your email for the six-digit verification code.", "success");
@@ -80,7 +86,8 @@
         showStatus("If the email exists, a recovery code has been sent.", "success");
       } else if (mode === "verify") {
         await request("verify", { challengeId, code: data.code });
-        showStatus("Email verified. You are signed in.", "success");
+        showStatus("Email verified. You are signed in. Redirecting...", "success");
+        setTimeout(() => window.location.href = "index.html", 1500);
       } else if (mode === "reset") {
         await request("reset", { challengeId, email: resetEmail, code: data.code, password: data.password });
         showView("login");
