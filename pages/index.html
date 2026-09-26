@@ -77,6 +77,188 @@
             font-size: clamp(17px, 2vw, 22px);
             font-weight: 600;
         }
+        .payment-section {
+            width: min(1200px, calc(100% - 48px));
+            margin: 0 auto;
+        }
+        .payment-panel {
+            overflow: hidden;
+            padding: 24px;
+            border: 1px solid #2b2927;
+            border-radius: 20px;
+            background: #111110;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, .2), 0 0 34px rgba(255, 157, 92, .045);
+        }
+        .payment-panel h2 {
+            margin-bottom: 18px;
+            color: #f4eee9;
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .payment-tickers {
+            display: grid;
+            gap: 12px;
+            min-width: 0;
+        }
+        .payment-ticker {
+            overflow: hidden;
+            min-width: 0;
+            padding: 2px 0;
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+        }
+        .payment-track {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+        }
+        .payment-track--right {
+            animation: payment-marquee-right 36s linear infinite;
+        }
+        .payment-track--left {
+            animation: payment-marquee-left 40s linear infinite;
+        }
+        .payment-track__group {
+            display: flex;
+            flex: 0 0 auto;
+            gap: 12px;
+            padding-right: 12px;
+            list-style: none;
+        }
+        .payment-method {
+            display: grid;
+            width: 70px;
+            height: 62px;
+            flex: 0 0 70px;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid #302d2a;
+            border-radius: 13px;
+            background: #181716;
+            transition: border-color .2s ease, background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+        }
+        .payment-method:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 157, 92, .65);
+            background: #211b17;
+            box-shadow: 0 7px 20px rgba(255, 157, 92, .1);
+        }
+        .payment-method img {
+            display: block;
+            width: 40px;
+            height: 40px;
+            max-width: 100%;
+            border-radius: 8px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+        .payment-method img[src$="solana.png"] {
+            width: 56px;
+            height: 56px;
+            max-width: none;
+            border-radius: 0;
+        }
+        .payment-method img[src$="google-pay.png"] {
+            width: 56px;
+            height: 56px;
+            max-width: none;
+            background: #fff;
+        }
+        .payment-method img[src$="payment-transfer.jpg"] {
+            width: 54px;
+            height: 54px;
+            max-width: none;
+        }
+        .payment-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .payment-stat {
+            display: flex;
+            min-width: 0;
+            min-height: 142px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            border: 1px solid #292725;
+            border-radius: 16px;
+            background: #111110;
+            text-align: center;
+            transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+        .payment-stat:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 157, 92, .42);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .22), 0 0 24px rgba(255, 157, 92, .045);
+        }
+        .payment-stat__value {
+            color: #ff9d5c;
+            font-size: 46px;
+            font-weight: 850;
+            line-height: 1;
+        }
+        .payment-stat h3 {
+            margin-top: 9px;
+            color: #e6e1dd;
+            font-size: 15px;
+            font-weight: 750;
+            line-height: 1.35;
+        }
+        .payment-rating__stars {
+            display: flex;
+            gap: 3px;
+            margin-top: 9px;
+            color: #ff9d5c;
+            font-size: 17px;
+            line-height: 1;
+        }
+        .payment-rating h3 {
+            margin-top: 7px;
+            color: #a9a29c;
+            font-size: 13px;
+        }
+        .payment-delivery__icon {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            margin-bottom: 10px;
+            place-items: center;
+            border: 1px solid rgba(255, 157, 92, .3);
+            border-radius: 11px;
+            color: #ff9d5c;
+            background: rgba(255, 157, 92, .08);
+        }
+        .payment-delivery__icon svg {
+            width: 19px;
+            height: 19px;
+        }
+        .payment-delivery p {
+            max-width: 290px;
+            margin-top: 6px;
+            color: #918a85;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .payment-visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            clip-path: inset(50%);
+        }
+        @keyframes payment-marquee-right {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes payment-marquee-left {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
         .faq-section {
             width: min(1200px, calc(100% - 48px));
             margin: 80px auto 120px;
@@ -181,6 +363,39 @@
             line-height: 1.7;
         }
         @media (max-width: 768px) {
+            .payment-panel {
+                padding: 20px 16px;
+                border-radius: 17px;
+            }
+            .payment-track__group {
+                gap: 10px;
+                padding-right: 10px;
+            }
+            .payment-method {
+                width: 62px;
+                height: 58px;
+                flex-basis: 62px;
+            }
+            .payment-method img {
+                width: 36px;
+                height: 36px;
+            }
+            .payment-method img[src$="solana.png"],
+            .payment-method img[src$="google-pay.png"] {
+                width: 52px;
+                height: 52px;
+            }
+            .payment-method img[src$="payment-transfer.jpg"] {
+                width: 50px;
+                height: 50px;
+            }
+            .payment-stat {
+                min-height: 132px;
+                padding: 16px 10px;
+            }
+            .payment-stat__value {
+                font-size: 40px;
+            }
             .faq-section {
                 margin: 60px auto 80px;
                 padding: 40px 0;
@@ -197,9 +412,55 @@
                 font-size: 14px;
             }
         }
+        @media (max-width: 520px) {
+            .payment-section {
+                width: calc(100% - 32px);
+            }
+            .payment-panel {
+                padding: 18px 12px;
+            }
+            .payment-panel h2 {
+                margin-bottom: 14px;
+                font-size: 14px;
+            }
+            .payment-tickers {
+                gap: 9px;
+            }
+            .payment-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 9px;
+                margin-top: 10px;
+            }
+            .payment-stat {
+                min-height: 126px;
+                padding: 14px 9px;
+            }
+            .payment-stat__value {
+                font-size: 38px;
+            }
+            .payment-stat h3 {
+                font-size: 14px;
+            }
+            .payment-stat--delivery {
+                grid-column: 1 / -1;
+                min-height: 112px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .payment-track {
+                animation: none;
+                transform: none;
+                will-change: auto;
+            }
+            .payment-method,
+            .payment-stat {
+                transition: none;
+            }
+        }
     </style>
     <link rel="stylesheet" href="../styles/site-header.css">
     <script src="../scripts/site-header.js" defer></script>
+    <script src="../scripts/site-reveal.js" defer></script>
       <link rel="stylesheet" href="../styles/site-footer.css">
       <link rel="stylesheet" href="../styles/site-theme.css">
       <script src="../scripts/site-footer.js" defer></script><script src="../scripts/site-i18n.js" defer></script><script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script><script src="../scripts/site-theme.js" defer></script>
@@ -232,6 +493,98 @@
         <h1>Cheat<span>Blox</span></h1>
         <p data-i18n="home-tagline">Открой Максимум возможностей</p>
     </main>
+
+    <section class="payment-section" aria-labelledby="payment-heading">
+        <div class="payment-panel">
+            <h2 id="payment-heading">PAYMENT METHODS</h2>
+            <div class="payment-tickers" role="group" aria-label="Accepted payment methods">
+                <div class="payment-ticker">
+                    <div class="payment-track payment-track--right">
+                        <ul class="payment-track__group">
+                            <li class="payment-method"><img src="../assets/payment-icons/wallet-blue.jpg" alt="Payment wallet" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/litecoin.png" alt="Litecoin" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/solana.png" alt="Solana" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/bitcoin.png" alt="Bitcoin" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tether.png" alt="Tether (USDT)" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/paypal.png" alt="PayPal" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/payment-transfer.jpg" alt="Digital payment" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ethereum.png" alt="Ethereum" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/google-pay.png" alt="Google Pay" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ton.png" alt="TON Wallet" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/usdc.png" alt="USDC" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/binance.png" alt="Binance" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tron.png" alt="TRON" draggable="false"></li>
+                        </ul>
+                        <ul class="payment-track__group" aria-hidden="true">
+                            <li class="payment-method"><img src="../assets/payment-icons/wallet-blue.jpg" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/litecoin.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/solana.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/bitcoin.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tether.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/paypal.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/payment-transfer.jpg" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ethereum.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/google-pay.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ton.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/usdc.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/binance.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tron.png" alt="" draggable="false"></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="payment-ticker" aria-hidden="true">
+                    <div class="payment-track payment-track--left">
+                        <ul class="payment-track__group">
+                            <li class="payment-method"><img src="../assets/payment-icons/paypal.png" alt="PayPal" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tron.png" alt="TRON" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/litecoin.png" alt="Litecoin" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ethereum.png" alt="Ethereum" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/binance.png" alt="Binance" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/solana.png" alt="Solana" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/google-pay.png" alt="Google Pay" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/wallet-blue.jpg" alt="Payment wallet" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tether.png" alt="Tether (USDT)" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/bitcoin.png" alt="Bitcoin" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/payment-transfer.jpg" alt="Digital payment" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ton.png" alt="TON Wallet" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/usdc.png" alt="USDC" draggable="false"></li>
+                        </ul>
+                        <ul class="payment-track__group" aria-hidden="true">
+                            <li class="payment-method"><img src="../assets/payment-icons/paypal.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tron.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/litecoin.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ethereum.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/binance.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/solana.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/google-pay.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/wallet-blue.jpg" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/tether.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/bitcoin.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/payment-transfer.jpg" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/ton.png" alt="" draggable="false"></li>
+                            <li class="payment-method"><img src="../assets/payment-icons/usdc.png" alt="" draggable="false"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="payment-stats">
+            <article class="payment-stat">
+                <span class="payment-stat__value">0</span>
+                <h3>Orders</h3>
+            </article>
+            <article class="payment-stat payment-rating">
+                <span class="payment-stat__value">5.0</span>
+                <span class="payment-rating__stars" role="img" aria-label="5 out of 5 stars">★★★★★</span>
+                <h3>Average rating</h3>
+            </article>
+            <article class="payment-stat payment-stat--delivery payment-delivery">
+                <span class="payment-delivery__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 10-13h-7z"/></svg></span>
+                <h3>Instant Delivery</h3>
+                <p>Your order is delivered as soon as payment is confirmed.</p>
+            </article>
+        </div>
+    </section>
 
     <section class="faq-section">
         <div class="faq-header">

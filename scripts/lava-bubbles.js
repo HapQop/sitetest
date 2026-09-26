@@ -2,6 +2,7 @@ class LavaBubbleSystem {
   constructor() {
     if (!window.THREE || document.querySelector(".ambient-orbs")) return;
 
+    const system = this;
     const THREE = window.THREE;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mobile = window.innerWidth < 700;
@@ -31,16 +32,8 @@ class LavaBubbleSystem {
     const pointer = { x: null, y: null };
     const targetVisible = mobile ? 2 + (Math.random() < 0.65 ? 1 : 0) :
       3 + (Math.random() < 0.55 ? 1 : 0);
-    const sizes = [0.92 + Math.random() * 0.10, 0.80 + Math.random() * 0.10,
-      0.62 + Math.random() * 0.12, 0.72 + Math.random() * 0.13];
-    for (let i = sizes.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [sizes[i], sizes[j]] = [sizes[j], sizes[i]];
-    }
-    const orbConfigs = sizes.map((size) => ({
-      size,
-      speed: 0.16 + Math.random() * 0.09
-    }));
+    const poolSize = targetVisible + 3;
+    const world = [];
     let lastSpawnX = null;
 
     const vertexShader = `
@@ -51,6 +44,7 @@ class LavaBubbleSystem {
       uniform float uPressure;
       uniform vec2 uNeighbor;
       uniform float uNeighborStrength;
+      uniform float uEmergence;
       varying vec3 vPoint;
       varying vec3 vNormal;
       varying vec3 vView;
@@ -62,6 +56,8 @@ class LavaBubbleSystem {
                     + 0.042 * sin(n.y * 5.7 + n.z * 3.1 - slow * 0.8)
                     + 0.020 * sin(n.x * 8.4 - n.z * 5.2 + slow * 0.65);
         vec3 p = n * (1.0 + swell) * uShape;
+        p.xy *= mix(vec2(0.57, 0.82), vec2(1.0), uEmergence);
+        p.y += (1.0 - uEmergence) * (0.14 + 0.11 * (1.0 - n.y));
 
         vec2 delta = p.xy - uPointer;
         float dent = exp(-dot(delta, delta) * 7.0) * uPressure * smoothstep(-0.1, 0.45, n.z);
@@ -216,32 +212,88 @@ class LavaBubbleSystem {
         uPressure: { value: 0 },
         uNeighbor: { value: new THREE.Vector2() },
         uNeighborStrength: { value: 0 },
+        uEmergence: { value: 1 },
         uTint: { value: orb.tint }
       };
     }
 
+    const lake = document.createElement("div");
+    lake.className = "lava-source";
+    lake.setAttribute("aria-hidden", "true");
+    document.body.appendChild(lake);
+    const lakeUniforms = {
+      uTime: { value: 0 },
+      uDetail: { value: 1 },
+      uPulse: { value: 0 },
+      uBirthX: { value: 0.5 }
+    };
+    const lakeVertex = `
+      uniform float uTime;
+      uniform float uPulse;
+      uniform float uBirthX;
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        vec3 p = position;
+        float along = uv.x * 6.28318;
+        float wave = sin(along * 1.7 + uTime * 0.42) * 0.026
+                   + sin(along * 4.1 - uTime * 0.71) * 0.014;
+        float birth = exp(-pow((uv.x - uBirthX) * 8.0, 2.0)) * uPulse * 0.085;
+        p.y += (wave + birth) * smoothstep(0.72, 1.0, uv.y);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }
+    `;
+    const lakeFragment = `
+      uniform float uTime;
+      uniform float uPulse;
+      uniform float uBirthX;
+      varying vec2 vUv;
+      ${liquidFunctions}
+      void main() {
+        vec2 uv = vUv;
+        float surface = smoothstep(0.80, 1.0, uv.y);
+        vec3 p = vec3(uv.x * 7.2, uv.y * 2.6, 0.38);
+        vec4 fluid = liquid(p, uTime * 1.15, 3.7);
+        vec4 deep = liquid(p * 0.74 + vec3(1.7, 0.4, 2.1), uTime * 0.73, 8.4);
+        float current = sin(uv.x * 19.0 + fluid.x * 8.0 - uTime * 0.30) * 0.5 + 0.5;
+        float hot = fluid.z * 0.55 + deep.z * 0.42 + fluid.w * 0.10;
+        float birth = exp(-pow((uv.x - uBirthX) * 9.0, 2.0)) * uPulse * surface;
+        vec3 color = mix(vec3(0.14, 0.025, 0.015), vec3(0.67, 0.17, 0.035),
+                         smoothstep(0.22, 0.73, fluid.x) * 0.75 + surface * 0.12);
+        color += vec3(0.95, 0.36, 0.055) * (hot * 0.44 + current * fluid.z * 0.12);
+        color += vec3(1.0, 0.68, 0.20) * (fluid.z * 0.18 + birth * 0.5);
+        color += vec3(0.87, 0.31, 0.08) * surface * (0.20 + deep.x * 0.25);
+        float rim = smoothstep(0.935, 0.995, uv.y) * (0.30 + fluid.x * 0.25);
+        color += vec3(1.0, 0.57, 0.17) * rim;
+        float alpha = 0.75 + fluid.x * 0.17 + surface * 0.06;
+        gl_FragColor = vec4(color, min(alpha, 0.98));
+      }
+    `;
+    const lakeMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(1, 1, mobile ? 48 : 80, 4),
+      new THREE.ShaderMaterial({
+        uniforms: lakeUniforms, vertexShader: lakeVertex, fragmentShader: lakeFragment,
+        transparent: true, depthWrite: false, side: THREE.DoubleSide
+      })
+    );
+    lakeMesh.renderOrder = 0;
+    scene.add(lakeMesh);
+
     class LiquidOrb {
-      constructor(config, index) {
+      constructor(index) {
         this.index = index;
-        this.sizeRatio = config.size;
-        this.speed = config.speed;
-        this.x = window.innerWidth * 0.5;
-        this.y = window.innerHeight * 1.5;
-        this.vx = 0;
-        this.vy = 0;
-        this.driftSpeed = (Math.random() - 0.5) * 0.018;
-        this.readyAt = Infinity;
+        this.record = null;
+        this.screenY = Infinity;
         this.pressure = 0;
+        this.pressureVelocity = 0;
+        this.impactX = 0;
+        this.impactY = 0;
+        this.impactVX = 0;
+        this.impactVY = 0;
         this.neighbor = new THREE.Vector2();
-        this.pointerLocal = new THREE.Vector2();
         this.neighborStrength = 0;
-        this.phase = Math.random() * 20;
-        this.sizeVariation = 0.92 + Math.random() * 0.16;
-        this.shape = new THREE.Vector3(
-          0.96 + Math.random() * 0.14,
-          0.92 + Math.random() * 0.13,
-          0.82 + Math.random() * 0.18
-        );
+        this.phase = 0;
+        this.shape = new THREE.Vector3(1, 1, 1);
         this.tint = new THREE.Vector3(0.88, 0.30, 0.045);
         this.uniforms = makeUniforms(this);
 
@@ -268,7 +320,6 @@ class LavaBubbleSystem {
         this.core.renderOrder = 2;
         this.front.renderOrder = 3;
         scene.add(this.halo, this.rear, this.core, this.front);
-        this.setSize(window.innerWidth, window.innerHeight);
         this.setActive(false);
       }
 
@@ -280,58 +331,56 @@ class LavaBubbleSystem {
         this.front.visible = active;
       }
 
-      setSize(width, height) {
-        const largeDiameter = Math.min(390, Math.max(210, width * 0.29), height * 0.62);
-        this.baseRadius = largeDiameter * this.sizeRatio * 0.5;
-        this.radius = this.baseRadius * (this.sizeVariation || 1);
+      bind(record) {
+        if (this.record === record) return;
+        this.record = record;
+        this.pressure = 0;
+        this.pressureVelocity = 0;
+        this.impactX = 0;
+        this.impactY = 0;
+        this.impactVX = 0;
+        this.impactVY = 0;
+        if (!record) { this.setActive(false); return; }
+        this.radius = record.radius;
+        this.phase = record.phase;
+        this.shape.copy(record.shape);
+        this.uniforms.uPhase.value = this.phase;
         this.rear.scale.setScalar(this.radius);
         this.front.scale.setScalar(this.radius);
         this.core.scale.setScalar(this.radius * 0.84);
         this.halo.scale.setScalar(this.radius * 1.75);
-      }
-
-      recycle(width, height) {
-        this.vx = 0;
-        this.vy = 0;
-        this.phase = Math.random() * 20;
-        this.sizeVariation = 0.92 + Math.random() * 0.16;
-        this.driftSpeed = (Math.random() - 0.5) * 0.018;
-        this.shape.set(0.96 + Math.random() * 0.14, 0.92 + Math.random() * 0.13, 0.82 + Math.random() * 0.18);
-        this.uniforms.uPhase.value = this.phase;
-        this.setSize(width, height);
-        this.y = height + this.radius * 0.85;
-        this.x = chooseSpawnX(this, width);
         this.setActive(true);
       }
 
-      update(time, delta, width, height, flowTime = time) {
-        if (!this.active) return;
-        this.vx *= Math.pow(0.965, delta);
-        this.vy *= Math.pow(0.94, delta);
-        this.x += (this.vx + this.driftSpeed) * delta;
-        this.y += (this.vy - this.speed) * delta;
-        const edge = mobile ? 0 : this.radius * 0.9;
-        this.x = Math.max(edge, Math.min(width - edge, this.x));
-        if (this.y < -this.radius) {
-          this.setActive(false);
-          this.readyAt = time + 150 + Math.random() * 1200;
-          return;
-        }
-
-        const localX = pointer.x === null ? 0 : (pointer.x - this.x) / this.radius;
-        const localY = pointer.y === null ? 0 : (this.y - pointer.y) / this.radius;
+      update(time, delta, width, height, scrollY, flowTime = time) {
+        if (!this.record) return;
+        const record = this.record;
+        this.screenY = record.worldY - scrollY;
+        const localX = pointer.x === null ? 0 : (pointer.x - record.x) / this.radius;
+        const localY = pointer.y === null ? 0 : (this.screenY - pointer.y) / this.radius;
         const distance = Math.hypot(localX, localY);
-        const target = pointer.x === null ? 0 : 0.9 * (1 - THREE.MathUtils.smoothstep(distance, 0.45, 1.4));
-        this.pressure += (target - this.pressure) * Math.min(1, delta * 0.055);
-        this.uniforms.uPointer.value.lerp(this.pointerLocal.set(localX, localY), Math.min(1, delta * 0.13));
+        const proximity = pointer.x === null ? 0 : 1 - THREE.MathUtils.smoothstep(distance, 0.45, 1.35);
+        const target = 0.95 * proximity * proximity;
+        const spring = Math.min(delta, 2.5);
+        this.pressureVelocity = (this.pressureVelocity + (target - this.pressure) * 0.018 * spring) * Math.pow(0.84, spring);
+        this.pressure = Math.max(0, Math.min(1, this.pressure + this.pressureVelocity * spring));
+        const targetX = pointer.x === null ? this.impactX : localX;
+        const targetY = pointer.y === null ? this.impactY : localY;
+        this.impactVX = (this.impactVX + (targetX - this.impactX) * 0.025 * spring) * Math.pow(0.79, spring);
+        this.impactVY = (this.impactVY + (targetY - this.impactY) * 0.025 * spring) * Math.pow(0.79, spring);
+        this.impactX += this.impactVX * spring;
+        this.impactY += this.impactVY * spring;
+        this.uniforms.uPointer.value.set(this.impactX, this.impactY);
         this.uniforms.uPressure.value = this.pressure;
         this.uniforms.uNeighbor.value.copy(this.neighbor);
         this.uniforms.uNeighborStrength.value = this.neighborStrength;
         this.uniforms.uTime.value = time * 0.001;
         this.uniforms.uFlowTime.value = flowTime * 0.001;
+        this.uniforms.uEmergence.value = record.bornAt < 0 ? 1 :
+          THREE.MathUtils.smoothstep(time - record.bornAt, 0, 4800);
 
-        const x = this.x - width / 2;
-        const y = height / 2 - this.y;
+        const x = record.x - width / 2;
+        const y = height / 2 - this.screenY;
         this.rear.position.set(x, y, 0);
         this.core.position.set(x, y, 0);
         this.front.position.set(x, y, 0);
@@ -339,83 +388,139 @@ class LavaBubbleSystem {
       }
     }
 
-    const orbs = orbConfigs.map((config, index) => new LiquidOrb(config, index));
+    const orbs = Array.from({ length: poolSize }, (_, index) => new LiquidOrb(index));
     let width = window.innerWidth;
     let height = window.innerHeight;
+    let scrollY = window.scrollY || 0;
+    let sourceY = 0;
+    let lastBirthX = 0.5;
+    let birthPulse = 0;
+    const spacing = Math.max(170, height / (targetVisible + 0.3));
 
-    function chooseSpawnX(orb, viewportWidth) {
-      const minX = mobile ? 0 : Math.min(viewportWidth / 2, orb.radius * 1.05);
-      const maxX = viewportWidth - minX;
-      let bestX = viewportWidth / 2;
-      let bestScore = -1;
-      for (let attempt = 0; attempt < 18; attempt++) {
-        const x = attempt === 16 ? minX : attempt === 17 ? maxX :
-          minX + Math.random() * (maxX - minX);
+    function radiusFor(sizeRatio) {
+      const diameter = Math.min(390, Math.max(210, width * 0.29), height * 0.62);
+      return diameter * sizeRatio * 0.5;
+    }
+
+    function chooseSpawnX(record) {
+      const inset = Math.min(record.radius * 0.65, width * 0.12);
+      const minX = inset;
+      const maxX = width - inset;
+      let bestX = width / 2;
+      let bestScore = -Infinity;
+      for (let attempt = 0; attempt < 16; attempt++) {
+        const x = minX + Math.random() * (maxX - minX);
         let clearance = 2;
-        for (const other of orbs) {
-          if (other === orb || !other.active) continue;
+        for (const other of world) {
+          if (Math.abs(record.worldY - other.worldY) > spacing * 1.8) continue;
           clearance = Math.min(clearance,
-            Math.hypot(x - other.x, orb.y - other.y) / ((orb.radius + other.radius) * 1.12));
+            Math.hypot(x - other.x, record.worldY - other.worldY) / (record.radius + other.radius));
         }
-        const spread = lastSpawnX === null ? 2 : Math.abs(x - lastSpawnX) / (viewportWidth * 0.15);
-        const score = clearance * 10 + Math.min(spread, 2);
-        if (score > bestScore) {
-          bestScore = score;
-          bestX = x;
-        }
-        if (clearance >= 1 && spread >= 1) break;
+        const spread = lastSpawnX === null ? 1 : Math.abs(x - lastSpawnX) / width;
+        const score = clearance * 3 + spread;
+        if (score > bestScore) { bestScore = score; bestX = x; }
+        if (clearance > 1.15 && spread > 0.3) break;
       }
       lastSpawnX = bestX;
       return bestX;
     }
 
-    const startTime = performance.now();
-    const spawnGap = 1400 + Math.random() * 1100;
-    let lastActivationTime = startTime;
-    const initialVisible = reducedMotion ? targetVisible : 2;
-    orbs.forEach((orb, index) => {
-      if (index < initialVisible) {
-        orb.y = reducedMotion ? height * ((index + 1) / (initialVisible + 1)) :
-          height * (index === 0 ? 0.18 + Math.random() * 0.22 : 0.74 + Math.random() * 0.20);
-        orb.x = chooseSpawnX(orb, width);
-        orb.setActive(true);
-      } else if (index < targetVisible) {
-        orb.readyAt = startTime + 700 + Math.random() * 2000 + (index - 2) * 2500;
-      }
-    });
+    function createRecord(worldY, bornAt = -1) {
+      const sizeRatio = 0.65 + Math.random() * 0.37;
+      const record = {
+        x: 0, worldY, sizeRatio, radius: radiusFor(sizeRatio),
+        speed: 0.16 + Math.random() * 0.09,
+        driftSpeed: (Math.random() - 0.5) * 0.028,
+        vx: 0, vy: 0, phase: Math.random() * 20,
+        shape: new THREE.Vector3(
+          0.96 + Math.random() * 0.14,
+          0.92 + Math.random() * 0.13,
+          0.82 + Math.random() * 0.18
+        ),
+        bornAt
+      };
+      record.x = chooseSpawnX(record);
+      return record;
+    }
 
-    function resize() {
-      const oldWidth = width;
-      const oldHeight = height;
-      width = window.innerWidth;
-      height = window.innerHeight;
-      camera.left = -width / 2;
-      camera.right = width / 2;
-      camera.top = height / 2;
-      camera.bottom = -height / 2;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-      orbs.forEach((orb) => {
-        orb.x *= width / oldWidth;
-        orb.y *= height / oldHeight;
-        orb.setSize(width, height);
-        orb.update(0, 0, width, height);
-      });
-      renderer.render(scene, camera);
+    function readSourceY() {
+      const rect = lake.getBoundingClientRect();
+      return rect.top + (window.scrollY || 0) + 20;
+    }
+
+    function seedWorld() {
+      sourceY = readSourceY();
+      const count = Math.min(80, Math.ceil((sourceY + height * 0.5) / spacing));
+      const actualSpacing = (sourceY + height * 0.5) / count;
+      for (let index = 0; index < count; index++) {
+        const y = sourceY - actualSpacing * (index + 0.42 + Math.random() * 0.16);
+        world.push(createRecord(y));
+      }
+      world.sort((a, b) => a.worldY - b.worldY);
+    }
+
+    function getVisibleRecords() {
+      return world.filter((record) => {
+        const screenY = record.worldY - scrollY;
+        return screenY + record.radius * 1.2 > 0 && screenY - record.radius * 1.2 < height;
+      }).sort((a, b) => a.worldY - b.worldY).slice(0, poolSize);
+    }
+
+    function bindVisible() {
+      const visible = getVisibleRecords();
+      for (const orb of orbs) {
+        if (orb.record && !visible.includes(orb.record)) orb.bind(null);
+      }
+      for (const record of visible) {
+        if (orbs.some((orb) => orb.record === record)) continue;
+        const free = orbs.find((orb) => !orb.record);
+        if (free) free.bind(record);
+      }
+    }
+
+    function updateLake(time) {
+      const rect = lake.getBoundingClientRect();
+      const top = rect.top + 20;
+      const depth = Math.max(1, rect.height - 20);
+      lakeMesh.visible = top < height && top + depth > 0;
+      if (!lakeMesh.visible) return;
+      lakeMesh.scale.set(width, depth, 1);
+      lakeMesh.position.set(0, height / 2 - top - depth / 2, -20);
+      lakeUniforms.uTime.value = time * 0.001;
+      lakeUniforms.uPulse.value = birthPulse;
+      lakeUniforms.uBirthX.value = lastBirthX;
+    }
+
+    function updateWorld(delta, time) {
+      for (const record of world) {
+        record.vx *= Math.pow(0.96, delta);
+        record.vy *= Math.pow(0.94, delta);
+        record.x += (record.driftSpeed + record.vx) * delta;
+        record.worldY += (record.vy - record.speed) * delta;
+        const inset = Math.min(record.radius * 0.65, width * 0.12);
+        record.x = Math.max(inset, Math.min(width - inset, record.x));
+      }
+      while (world.length && world[0].worldY < -world[0].radius * 1.5) world.shift();
+      sourceY = readSourceY();
+      const lowest = world[world.length - 1];
+      if (world.length < 80 && (!lowest || sourceY - lowest.worldY > spacing * 0.88)) {
+        const record = createRecord(sourceY + radiusFor(0.8) * 0.72, time);
+        world.push(record);
+        lastBirthX = record.x / width;
+        birthPulse = 1;
+      }
+      birthPulse *= Math.pow(0.989, delta);
     }
 
     function interact(delta) {
-      orbs.forEach((orb) => {
-        orb.neighbor.set(0, 0);
-        orb.neighborStrength = 0;
-      });
+      for (const orb of orbs) { orb.neighbor.set(0, 0); orb.neighborStrength = 0; }
       for (let i = 0; i < orbs.length; i++) {
         for (let j = i + 1; j < orbs.length; j++) {
           const a = orbs[i];
           const b = orbs[j];
-          if (!a.active || !b.active) continue;
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
+          if (!a.record || !b.record) continue;
+          const dx = b.record.x - a.record.x;
+          const dy = b.record.worldY - a.record.worldY;
           const distance = Math.max(1, Math.hypot(dx, dy));
           const reach = (a.radius + b.radius) * 1.22;
           if (distance >= reach) continue;
@@ -431,15 +536,43 @@ class LavaBubbleSystem {
           const overlap = a.radius + b.radius - distance;
           if (overlap > 0) {
             const force = Math.min(0.024, overlap * 0.00018) * delta;
-            const aShare = b.radius / (a.radius + b.radius);
-            const bShare = a.radius / (a.radius + b.radius);
-            a.vx -= dx / distance * force * aShare;
-            a.vy -= dy / distance * force * aShare;
-            b.vx += dx / distance * force * bShare;
-            b.vy += dy / distance * force * bShare;
+            a.record.vx -= dx / distance * force;
+            a.record.vy -= dy / distance * force;
+            b.record.vx += dx / distance * force;
+            b.record.vy += dy / distance * force;
           }
         }
       }
+    }
+
+    function renderFrame(time, delta, flowTime = time) {
+      scrollY = window.scrollY || 0;
+      this.scrollY = scrollY;
+      updateWorld(delta, time);
+      bindVisible();
+      interact(delta);
+      for (const orb of orbs) orb.update(time, delta, width, height, scrollY, flowTime);
+      updateLake(time);
+      this.sourceY = sourceY;
+      renderer.render(scene, camera);
+    }
+
+    function resize() {
+      const oldWidth = width;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      camera.left = -width / 2;
+      camera.right = width / 2;
+      camera.top = height / 2;
+      camera.bottom = -height / 2;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+      for (const record of world) {
+        record.x *= width / oldWidth;
+        record.radius = radiusFor(record.sizeRatio);
+      }
+      for (const orb of orbs) orb.bind(null);
+      renderFrame.call(system, performance.now(), 0);
     }
 
     document.addEventListener("pointermove", (event) => {
@@ -450,28 +583,18 @@ class LavaBubbleSystem {
     document.addEventListener("pointerleave", clearPointer);
     window.addEventListener("blur", clearPointer);
     window.addEventListener("resize", resize);
-    resize();
-
-    function maintainFlow(time, flowTime) {
-      let visible = 0;
-      for (const orb of orbs) {
-        if (orb.active && orb.y + orb.radius > 0 && orb.y - orb.radius < height) visible++;
-      }
-      while (visible < targetVisible) {
-        if (visible >= 2 && time - lastActivationTime < spawnGap) break;
-        const parked = orbs.find((orb) => !orb.active && (time >= orb.readyAt || visible < 2));
-        if (!parked) break;
-        parked.recycle(width, height);
-        parked.update(time, 0, width, height, flowTime);
-        lastActivationTime = time;
-        visible++;
-      }
-    }
-
+    seedWorld();
     this.renderer = renderer;
     this.orbs = orbs;
+    this.world = world;
+    this.lake = lake;
     this.targetVisible = targetVisible;
-    if (reducedMotion) return;
+    this.getVisibleRecords = getVisibleRecords;
+    resize();
+    if (reducedMotion) {
+      window.addEventListener("scroll", () => renderFrame.call(system, performance.now(), 0), { passive: true });
+      return;
+    }
     let lastTime = performance.now();
     let sampleStart = lastTime;
     let sampleFrames = 0;
@@ -483,10 +606,7 @@ class LavaBubbleSystem {
         const flowInterval = pixelRatio < maxPixelRatio * 0.75 ? 66 :
           pixelRatio < maxPixelRatio * 0.9 ? 50 : mobile ? 33 : 0;
         if (time - flowTime >= flowInterval) flowTime = time;
-        interact(delta);
-        orbs.forEach((orb) => orb.update(time, delta, width, height, flowTime));
-        maintainFlow(time, flowTime);
-        renderer.render(scene, camera);
+        renderFrame.call(system, time, delta, flowTime);
 
         sampleFrames++;
         const sampleDuration = time - sampleStart;
@@ -499,6 +619,7 @@ class LavaBubbleSystem {
             renderer.setPixelRatio(pixelRatio);
             const detail = pixelRatio < maxPixelRatio * 0.82 ? 0 : 1;
             orbs.forEach((orb) => { orb.uniforms.uDetail.value = detail; });
+            lakeUniforms.uDetail.value = detail;
           }
           sampleStart = time;
           sampleFrames = 0;
