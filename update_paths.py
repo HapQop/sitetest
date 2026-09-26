@@ -21,17 +21,13 @@ def update_html_file(filepath):
     content = re.sub(r'src="site-footer\.js"', 'src="../scripts/site-footer.js"', content)
     content = re.sub(r'src="site-i18n\.js"', 'src="../scripts/site-i18n.js"', content)
     content = re.sub(r'src="site-currency\.js"', 'src="../scripts/site-currency.js"', content)
-    content = re.sub(r'src="site-orbs\.js"', 'src="../scripts/site-orbs.js"', content)
     content = re.sub(r'src="site-catalog\.js"', 'src="../scripts/site-catalog.js"', content)
     content = re.sub(r'src="catalog\.js"', 'src="../scripts/catalog.js"', content)
-    content = re.sub(r'src="scripts\.js"', 'src="../scripts/scripts.js"', content)
     content = re.sub(r'src="products\.js"', 'src="../scripts/products.js"', content)
     content = re.sub(r'src="auth\.js"', 'src="../scripts/auth.js"', content)
     content = re.sub(r'src="admin\.js"', 'src="../scripts/admin.js"', content)
     content = re.sub(r'src="reviews\.js"', 'src="../scripts/reviews.js"', content)
     content = re.sub(r'src="exploits\.js"', 'src="../scripts/exploits.js"', content)
-    content = re.sub(r'src="infinite-yield\.js"', 'src="../scripts/infinite-yield.js"', content)
-    content = re.sub(r'src="chilli-hub\.js"', 'src="../scripts/chilli-hub.js"', content)
     content = re.sub(r'src="capture_thumbnail\.js"', 'src="../scripts/capture_thumbnail.js"', content)
 
     # Обновляем пути к изображениям в assets

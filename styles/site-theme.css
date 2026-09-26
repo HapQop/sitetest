@@ -15,8 +15,13 @@ body.dark-theme {
 }
 
 body.dark-theme .site-header {
+  background: transparent;
+  border-color: transparent;
+}
+
+body.dark-theme .site-header.is-scrolled {
   background: #1b1b1b;
-  border-color: #404040;
+  border-color: rgba(255, 157, 92, .4);
 }
 
 body.dark-theme .site-brand {

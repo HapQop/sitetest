@@ -10,13 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
         '<div class="site-footer__grid">' +
           '<section>' +
             '<a class="site-footer__brand" href="index.html">Cheat<span>Blox</span></a>' +
-            '<p class="site-footer__description" data-i18n="footer-description">CheatBlox is a streamlined gaming hub for versions, scripts, and community resources.</p>' +
+            '<p class="site-footer__description" data-i18n="footer-description">CheatBlox is a streamlined gaming hub for versions, products, and community resources.</p>' +
           '</section>' +
           '<section>' +
             '<h2 class="site-footer__title" data-i18n="footer-navigation">Navigation</h2>' +
             '<nav aria-label="Footer navigation"><ul class="site-footer__links">' +
               '<li><a href="index.html" data-i18n="nav-home">Home</a></li>' +
-              '<li><a href="scripts.html" data-i18n="nav-scripts">Scripts</a></li>' +
               '<li><a href="products.html" data-i18n="nav-products">Products</a></li>' +
               '<li><a href="exploits.html" data-i18n="nav-exploits">Exploits</a></li>' +
               '<li><a href="reviews.html" data-i18n="nav-reviews">Reviews</a></li>' +

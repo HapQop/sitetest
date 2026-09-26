@@ -2,7 +2,7 @@
 
 ## Source of truth
 
-Status: Active. Date: 2026-09-20. Product surfaces: the static Home, Scripts, Products, Exploits, Reviews, and Contact pages. Evidence reviewed: the six HTML pages, version-download cards, the user-provided product-catalog reference, product-card reference, and footer reference. No existing design brief, shared stylesheet, framework, or component library was present.
+Status: Active. Date: 2026-09-20. Product surfaces: the static Home, Products, Exploits, Reviews, and Contact pages. Evidence reviewed: the five HTML pages, version-download cards, the user-provided product-catalog reference, product-card reference, and footer reference. No existing design brief, shared stylesheet, framework, or component library was present.
 
 ## Brand
 
@@ -14,11 +14,11 @@ Goals: provide clear page navigation, let visitors select a game category in Pro
 
 ## Personas and jobs
 
-Primary visitors are gamers looking for versions, scripts, community links, and project information. Their jobs are switching sections quickly, opening community channels, and finding the language/account controls without searching.
+Primary visitors are gamers looking for versions, products, community links, and project information. Their jobs are switching sections quickly, opening community channels, and finding the language/account controls without searching.
 
 ## Information architecture
 
-Global navigation: CheatBlox home link; Home, Scripts, Products, Exploits, Reviews, Contact; Russian/English selector; Login; Register. The current navigation entry uses orange text. Products contains an orange-accented category control for All Products, Roblox, and CS2; it currently shows the Isaeva Roblox executor card for $7.99 and a clear CS2 empty state. Exploits contains the Roblox version cards and downloads. The Home screen centers a CheatBlox title and a concise benefit statement. Contact retains cards for Discord and Telegram. Every page ends with a shared CheatBlox footer, navigation, resource links, and placeholder Telegram, FunPay, and email contacts.
+Global navigation: CheatBlox home link; Home, Products, Exploits, Reviews, Contact; Russian/English selector; Login; Register. The current navigation entry uses orange text. Products contains an orange-accented category control for All Products, Roblox, and CS2; it currently shows the Isaeva Roblox executor card for $7.99 and a clear CS2 empty state. Exploits contains the Roblox version cards and downloads. The Home screen centers a CheatBlox title and a concise benefit statement. Contact retains cards for Discord and Telegram. Every page ends with a shared CheatBlox footer, navigation, resource links, and placeholder Telegram, FunPay, and email contacts.
 
 ## Design principles
 
@@ -50,7 +50,7 @@ Use concise English navigation labels already used by the site. Footer brand cop
 
 ## Implementation constraints
 
-Static HTML/CSS/JavaScript only, no dependencies or build runtime. Reuse orange token `#ff9d5c`; use `site-i18n.js` for the six standalone pages and store language preference locally. `site-orbs.js` supplies deterministic per-page decorative layouts and honors reduced-motion preferences. Verify markup presence, key coverage, and link targets after edits.
+Static HTML/CSS/JavaScript with the local Three.js runtime. Reuse orange token `#ff9d5c`; use `site-i18n.js` for the six standalone pages and store language preference locally. `lava-bubbles.js` is the single shared WebGL liquid-bubble system for every page with the common site background. Verify markup presence, key coverage, and link targets after edits.
 
 ## Open questions
 

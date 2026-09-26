@@ -1,0 +1,14 @@
+{
+  "session_id": "01a0dd99-1031-71b3-9b69-cab5549b9c8d",
+  "native_session_id": "01a0dd99-1031-71b3-9b69-cab5549b9c8d",
+  "started_at": "2026-09-26T12:03:39.530Z",
+  "cwd": "F:\\site",
+  "state_root": "F:\\site\\.omx\\state\\sessions\\01a0dd99-1031-71b3-9b69-cab5549b9c8d",
+  "pid": 29476,
+  "platform": "win32",
+  "identity_schema_version": 2,
+  "process_identity": {
+    "platform": "win32",
+    "birth": "134348966960449432"
+  }
+}
