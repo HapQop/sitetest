@@ -2,8 +2,55 @@
   const apiBase = window.AUTH_API_BASE || "/api/auth";
   const views = [...document.querySelectorAll("[data-auth-view]")];
   const status = document.querySelector("[data-auth-status]");
+  const authTitle = document.querySelector("#auth-title");
+  const authTitles = {
+    login: { ru: "Вход", en: "Login" },
+    register: { ru: "Регистрация", en: "Sign up" },
+    forgot: { ru: "Восстановление доступа", en: "Recover access" },
+    verify: { ru: "Подтверждение почты", en: "Verify email" },
+    reset: { ru: "Новый пароль", en: "New password" },
+  };
+  let currentMode = "login";
   let challengeId = "";
   let resetEmail = "";
+  const socialProvider = document.querySelector("#register-social-provider");
+  const socialHandleField = document.querySelector("[data-social-handle-field]");
+  const socialHandle = document.querySelector("#register-social-handle");
+  const socialChoices = [...document.querySelectorAll("[data-social-choice]")];
+
+  function updateAuthTitle(language = document.documentElement.lang) {
+    authTitle.textContent = authTitles[currentMode][language === "en" ? "en" : "ru"];
+  }
+
+  function updateSocialHandle() {
+    const selected = socialProvider.value === "discord" || socialProvider.value === "telegram";
+    socialHandleField.hidden = !selected;
+    socialHandle.disabled = !selected;
+    socialHandle.required = selected;
+    if (!selected) socialHandle.value = "";
+    socialChoices.forEach((button) => {
+      if (!button.dataset.socialChoice) return;
+      const active = button.dataset.socialChoice === socialProvider.value;
+      button.classList.toggle("is-selected", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  socialChoices.forEach((button) => {
+    button.addEventListener("click", () => {
+      const choice = button.dataset.socialChoice;
+      const next = socialProvider.value === choice ? "" : choice;
+      if (next !== socialProvider.value) socialHandle.value = "";
+      socialProvider.value = next;
+      updateSocialHandle();
+      if (next) socialHandle.focus();
+    });
+  });
+  updateSocialHandle();
+  document.addEventListener("DOMContentLoaded", () => updateAuthTitle());
+  document.querySelectorAll('input[name="language"]').forEach((input) => {
+    input.addEventListener("change", () => updateAuthTitle(input.value));
+  });
 
   document.querySelectorAll("[data-password-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -28,9 +75,11 @@
   }
 
   function showView(mode) {
+    currentMode = mode;
     views.forEach((view) => {
       view.hidden = view.dataset.authView !== mode;
     });
+    updateAuthTitle();
     showStatus("");
   }
 

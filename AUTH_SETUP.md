@@ -16,6 +16,8 @@ Create a Vercel KV/Upstash Redis store to obtain the first two values. Create a 
 
 The API stores password hashes, short-lived verification challenges, and seven-day sessions. It sends a six-digit code for registration and login, and a recovery code for password resets.
 
+Registration can also save one optional Discord or Telegram username in the user record as `socialContact` with `status: "pending"`. This is a contact preference, not a verified account link. After the bots are available, verify ownership through the chosen bot and store the platform user ID before treating the account as connected. Existing email-only registrations continue to work.
+
 ## Admin panel
 
 Open `/admin.html` after signing in with an account whose verified email is listed in `ADMIN_EMAILS`. The panel can update each product plan's USD price, stock count, and availability. Changes are stored in the same KV database and are applied to the public catalog on the next page load.

@@ -140,9 +140,15 @@ async function register(req, res) {
   const usernameLower = normalizeUsername(username);
   const email = normalizeEmail(bodyValue(req.body, "email"));
   const password = bodyValue(req.body, "password");
+  const socialProvider = bodyValue(req.body, "socialProvider").trim().toLowerCase();
+  const socialHandle = bodyValue(req.body, "socialHandle").trim().replace(/^@/, "");
   if (!validUsername(usernameLower)) return json(res, 400, { error: "Username must be 3–32 letters, numbers, dots, dashes, or underscores." });
   if (!validEmail(email)) return json(res, 400, { error: "Enter a valid email address." });
   if (!validPassword(password)) return json(res, 400, { error: "Password must be 8–128 characters." });
+  if (!["", "discord", "telegram"].includes(socialProvider)) return json(res, 400, { error: "Choose Discord, Telegram, or email only." });
+  if (!socialProvider && socialHandle) return json(res, 400, { error: "Choose a contact service for that username." });
+  if (socialProvider === "discord" && !/^[a-z0-9_.]{2,32}$/i.test(socialHandle)) return json(res, 400, { error: "Enter a valid Discord username (2–32 letters, numbers, dots, or underscores)." });
+  if (socialProvider === "telegram" && !/^[a-z][a-z0-9_]{4,31}$/i.test(socialHandle)) return json(res, 400, { error: "Enter a valid Telegram username (5–32 letters, numbers, or underscores)." });
 
   const existingId = await kv(["GET", `auth:username:${usernameLower}`]);
   const existingEmailId = await kv(["GET", `auth:email:${email}`]);
@@ -160,6 +166,7 @@ async function register(req, res) {
     usernameLower,
     email,
     passwordHash: await hashPassword(password),
+    socialContact: socialProvider ? { provider: socialProvider, username: socialHandle.toLowerCase(), status: "pending" } : null,
     verifiedAt: null,
     updatedAt: new Date().toISOString(),
   };

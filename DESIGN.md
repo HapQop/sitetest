@@ -26,11 +26,11 @@ Use one reusable header pattern; make active state readable without relying only
 
 ## Visual language
 
-Color: near-black page, charcoal header, muted grey inactive links, `#ff9d5c` orange active/action accents, and an orange scrollbar thumb on a dark track. Typography: system sans serif, semibold navigation. Spacing: 10–16 px control gaps; 20 px rounded header. Shape/elevation: dark bordered capsule with a light shadow. Motion: short color/background transitions plus low-key drifting orange background circles. Icons: simple inline SVG only.
+Color: near-black page, charcoal header, muted grey inactive links, `#ff9d5c` orange active/action accents, and an orange scrollbar thumb on a dark track. Typography: system sans serif, semibold navigation. Spacing: 10–16 px control gaps; 20 px rounded header. Shape/elevation: dark bordered capsule with a light shadow. Motion: short color/background transitions plus low-key drifting orange bubbles on Home. Icons: simple inline SVG only.
 
 ## Components
 
-`site-header`: brand, navigation links, compact language toggle, Login and Register links. Variants: desktop single row; responsive wrapped layout. `nav-link`: default, hover, active. `auth-button`: secondary outline Login and filled orange Register. `language-toggle`: RU/EN segmented control with an orange sliding indicator. `product-card`: a shared 48 px icon area with the supplied white Windows mark, the user-supplied light Finder image for Mac cropped to remove its outer white backdrop, Android, and white Apple treatment for iOS; each has an exact version chip centered in the card, animated copy control, and an orange download control at the right. Android opens a compact format menu inside its card: current XAPK or legacy standard APK. The product category selector and Isaeva Roblox executor card live in Products; the version cards and downloads live in Exploits. The shared footer has four information groups: CheatBlox identity, navigation, resources, and contact placeholders. Components are duplicated in static pages until a shared template/build system exists.
+`site-header`: brand, navigation links, compact language toggle, Login and Register links. Variants: desktop single row; responsive wrapped layout. `nav-link`: default, hover, active. `auth-button`: secondary outline Login and filled orange Register. `language-toggle`: RU/EN segmented control with an orange sliding indicator. The account page has a warm orange Hello panel beside the dark form on desktop and stacks them on small screens. Registration offers circular Telegram and Discord contact choices beneath the fields. `product-card`: a shared 48 px icon area with the supplied white Windows mark, the user-supplied light Finder image for Mac cropped to remove its outer white backdrop, Android, and white Apple treatment for iOS; each has an exact version chip centered in the card, animated copy control, and an orange download control at the right. Android opens a compact format menu inside its card: current XAPK or legacy standard APK. The product category selector and Isaeva Roblox executor card live in Products; the version cards and downloads live in Exploits. The shared footer has four information groups: CheatBlox identity, navigation, resources, and contact placeholders. Components are duplicated in static pages until a shared template/build system exists.
 
 ## Accessibility
 
@@ -42,7 +42,7 @@ At approximately 1020 px, the header wraps controls beneath the primary links; a
 
 ## Interaction states
 
-Nav links: hover and focus become orange; current link stays orange. Login/Register are visual entry points only until authentication routes exist. The language toggle animates its orange indicator to the selected segment, immediately changes interface labels, and stores its choice for the next page. Product-category tabs retain their selected orange state, filter the visible card, and show the CS2 empty state when applicable. Exploit version copy controls animate into a confirmation checkmark; Windows and Mac Download controls are active for their local ZIP packages. Android opens a format choice inside its own expanded card between the supplied latest XAPK and a legacy standard APK. Its trigger is hidden while the choices are open; a click outside the menu or Escape closes it. iOS has an active orange Download control for its supplied local IPA package.
+Nav links: hover and focus become orange; current link stays orange. Registration optionally saves a Discord or Telegram username as a pending contact until a bot verifies ownership. The language toggle animates its orange indicator to the selected segment, immediately changes interface labels, and stores its choice for the next page. Product-category tabs retain their selected orange state, filter the visible card, and show the CS2 empty state when applicable. Exploit version copy controls animate into a confirmation checkmark; Windows and Mac Download controls are active for their local ZIP packages. Android opens a format choice inside its own expanded card between the supplied latest XAPK and a legacy standard APK. Its trigger is hidden while the choices are open; a click outside the menu or Escape closes it. iOS has an active orange Download control for its supplied local IPA package.
 
 ## Content voice
 
@@ -50,7 +50,7 @@ Use concise English navigation labels already used by the site. Footer brand cop
 
 ## Implementation constraints
 
-Static HTML/CSS/JavaScript with the local Three.js runtime. Reuse orange token `#ff9d5c`; use `site-i18n.js` for the six standalone pages and store language preference locally. `lava-bubbles.js` is the single shared WebGL liquid-bubble system for every page with the common site background. Verify markup presence, key coverage, and link targets after edits.
+Static HTML/CSS/JavaScript with the local Three.js runtime on Home. Reuse orange token `#ff9d5c`; use `site-i18n.js` for the six standalone pages and store language preference locally. `lava-bubbles.js` renders the WebGL bubbles on Home only; all pages use a plain dark background. Verify markup presence, key coverage, and link targets after edits.
 
 ## Open questions
 
