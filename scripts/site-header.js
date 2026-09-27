@@ -9,6 +9,10 @@
     let framePending = false;
 
     if (!isAtTop) header.classList.add("is-scrolled");
+    if (window.scrollY > header.offsetHeight) {
+      header.classList.add("is-hidden");
+      header.inert = true;
+    }
 
     const spacer = document.createElement("div");
     spacer.className = "site-header-spacer";
@@ -29,6 +33,9 @@
       const nextIsScrollingDown = currentScrollY > lastScrollY;
       lastScrollY = currentScrollY;
       if (nextIsScrollingDown !== isScrollingDown) isScrollingDown = nextIsScrollingDown;
+      const hidden = currentScrollY > header.offsetHeight && isScrollingDown;
+      header.classList.toggle("is-hidden", hidden);
+      header.inert = hidden;
 
       const nextIsAtTop = currentScrollY <= 1;
       if (nextIsAtTop === isAtTop) return;
@@ -45,7 +52,11 @@
 
     updateSpacer();
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", updateSpacer, { passive: true });
+    window.addEventListener("resize", () => {
+      header.classList.remove("is-hidden");
+      header.inert = false;
+      updateSpacer();
+    }, { passive: true });
   }
 
   if (document.readyState === "loading") {

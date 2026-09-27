@@ -1,6 +1,18 @@
 :root { --accent: #ff9d5c; --site-header-flow-top: 34px; --site-header-open-offset: 20px; }
 
-body { overflow-x: hidden; isolation: isolate; }
+body { position: relative; overflow-x: hidden; isolation: isolate; }
+body::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(90deg, rgba(8, 5, 3, .58), rgba(9, 6, 4, .70) 50%, rgba(8, 5, 3, .58)), url("../assets/lava-cracked-texture-warm.jpg");
+  background-position: center, center top;
+  background-size: auto, clamp(720px, 75vw, 1100px) auto;
+  background-repeat: no-repeat, repeat;
+  opacity: .86;
+}
 
 /* Анимация смены языка */
 [data-i18n] { transition: opacity 0.15s ease; }
@@ -11,11 +23,14 @@ html { scroll-behavior: smooth; scrollbar-color: #ff9d5c #111; scrollbar-width: 
 ::-webkit-scrollbar-track { background: #111; }
 ::-webkit-scrollbar-thumb { border: 2px solid #111; border-radius: 999px; background: #ff9d5c; }
 ::-webkit-scrollbar-thumb:hover { background: #ffb077; }
-body > :not(.ambient-orbs) { position: relative; z-index: 1; }
-.ambient-orbs { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+body > :not(.ambient-orbs) { position: relative; z-index: 2; }
+.ambient-orbs { position: fixed; z-index: 1; inset: 0; overflow: hidden; pointer-events: none; }
 .ambient-orbs canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
-.lava-source { flex: 0 0 auto; width: 100%; height: clamp(280px, 40vh, 440px); pointer-events: none; }
-.site-header .site-brand, .site-header .site-nav a, .home-hero h1, .home-hero p { text-shadow: 0 2px 6px rgba(0, 0, 0, .95), 0 0 18px rgba(0, 0, 0, .75); }
+@media (max-width: 680px) {
+  body::before { opacity: .75; }
+}
+.site-header .site-brand, .site-header .site-nav a, main h1, main > p { text-shadow: 0 2px 6px rgba(0, 0, 0, .95), 0 0 18px rgba(0, 0, 0, .75); }
+body[data-page="products"] main { background: linear-gradient(#080808 0 110px, rgba(8, 8, 8, 0) 165px); }
 
 [data-scroll-reveal] {
   opacity: 1;
@@ -46,10 +61,10 @@ body > :not(.ambient-orbs) { position: relative; z-index: 1; }
   margin: 0;
   padding: 10px 22px;
   transform: translate(-50%, var(--site-header-open-offset));
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 157, 92, .16);
   border-radius: 26px;
-  background: transparent;
-  box-shadow: none;
+  background: rgba(12, 11, 11, .94);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .25);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   transition: gap 300ms ease, padding 300ms ease, background-color 300ms ease, border-color 300ms ease, border-radius 300ms ease, box-shadow 300ms ease, transform 300ms ease;
 }
@@ -64,6 +79,8 @@ body > .site-header { position: fixed; z-index: 100; }
   background: rgba(27, 27, 27, .97);
   box-shadow: 0 16px 34px rgba(0, 0, 0, .38);
 }
+.site-header.is-scrolled.is-hidden { transform: translate(-50%, calc(-100% - 24px)); }
+body.dark-theme .site-header:not(.is-scrolled) { background: rgba(12, 11, 11, .94); border-color: rgba(255, 157, 92, .16); }
 
 .site-brand {
   flex-shrink: 0;
@@ -213,7 +230,6 @@ body > .site-header { position: fixed; z-index: 100; }
 }
 
 @media (max-width: 680px) {
-  .lava-source { height: clamp(210px, 35vh, 330px); }
   :root { --site-header-flow-top: 16px; --site-header-open-offset: 2px; }
   .site-header { width: calc(100% - 20px); border-radius: 26px; }
   .site-header.is-scrolled { width: calc(100% - 20px); border-radius: 26px; }

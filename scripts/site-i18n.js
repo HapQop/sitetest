@@ -103,7 +103,6 @@ const translations = {
     "footer-telegram": "Telegram",
     "footer-funpay": "FunPay",
     "footer-email": "Email",
-    "footer-copyright": "© 2026 CheatBlox. All rights reserved.",
   },
   ru: {
     "nav-home": "Главная",
@@ -209,7 +208,6 @@ const translations = {
     "footer-telegram": "Telegram",
     "footer-funpay": "FunPay",
     "footer-email": "Почта",
-    "footer-copyright": "© 2026 CheatBlox. Все права защищены.",
   },
 };
 

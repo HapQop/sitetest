@@ -57,12 +57,14 @@
         }
         .navbar .brand span { color: #ff9d5c; }
         .home-hero {
+            --hero-backdrop: #0a0a0a;
             display: grid;
             min-height: calc(100vh - 118px);
             padding: 40px 20px 100px;
             place-content: center;
             text-align: center;
         }
+        body.dark-theme .home-hero { --hero-backdrop: #0f0f0f; }
         .home-hero h1 {
             color: #fff;
             font-size: clamp(48px, 9vw, 94px);
@@ -76,6 +78,13 @@
             color: #b7b7b7;
             font-size: clamp(17px, 2vw, 22px);
             font-weight: 600;
+        }
+        @media (max-width: 700px) {
+            .home-hero h1,
+            .home-hero p {
+                background: var(--hero-backdrop);
+                box-shadow: 0 0 14px 14px var(--hero-backdrop);
+            }
         }
         .payment-section {
             width: min(1200px, calc(100% - 48px));

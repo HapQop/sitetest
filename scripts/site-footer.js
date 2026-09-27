@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
           '</section>' +
         '</div>'
       ) : '') +
-        '<div class="site-footer__bottom"><span data-i18n="footer-copyright">© 2026 CheatBlox. All rights reserved.</span></div>' +
       '</div>' +
     '</footer>';
 

@@ -30,11 +30,9 @@ class LavaBubbleSystem {
     const sphere = new THREE.SphereGeometry(1, mobile ? 64 : 88, mobile ? 48 : 64);
     const quad = new THREE.PlaneGeometry(2, 2);
     const pointer = { x: null, y: null };
-    const targetVisible = mobile ? 2 + (Math.random() < 0.65 ? 1 : 0) :
-      3 + (Math.random() < 0.55 ? 1 : 0);
-    const poolSize = targetVisible + 3;
+    const targetVisible = 8;
+    const poolSize = targetVisible;
     const world = [];
-    let lastSpawnX = null;
 
     const vertexShader = `
       uniform float uTime;
@@ -58,13 +56,12 @@ class LavaBubbleSystem {
         vec3 p = n * (1.0 + swell) * uShape;
         p.xy *= mix(vec2(0.57, 0.82), vec2(1.0), uEmergence);
         p.y += (1.0 - uEmergence) * (0.14 + 0.11 * (1.0 - n.y));
-
         vec2 delta = p.xy - uPointer;
-        float dent = exp(-dot(delta, delta) * 7.0) * uPressure * smoothstep(-0.1, 0.45, n.z);
-        p -= n * dent * 0.23;
+        float dent = exp(-dot(delta, delta) * 6.0) * uPressure * smoothstep(-0.1, 0.45, n.z);
+        p -= n * dent * 0.13;
         float travelingWave = sin(length(delta) * 9.0 - uTime * 1.3) * exp(-length(delta) * 3.5);
-        p += n * travelingWave * uPressure * 0.022;
-        p.xy -= normalize(uPointer + vec2(0.0001)) * uPressure * 0.028 *
+        p += n * travelingWave * uPressure * 0.012;
+        p.xy -= normalize(uPointer + vec2(0.0001)) * uPressure * 0.014 *
                 (1.0 - smoothstep(-0.7, 0.0, dot(n.xy, normalize(uPointer + vec2(0.0001)))));
 
         vec2 towardNeighbor = normalize(uNeighbor + vec2(0.0001));
@@ -128,6 +125,7 @@ class LavaBubbleSystem {
       uniform float uTime;
       uniform float uFlowTime;
       uniform float uPhase;
+      uniform float uFade;
       uniform vec3 uTint;
       varying vec3 vPoint;
       varying vec3 vNormal;
@@ -155,7 +153,7 @@ class LavaBubbleSystem {
         color += vec3(1.0, 0.79, 0.51) * glint * 0.23;
         float alpha = 0.37 + fluid.x * 0.18 + fluid.z * 0.12 + rim * 0.10;
         if (!gl_FrontFacing) alpha *= 0.35;
-        gl_FragColor = vec4(color, min(alpha, 0.74));
+        gl_FragColor = vec4(color, min(alpha, 0.74) * uFade);
       }
     `;
 
@@ -163,6 +161,7 @@ class LavaBubbleSystem {
       uniform float uTime;
       uniform float uFlowTime;
       uniform float uPhase;
+      uniform float uFade;
       uniform vec3 uTint;
       varying vec3 vPoint;
       varying vec3 vNormal;
@@ -184,7 +183,7 @@ class LavaBubbleSystem {
         color += vec3(0.54, 0.26, 0.12) * pocket * 0.40;
         float facing = max(dot(normalize(vNormal), normalize(vView)), 0.0);
         float alpha = (0.31 + deep.x * 0.17 + glow * 0.12 + pocket * 0.06) * smoothstep(0.0, 0.38, facing);
-        gl_FragColor = vec4(color, alpha);
+        gl_FragColor = vec4(color, alpha * uFade);
       }
     `;
 
@@ -193,14 +192,14 @@ class LavaBubbleSystem {
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
     `;
     const haloFragment = `
+      uniform float uFade;
       varying vec2 vUv;
       void main() {
         float r = length(vUv * 2.0 - 1.0);
         float glow = exp(-r * r * 6.0) * (1.0 - smoothstep(0.55, 1.0, r));
-        gl_FragColor = vec4(1.0, 0.29, 0.045, glow * 0.13);
+        gl_FragColor = vec4(1.0, 0.32, 0.055, glow * 0.22 * uFade);
       }
     `;
-
     function makeUniforms(orb) {
       return {
         uTime: { value: 0 },
@@ -213,71 +212,10 @@ class LavaBubbleSystem {
         uNeighbor: { value: new THREE.Vector2() },
         uNeighborStrength: { value: 0 },
         uEmergence: { value: 1 },
+        uFade: { value: 1 },
         uTint: { value: orb.tint }
       };
     }
-
-    const lake = document.createElement("div");
-    lake.className = "lava-source";
-    lake.setAttribute("aria-hidden", "true");
-    document.body.appendChild(lake);
-    const lakeUniforms = {
-      uTime: { value: 0 },
-      uDetail: { value: 1 },
-      uPulse: { value: 0 },
-      uBirthX: { value: 0.5 }
-    };
-    const lakeVertex = `
-      uniform float uTime;
-      uniform float uPulse;
-      uniform float uBirthX;
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        vec3 p = position;
-        float along = uv.x * 6.28318;
-        float wave = sin(along * 1.7 + uTime * 0.42) * 0.026
-                   + sin(along * 4.1 - uTime * 0.71) * 0.014;
-        float birth = exp(-pow((uv.x - uBirthX) * 8.0, 2.0)) * uPulse * 0.085;
-        p.y += (wave + birth) * smoothstep(0.72, 1.0, uv.y);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-      }
-    `;
-    const lakeFragment = `
-      uniform float uTime;
-      uniform float uPulse;
-      uniform float uBirthX;
-      varying vec2 vUv;
-      ${liquidFunctions}
-      void main() {
-        vec2 uv = vUv;
-        float surface = smoothstep(0.80, 1.0, uv.y);
-        vec3 p = vec3(uv.x * 7.2, uv.y * 2.6, 0.38);
-        vec4 fluid = liquid(p, uTime * 1.15, 3.7);
-        vec4 deep = liquid(p * 0.74 + vec3(1.7, 0.4, 2.1), uTime * 0.73, 8.4);
-        float current = sin(uv.x * 19.0 + fluid.x * 8.0 - uTime * 0.30) * 0.5 + 0.5;
-        float hot = fluid.z * 0.55 + deep.z * 0.42 + fluid.w * 0.10;
-        float birth = exp(-pow((uv.x - uBirthX) * 9.0, 2.0)) * uPulse * surface;
-        vec3 color = mix(vec3(0.14, 0.025, 0.015), vec3(0.67, 0.17, 0.035),
-                         smoothstep(0.22, 0.73, fluid.x) * 0.75 + surface * 0.12);
-        color += vec3(0.95, 0.36, 0.055) * (hot * 0.44 + current * fluid.z * 0.12);
-        color += vec3(1.0, 0.68, 0.20) * (fluid.z * 0.18 + birth * 0.5);
-        color += vec3(0.87, 0.31, 0.08) * surface * (0.20 + deep.x * 0.25);
-        float rim = smoothstep(0.935, 0.995, uv.y) * (0.30 + fluid.x * 0.25);
-        color += vec3(1.0, 0.57, 0.17) * rim;
-        float alpha = 0.75 + fluid.x * 0.17 + surface * 0.06;
-        gl_FragColor = vec4(color, min(alpha, 0.98));
-      }
-    `;
-    const lakeMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(1, 1, mobile ? 48 : 80, 4),
-      new THREE.ShaderMaterial({
-        uniforms: lakeUniforms, vertexShader: lakeVertex, fragmentShader: lakeFragment,
-        transparent: true, depthWrite: false, side: THREE.DoubleSide
-      })
-    );
-    lakeMesh.renderOrder = 0;
-    scene.add(lakeMesh);
 
     class LiquidOrb {
       constructor(index) {
@@ -308,7 +246,9 @@ class LavaBubbleSystem {
         this.rear = new THREE.Mesh(sphere, material(shellShader, THREE.BackSide));
         this.core = new THREE.Mesh(sphere, material(coreShader, THREE.FrontSide));
         this.front = new THREE.Mesh(sphere, material(shellShader, THREE.FrontSide));
+        this.haloUniforms = { ...this.uniforms, uFade: { value: 1 } };
         this.halo = new THREE.Mesh(quad, new THREE.ShaderMaterial({
+          uniforms: this.haloUniforms,
           vertexShader: haloShader,
           fragmentShader: haloFragment,
           transparent: true,
@@ -344,6 +284,7 @@ class LavaBubbleSystem {
         this.radius = record.radius;
         this.phase = record.phase;
         this.shape.copy(record.shape);
+        this.tint.copy(record.tint);
         this.uniforms.uPhase.value = this.phase;
         this.rear.scale.setScalar(this.radius);
         this.front.scale.setScalar(this.radius);
@@ -360,14 +301,14 @@ class LavaBubbleSystem {
         const localY = pointer.y === null ? 0 : (this.screenY - pointer.y) / this.radius;
         const distance = Math.hypot(localX, localY);
         const proximity = pointer.x === null ? 0 : 1 - THREE.MathUtils.smoothstep(distance, 0.45, 1.35);
-        const target = 0.95 * proximity * proximity;
+        const target = 0.48 * proximity * proximity;
         const spring = Math.min(delta, 2.5);
-        this.pressureVelocity = (this.pressureVelocity + (target - this.pressure) * 0.018 * spring) * Math.pow(0.84, spring);
+        this.pressureVelocity = (this.pressureVelocity + (target - this.pressure) * 0.009 * spring) * Math.pow(0.88, spring);
         this.pressure = Math.max(0, Math.min(1, this.pressure + this.pressureVelocity * spring));
         const targetX = pointer.x === null ? this.impactX : localX;
         const targetY = pointer.y === null ? this.impactY : localY;
-        this.impactVX = (this.impactVX + (targetX - this.impactX) * 0.025 * spring) * Math.pow(0.79, spring);
-        this.impactVY = (this.impactVY + (targetY - this.impactY) * 0.025 * spring) * Math.pow(0.79, spring);
+        this.impactVX = (this.impactVX + (targetX - this.impactX) * 0.013 * spring) * Math.pow(0.86, spring);
+        this.impactVY = (this.impactVY + (targetY - this.impactY) * 0.013 * spring) * Math.pow(0.86, spring);
         this.impactX += this.impactVX * spring;
         this.impactY += this.impactVY * spring;
         this.uniforms.uPointer.value.set(this.impactX, this.impactY);
@@ -376,8 +317,14 @@ class LavaBubbleSystem {
         this.uniforms.uNeighborStrength.value = this.neighborStrength;
         this.uniforms.uTime.value = time * 0.001;
         this.uniforms.uFlowTime.value = flowTime * 0.001;
-        this.uniforms.uEmergence.value = record.bornAt < 0 ? 1 :
-          THREE.MathUtils.smoothstep(time - record.bornAt, 0, 4800);
+        this.uniforms.uEmergence.value = record.emergence;
+        this.uniforms.uFade.value = Math.sqrt(record.opacity);
+        this.haloUniforms.uFade.value = Math.sqrt(Math.sqrt(record.opacity));
+        const size = this.radius;
+        this.rear.scale.setScalar(size);
+        this.front.scale.setScalar(size);
+        this.core.scale.setScalar(size * 0.84);
+        this.halo.scale.setScalar(size * 1.75);
 
         const x = record.x - width / 2;
         const y = height / 2 - this.screenY;
@@ -391,78 +338,99 @@ class LavaBubbleSystem {
     const orbs = Array.from({ length: poolSize }, (_, index) => new LiquidOrb(index));
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let scrollY = window.scrollY || 0;
-    let sourceY = 0;
-    let lastBirthX = 0.5;
-    let birthPulse = 0;
     const spacing = Math.max(170, height / (targetVisible + 0.3));
+    const riseSpeed = 0.42;
 
     function radiusFor(sizeRatio) {
-      const diameter = Math.min(390, Math.max(210, width * 0.29), height * 0.62);
-      return diameter * sizeRatio * 0.5;
+      const diameter = Math.min(330, Math.max(150, width * 0.25), height * 0.48);
+      const stageLimit = width < 700 ? Math.max(58, height * 0.14) : Math.max(80, height * 0.20);
+      return Math.min(diameter * 0.5, stageLimit) * sizeRatio * 1.10;
+    }
+
+    function verticalMargin() {
+      return radiusFor(1.02) * 1.85;
+    }
+
+    function cycleHeight() {
+      const pageHeight = Math.max(height, document.documentElement.scrollHeight || height);
+      return pageHeight + verticalMargin() * 2;
     }
 
     function chooseSpawnX(record) {
-      const inset = Math.min(record.radius * 0.65, width * 0.12);
+      const inset = -record.radius * 0.55;
       const minX = inset;
       const maxX = width - inset;
+      const laneCounts = [0, 0, 0];
+      for (const other of world) {
+        if (other !== record && Number.isInteger(other.lane)) laneCounts[other.lane]++;
+      }
+      const fewest = Math.min(...laneCounts);
+      const availableLanes = laneCounts.map((count, lane) => count === fewest ? lane : -1)
+        .filter((lane) => lane >= 0);
+      const lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+      const laneWidth = (maxX - minX) / laneCounts.length;
       let bestX = width / 2;
       let bestScore = -Infinity;
       for (let attempt = 0; attempt < 16; attempt++) {
-        const x = minX + Math.random() * (maxX - minX);
+        const x = minX + laneWidth * (lane + 0.12 + Math.random() * 0.76);
         let clearance = 2;
         for (const other of world) {
           if (Math.abs(record.worldY - other.worldY) > spacing * 1.8) continue;
           clearance = Math.min(clearance,
             Math.hypot(x - other.x, record.worldY - other.worldY) / (record.radius + other.radius));
         }
-        const spread = lastSpawnX === null ? 1 : Math.abs(x - lastSpawnX) / width;
-        const score = clearance * 3 + spread;
+        const score = clearance * 3 + Math.random();
         if (score > bestScore) { bestScore = score; bestX = x; }
-        if (clearance > 1.15 && spread > 0.3) break;
+        if (clearance > 1.15) break;
       }
-      lastSpawnX = bestX;
+      record.lane = lane;
       return bestX;
     }
 
-    function createRecord(worldY, bornAt = -1) {
-      const sizeRatio = 0.65 + Math.random() * 0.37;
-      const record = {
-        x: 0, worldY, sizeRatio, radius: radiusFor(sizeRatio),
-        speed: 0.16 + Math.random() * 0.09,
-        driftSpeed: (Math.random() - 0.5) * 0.028,
-        vx: 0, vy: 0, phase: Math.random() * 20,
-        shape: new THREE.Vector3(
-          0.96 + Math.random() * 0.14,
-          0.92 + Math.random() * 0.13,
-          0.82 + Math.random() * 0.18
-        ),
-        bornAt
+    function createRecord(worldY, reuse = null) {
+      const sizeRatio = 0.72 + Math.random() * 0.30;
+      const record = reuse || {
+        shape: new THREE.Vector3(1, 1, 1),
+        tint: new THREE.Vector3(0.88, 0.30, 0.045)
       };
+      Object.assign(record, {
+        x: 0, worldY, sizeRatio, radius: radiusFor(sizeRatio), speed: riseSpeed,
+        driftSpeed: (Math.random() - 0.5) * 0.070,
+        driftAmplitude: 0.045 + Math.random() * 0.065,
+        driftFrequency: 0.00014 + Math.random() * 0.00014,
+        vx: 0, phase: Math.random() * 20,
+        state: "rising", emergence: 1, sizeScale: 1, opacity: 1
+      });
+      record.shape.set(
+        0.88 + Math.random() * 0.25,
+        0.82 + Math.random() * 0.28,
+        0.80 + Math.random() * 0.24
+      );
+      record.tint.set(
+        0.82 + Math.random() * 0.08,
+        0.25 + Math.random() * 0.08,
+        0.035 + Math.random() * 0.020
+      );
       record.x = chooseSpawnX(record);
       return record;
     }
 
-    function readSourceY() {
-      const rect = lake.getBoundingClientRect();
-      return rect.top + (window.scrollY || 0) + 20;
-    }
-
     function seedWorld() {
-      sourceY = readSourceY();
-      const count = Math.min(80, Math.ceil((sourceY + height * 0.5) / spacing));
-      const actualSpacing = (sourceY + height * 0.5) / count;
+      const margin = verticalMargin();
+      const cycle = cycleHeight();
+      const viewportSpacing = (height + margin * 2) / targetVisible;
+      const count = Math.max(targetVisible, Math.floor(cycle / viewportSpacing));
+      const phase = Math.random();
       for (let index = 0; index < count; index++) {
-        const y = sourceY - actualSpacing * (index + 0.42 + Math.random() * 0.16);
-        world.push(createRecord(y));
+        const band = (index + phase) / count;
+        world.push(createRecord(-margin + cycle * band));
       }
-      world.sort((a, b) => a.worldY - b.worldY);
     }
 
     function getVisibleRecords() {
       return world.filter((record) => {
-        const screenY = record.worldY - scrollY;
-        return screenY + record.radius * 1.2 > 0 && screenY - record.radius * 1.2 < height;
+        const screenY = record.worldY - (window.scrollY || 0);
+        return screenY + record.radius * 1.85 > 0 && screenY - record.radius * 1.85 < height;
       }).sort((a, b) => a.worldY - b.worldY).slice(0, poolSize);
     }
 
@@ -478,38 +446,26 @@ class LavaBubbleSystem {
       }
     }
 
-    function updateLake(time) {
-      const rect = lake.getBoundingClientRect();
-      const top = rect.top + 20;
-      const depth = Math.max(1, rect.height - 20);
-      lakeMesh.visible = top < height && top + depth > 0;
-      if (!lakeMesh.visible) return;
-      lakeMesh.scale.set(width, depth, 1);
-      lakeMesh.position.set(0, height / 2 - top - depth / 2, -20);
-      lakeUniforms.uTime.value = time * 0.001;
-      lakeUniforms.uPulse.value = birthPulse;
-      lakeUniforms.uBirthX.value = lastBirthX;
-    }
 
     function updateWorld(delta, time) {
       for (const record of world) {
         record.vx *= Math.pow(0.96, delta);
-        record.vy *= Math.pow(0.94, delta);
-        record.x += (record.driftSpeed + record.vx) * delta;
-        record.worldY += (record.vy - record.speed) * delta;
-        const inset = Math.min(record.radius * 0.65, width * 0.12);
-        record.x = Math.max(inset, Math.min(width - inset, record.x));
+        const drift = record.driftSpeed +
+          record.driftAmplitude * Math.sin(time * record.driftFrequency + record.phase) +
+          record.driftAmplitude * 0.5 * Math.sin(time * record.driftFrequency * 0.43 + record.phase * 1.7);
+        record.x += (drift + record.vx) * delta;
+        record.worldY -= record.speed * delta;
+        const laneWidth = (width + record.radius * 1.1) / 3;
+        const laneLeft = -record.radius * 0.55 + record.lane * laneWidth;
+        const laneRight = laneLeft + laneWidth;
+        if (record.x < laneLeft || record.x > laneRight) record.driftSpeed *= -1;
+        record.x = Math.max(laneLeft, Math.min(laneRight, record.x));
       }
-      while (world.length && world[0].worldY < -world[0].radius * 1.5) world.shift();
-      sourceY = readSourceY();
-      const lowest = world[world.length - 1];
-      if (world.length < 80 && (!lowest || sourceY - lowest.worldY > spacing * 0.88)) {
-        const record = createRecord(sourceY + radiusFor(0.8) * 0.72, time);
-        world.push(record);
-        lastBirthX = record.x / width;
-        birthPulse = 1;
+      const cycle = cycleHeight();
+      const top = -verticalMargin();
+      for (const record of world) {
+        if (record.worldY < top) createRecord(record.worldY + cycle, record);
       }
-      birthPulse *= Math.pow(0.989, delta);
     }
 
     function interact(delta) {
@@ -535,30 +491,27 @@ class LavaBubbleSystem {
           }
           const overlap = a.radius + b.radius - distance;
           if (overlap > 0) {
-            const force = Math.min(0.024, overlap * 0.00018) * delta;
+            const force = Math.min(0.045, overlap * 0.00032) * delta;
             a.record.vx -= dx / distance * force;
-            a.record.vy -= dy / distance * force;
             b.record.vx += dx / distance * force;
-            b.record.vy += dy / distance * force;
           }
         }
       }
     }
 
     function renderFrame(time, delta, flowTime = time) {
-      scrollY = window.scrollY || 0;
-      this.scrollY = scrollY;
+      this.scrollY = window.scrollY || 0;
       updateWorld(delta, time);
       bindVisible();
       interact(delta);
-      for (const orb of orbs) orb.update(time, delta, width, height, scrollY, flowTime);
-      updateLake(time);
-      this.sourceY = sourceY;
+      for (const orb of orbs) orb.update(time, delta, width, height, this.scrollY, flowTime);
       renderer.render(scene, camera);
     }
 
     function resize() {
       const oldWidth = width;
+      const oldMargin = verticalMargin();
+      const oldCycle = cycleHeight();
       width = window.innerWidth;
       height = window.innerHeight;
       camera.left = -width / 2;
@@ -567,8 +520,11 @@ class LavaBubbleSystem {
       camera.bottom = -height / 2;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      const newMargin = verticalMargin();
+      const newCycle = cycleHeight();
       for (const record of world) {
         record.x *= width / oldWidth;
+        record.worldY = -newMargin + (record.worldY + oldMargin) / oldCycle * newCycle;
         record.radius = radiusFor(record.sizeRatio);
       }
       for (const orb of orbs) orb.bind(null);
@@ -587,7 +543,6 @@ class LavaBubbleSystem {
     this.renderer = renderer;
     this.orbs = orbs;
     this.world = world;
-    this.lake = lake;
     this.targetVisible = targetVisible;
     this.getVisibleRecords = getVisibleRecords;
     resize();
@@ -617,9 +572,6 @@ class LavaBubbleSystem {
           if (nextRatio !== pixelRatio) {
             pixelRatio = nextRatio;
             renderer.setPixelRatio(pixelRatio);
-            const detail = pixelRatio < maxPixelRatio * 0.82 ? 0 : 1;
-            orbs.forEach((orb) => { orb.uniforms.uDetail.value = detail; });
-            lakeUniforms.uDetail.value = detail;
           }
           sampleStart = time;
           sampleFrames = 0;
