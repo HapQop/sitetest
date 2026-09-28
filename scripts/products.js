@@ -53,11 +53,11 @@ function getVersionPlatform(product) {
   return ["windows", "mac", "android", "ios"].find((platform) => icon.classList.contains(platform)) || "";
 }
 
-function applyVersions(payload) {
+function applyVersions(payload, overrides = {}) {
   let updated = 0;
   document.querySelectorAll(".product[data-version]").forEach((product) => {
     const platform = getVersionPlatform(product);
-    const version = findVersionValue(payload, versionAliases(platform));
+    const version = overrides[platform] || findVersionValue(payload, versionAliases(platform));
     if (!platform || !version) return;
     product.dataset.version = version;
     const code = product.querySelector(".version-chip code");
@@ -78,8 +78,15 @@ function readCachedVersions() {
 }
 
 async function refreshRobloxVersions() {
+  let overrides = {};
+  try {
+    const response = await fetch("/api/catalog", { headers: { Accept: "application/json" }, cache: "no-store" });
+    if (response.ok) overrides = (await response.json()).versions || {};
+  } catch {
+    // Static and automatic versions remain available without the catalog API.
+  }
   const cached = readCachedVersions();
-  if (cached) applyVersions(cached);
+  applyVersions(cached || {}, overrides);
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 5000);
@@ -87,7 +94,7 @@ async function refreshRobloxVersions() {
     const response = await fetch(versionsApiUrl, { signal: controller.signal, headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`Versions request failed: ${response.status}`);
     const payload = await response.json();
-    const updated = applyVersions(payload);
+    const updated = applyVersions(payload, overrides);
     if (!updated) throw new Error("Versions response did not contain supported platforms");
     localStorage.setItem(versionsCacheKey, JSON.stringify({ savedAt: Date.now(), payload }));
   } catch {

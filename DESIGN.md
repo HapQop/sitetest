@@ -6,7 +6,7 @@ Status: Active. Date: 2026-09-20. Product surfaces: the static Home, Products, E
 
 ## Brand
 
-CheatBlox is a compact, dark gaming-oriented product directory. Its personality is direct, modern, and technical. Trust signals are clear navigation, consistent page state, restrained motion, and recognizable platform icons. Avoid bright multi-color decoration, dense controls, and mismatched navigation variants.
+CheatBlox is a compact, dark gaming-oriented product directory. Its personality is direct, modern, and technical. Its orange block-style C mark appears beside the CheatBlox wordmark in headers, the footer, and the account welcome panel. Trust signals are clear navigation, consistent page state, restrained motion, and recognizable platform icons. Avoid bright multi-color decoration, dense controls, and mismatched navigation variants.
 
 ## Product goals
 
@@ -20,7 +20,7 @@ Primary visitors are gamers looking for versions, products, community links, and
 
 ## Information architecture
 
-Global navigation: CheatBlox home link; Home, Products, Exploits, Reviews, Contact; Russian/English selector; Login; Register. The current navigation entry uses orange text. Products contains an orange-accented category control for All Products, Roblox, and CS2; it currently shows the Isaeva Roblox executor card for $7.99 and a clear CS2 empty state. Exploits contains the Roblox version cards and downloads. The Home screen centers a CheatBlox title and a concise benefit statement. Contact retains cards for Discord and Telegram. Every page ends with a shared CheatBlox footer, navigation, resource links, and placeholder Telegram, FunPay, and email contacts.
+Global navigation: CheatBlox home link; Home, Products, Exploits, Reviews, Contact; Russian/English selector; Login; Register. The current navigation entry uses orange text. Products contains an orange-accented category control for All Products, Roblox, and CS2; it currently shows the Isaeva Roblox executor card for $7.99 and a clear CS2 empty state. Exploits contains the Roblox version cards and downloads. The Home screen centers a CheatBlox title and a concise benefit statement. Contact retains cards for Discord and Telegram. The Home and document pages have a footer with navigation, empty Terms of Service, Privacy Policy, and Refund Policy pages, and Telegram, FunPay, email, and Discord contacts; other pages retain the compact footer.
 
 ## Design principles
 
@@ -28,11 +28,11 @@ Use one reusable header pattern; make active state readable without relying only
 
 ## Visual language
 
-Color: near-black page, charcoal header, muted grey inactive links, `#ff9d5c` orange active/action accents, and an orange scrollbar thumb on a dark track. Typography: system sans serif, semibold navigation. Spacing: 10–16 px control gaps; 20 px rounded header. Shape/elevation: dark bordered capsule with a light shadow. Motion: short color/background transitions plus low-key drifting orange bubbles on Home. Icons: simple inline SVG only.
+Color: near-black page, charcoal header, muted grey inactive links, `#ff9d5c` orange active/action accents, and an orange scrollbar thumb on a dark track. Typography: system sans serif, semibold navigation. Spacing: 10–16 px control gaps; 20 px rounded header. Shape/elevation: dark bordered capsule with a light shadow. Motion: short color/background transitions plus low-key drifting orange bubbles on Home. Icons: simple inline SVG and a shared SVG brand mark.
 
 ## Components
 
-`site-header`: brand, navigation links, compact language toggle, Login and Register links. Variants: desktop single row; responsive wrapped layout. `nav-link`: default, hover, active. `auth-button`: secondary outline Login and filled orange Register. `language-toggle`: RU/EN segmented control with an orange sliding indicator. The account page has a warm orange Hello panel beside the dark form on desktop and stacks them on small screens. Registration offers circular Telegram and Discord contact choices beneath the fields. `product-card`: a shared 48 px icon area with the supplied white Windows mark, the user-supplied light Finder image for Mac cropped to remove its outer white backdrop, Android, and white Apple treatment for iOS; each has an exact version chip centered in the card, animated copy control, and an orange download control at the right. Android opens a compact format menu inside its card: current XAPK or legacy standard APK. The product category selector and Isaeva Roblox executor card live in Products; the version cards and downloads live in Exploits. The shared footer has four information groups: CheatBlox identity, navigation, resources, and contact placeholders. Components are duplicated in static pages until a shared template/build system exists.
+`site-header`: brand, navigation links, compact language toggle, Login and Register links. Variants: desktop single row; responsive wrapped layout. `nav-link`: default, hover, active. `auth-button`: secondary outline Login and filled orange Register. `language-toggle`: RU/EN segmented control with an orange sliding indicator. The account page has a warm orange Hello panel beside the dark form on desktop and stacks them on small screens. Registration offers circular Telegram and Discord contact choices beneath the fields. `product-card`: a shared 48 px icon area with the supplied white Windows mark, the user-supplied light Finder image for Mac cropped to remove its outer white backdrop, Android, and white Apple treatment for iOS; each has an exact version chip centered in the card, animated copy control, and an orange download control at the right. Android opens a compact format menu inside its card: current XAPK or legacy standard APK. The product category selector and Isaeva Roblox executor card live in Products; the version cards and downloads live in Exploits. The full footer has four information groups: CheatBlox identity, navigation, documents, and contact links. Components are duplicated in static pages until a shared template/build system exists.
 
 ## Accessibility
 

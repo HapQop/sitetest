@@ -40,6 +40,7 @@
       userMenu.className = "user-menu";
       userMenu.innerHTML = `
         <span class="user-name">${escapeHtml(user.username)}</span>
+        ${user.isAdmin === true ? '<a class="admin-link" href="admin.html" aria-label="Open admin panel">✎ Admin</a>' : ""}
         <button class="logout-btn" aria-label="Logout">Logout</button>
       `;
 

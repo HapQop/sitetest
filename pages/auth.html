@@ -14,8 +14,9 @@
     .auth-welcome::before,.auth-welcome::after { position:absolute; z-index:-1; width:125%; aspect-ratio:1; border:1px solid rgba(255,255,255,.14); border-radius:50%; content:""; pointer-events:none; }
     .auth-welcome::before { right:-78%; bottom:-45%; box-shadow:0 0 0 58px rgba(255,255,255,.035),0 0 0 116px rgba(255,255,255,.025); }
     .auth-welcome::after { top:-94%; left:-47%; box-shadow:0 0 0 76px rgba(255,255,255,.025); }
-    .auth-welcome-brand { color:#fff; font-size:23px; font-weight:850; letter-spacing:-.7px; }
+    .auth-welcome-brand { display:inline-flex; align-items:center; color:#fff; font-size:23px; font-weight:850; letter-spacing:-.7px; }
     .auth-welcome-brand span { color:#ffd0a7; }
+    .auth-welcome-brand .brand-mark { display:block; width:26px; height:26px; margin-right:8px; filter:brightness(0) invert(1); }
     .auth-welcome-copy { position:relative; margin:72px 0; }
     .auth-welcome-copy h2 { color:#fff; font-size:clamp(64px,7vw,104px); font-weight:850; letter-spacing:-5px; line-height:.95; }
     .auth-welcome-copy h2 span { color:#ffd0a7; }
@@ -86,7 +87,7 @@
 </head>
 <body data-page="auth">
   <nav class="site-header" aria-label="Primary navigation">
-    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <a class="site-brand" href="index.html"><img class="brand-mark" src="../assets/icons/cheatblox-mark.svg" alt="" width="28" height="28">Cheat<span>Blox</span></a>
     <div class="site-nav">
       <a href="index.html" data-i18n="nav-home">Home</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a>
     </div>
@@ -98,7 +99,7 @@
   <main>
     <section class="auth-card" aria-labelledby="auth-title">
       <div class="auth-welcome">
-        <span class="auth-welcome-brand">◢ Cheat<span>Blox</span></span>
+        <span class="auth-welcome-brand"><img class="brand-mark" src="../assets/icons/cheatblox-mark.svg" alt="" width="26" height="26">Cheat<span>Blox</span></span>
         <div class="auth-welcome-copy">
           <h2>Hello<span>.</span></h2>
           <p data-i18n="auth-welcome-copy">Your CheatBlox account brings everything together in one place.</p>

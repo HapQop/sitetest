@@ -2,14 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   injectBonusModal();
   if (document.querySelector(".site-footer")) return;
   const isHomePage = document.body.dataset.page === "nav-home";
+  const showFullFooter = isHomePage || document.body.dataset.page?.startsWith("doc-");
 
   const markup =
-    '<footer class="site-footer' + (isHomePage ? '' : ' site-footer--compact') + '" aria-label="Site footer">' +
+    '<footer class="site-footer' + (showFullFooter ? '' : ' site-footer--compact') + '" aria-label="Site footer">' +
       '<div class="site-footer__inner">' +
-      (isHomePage ? (
+      (showFullFooter ? (
         '<div class="site-footer__grid">' +
           '<section>' +
-            '<a class="site-footer__brand" href="index.html">Cheat<span>Blox</span></a>' +
+            '<a class="site-footer__brand" href="index.html"><img src="../assets/icons/cheatblox-mark.svg" alt="" width="26" height="26">Cheat<span>Blox</span></a>' +
             '<p class="site-footer__description" data-i18n="footer-description">CheatBlox is a streamlined gaming hub for versions, products, and community resources.</p>' +
           '</section>' +
           '<section>' +
@@ -23,19 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
             '</ul></nav>' +
           '</section>' +
           '<section>' +
-            '<h2 class="site-footer__title" data-i18n="footer-resources">Resources</h2>' +
+            '<h2 class="site-footer__title" data-i18n="footer-documents">Documents</h2>' +
             '<ul class="site-footer__links">' +
-              '<li><a href="products.html" data-i18n="footer-product-catalog">Product catalog</a></li>' +
-              '<li><a href="exploits.html" data-i18n="footer-version-archive">Version archive</a></li>' +
+              '<li><a href="terms-of-service.html">Terms of Service</a></li>' +
+              '<li><a href="privacy-policy.html">Privacy Policy</a></li>' +
+              '<li><a href="refund-policy.html">Refund Policy</a></li>' +
             '</ul>' +
-            '<p class="site-footer__coming-soon" data-i18n="footer-coming-soon">More information will appear here soon.</p>' +
           '</section>' +
           '<section>' +
             '<h2 class="site-footer__title" data-i18n="footer-contacts">Contacts</h2>' +
             '<ul class="site-footer__contacts">' +
-              '<li class="site-footer__contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 4-3.3 16-6-4.3-3.1 2.6.6-4.1L4 11.8 21 4Z"/><path d="m9.2 14.2 7.2-6.5"/></svg><span data-i18n="footer-telegram">Telegram</span><span class="site-footer__placeholder">—</span></li>' +
-              '<li class="site-footer__contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h3"/></svg><span data-i18n="footer-funpay">FunPay</span><span class="site-footer__placeholder">—</span></li>' +
-              '<li class="site-footer__contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 8 9 6 9-6"/></svg><span data-i18n="footer-email">Email</span><span class="site-footer__placeholder">—</span></li>' +
+              '<li class="site-footer__contact"><a href="https://t.me/Qop_products" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 4-3.3 16-6-4.3-3.1 2.6.6-4.1L4 11.8 21 4Z"/><path d="m9.2 14.2 7.2-6.5"/></svg><span data-i18n="footer-telegram">Telegram</span></a></li>' +
+              '<li class="site-footer__contact"><a href="https://funpay.com/users/15012980/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h3"/></svg><span data-i18n="footer-funpay">FunPay</span></a></li>' +
+              '<li class="site-footer__contact"><a href="mailto:cheatbloxsupport@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 8 9 6 9-6"/></svg><span data-i18n="footer-email">Email</span></a></li>' +
+              '<li class="site-footer__contact"><a href="https://discord.com/invite/qP2xRwhYFt" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5a15 15 0 0 1 8 0l1 2a14 14 0 0 1 3 9 16 16 0 0 1-4 2l-1-2a11 11 0 0 0 2-1 11 11 0 0 1-10 0 11 11 0 0 0 2 1l-1 2a16 16 0 0 1-4-2 14 14 0 0 1 3-9l1-2Z"/><path d="M9 12h.01M15 12h.01"/></svg><span>Discord</span></a></li>' +
             '</ul>' +
           '</section>' +
         '</div>'
@@ -61,8 +63,8 @@ function injectBonusModal() {
         <h2 id="bonus-modal-title" data-i18n="bonus-modal-title">Get 10% off</h2>
         <p id="bonus-modal-copy" data-i18n="bonus-modal-copy">Join our Telegram or Discord to get a promo code. Apply it on a product page to see your discounted price.</p>
         <div class="bonus-modal__actions">
-          <a class="bonus-modal__cta" href="https://t.me/qop_fun" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--telegram" aria-hidden="true"></span><span data-i18n="bonus-modal-telegram">Open Telegram</span></a>
-          <a class="bonus-modal__cta bonus-modal__cta--secondary" href="https://discord.gg/qP2xRwhYFt" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--discord" aria-hidden="true"></span><span data-i18n="bonus-modal-discord">Open Discord</span></a>
+          <a class="bonus-modal__cta" href="https://t.me/Qop_products" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--telegram" aria-hidden="true"></span><span data-i18n="bonus-modal-telegram">Open Telegram</span></a>
+          <a class="bonus-modal__cta bonus-modal__cta--secondary" href="https://discord.com/invite/qP2xRwhYFt" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--discord" aria-hidden="true"></span><span data-i18n="bonus-modal-discord">Open Discord</span></a>
         </div>
       </section>
     </div>

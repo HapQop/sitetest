@@ -121,7 +121,7 @@
         if (result.ok && result.user) {
           // Уже верифицированный пользователь - сразу логиним
           showStatus("Login successful! Redirecting...", "success");
-          setTimeout(() => window.location.href = "index.html", 1000);
+          setTimeout(() => window.location.href = result.user.isAdmin ? "admin.html" : "index.html", 1000);
           return;
         }
         challengeId = result.challengeId;
@@ -134,9 +134,9 @@
         showView("reset");
         showStatus("If the email exists, a recovery code has been sent.", "success");
       } else if (mode === "verify") {
-        await request("verify", { challengeId, code: data.code });
+        const result = await request("verify", { challengeId, code: data.code });
         showStatus("Email verified. You are signed in. Redirecting...", "success");
-        setTimeout(() => window.location.href = "index.html", 1500);
+        setTimeout(() => window.location.href = result.user?.isAdmin ? "admin.html" : "index.html", 1500);
       } else if (mode === "reset") {
         await request("reset", { challengeId, email: resetEmail, code: data.code, password: data.password });
         showView("login");

@@ -1,11 +1,16 @@
 const crypto = require("node:crypto");
 const { promisify } = require("node:util");
+const { isAdminUser } = require("../../lib/admin-access");
 
 const scrypt = promisify(crypto.scrypt);
 const USER_TTL = 60 * 60 * 24 * 365;
 const CHALLENGE_TTL = 10 * 60;
 const SESSION_TTL = 60 * 60 * 24 * 7;
 const MAX_CODE_ATTEMPTS = 5;
+
+function publicUser(user) {
+  return { username: user.username, email: user.email, isAdmin: isAdminUser(user) };
+}
 
 function json(res, status, body) {
   res.setHeader("Cache-Control", "no-store");
@@ -191,7 +196,7 @@ async function login(req, res) {
   }
   // Для уже верифицированных пользователей сразу создаем сессию без кода
   await issueSession(res, user.id);
-  return json(res, 200, { ok: true, user: { username: user.username, email: user.email } });
+  return json(res, 200, { ok: true, user: publicUser(user) });
 }
 
 async function forgot(req, res) {
@@ -220,7 +225,7 @@ async function verify(req, res) {
   await setJson(`auth:user:${user.id}`, user);
   await kv(["DEL", `auth:challenge:${challengeId}`]);
   await issueSession(res, user.id);
-  return json(res, 200, { ok: true, user: { username: user.username, email: user.email } });
+  return json(res, 200, { ok: true, user: publicUser(user) });
 }
 
 async function reset(req, res) {
@@ -250,7 +255,7 @@ async function getSession(req, res) {
   if (!session) return json(res, 401, { error: "Session expired." });
   const user = await getJson(`auth:user:${session.userId}`);
   if (!user) return json(res, 401, { error: "User not found." });
-  return json(res, 200, { ok: true, user: { username: user.username, email: user.email } });
+  return json(res, 200, { ok: true, user: publicUser(user) });
 }
 
 async function logout(req, res) {

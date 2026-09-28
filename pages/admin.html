@@ -19,7 +19,18 @@
     .admin-status { min-height:20px; margin-top:18px; color:var(--muted); font-size:13px; }
     .admin-status.is-error { color:#ff8179; }
     .admin-status.is-success { color:#62d497; }
-    .admin-table-wrap { margin-top:22px; overflow:auto; border:1px solid var(--border); border-radius:14px; background:var(--panel); box-shadow:0 18px 38px rgba(0,0,0,.25); }
+    .admin-section { margin-top:22px; }
+    .admin-section h2 { margin:0 0 10px; color:#fff; font-size:19px; }
+    .admin-section > p { margin:0 0 14px; color:var(--muted); font-size:13px; }
+    .admin-versions,.admin-product-card { border:1px solid var(--border); border-radius:14px; background:var(--panel); box-shadow:0 18px 38px rgba(0,0,0,.25); }
+    .admin-versions { display:grid; grid-template-columns:repeat(4,minmax(160px,1fr)); gap:14px; padding:16px; }
+    .admin-version-field { display:grid; gap:7px; color:#d7c2b4; font-size:12px; font-weight:800; text-transform:capitalize; }
+    .admin-field-label { display:block; margin-bottom:7px; color:#bdb4af; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .admin-product-card { margin-top:14px; overflow:hidden; }
+    .admin-product-editor { display:flex; align-items:end; gap:12px; padding:16px; border-bottom:1px solid #302b28; background:#1d1a18; }
+    .admin-product-editor .admin-field { flex:1 1 220px; }
+    .admin-product-editor .admin-input { width:100%; }
+    .admin-table-wrap { overflow:auto; }
     .admin-table { width:100%; min-width:740px; border-collapse:collapse; }
     .admin-table th,.admin-table td { padding:13px 15px; border-bottom:1px solid #302b28; text-align:left; }
     .admin-table th { color:#bdb4af; background:#1d1a18; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
@@ -28,15 +39,18 @@
     .admin-product { font-weight:800; }
     .admin-plan { color:#aaa5a2; }
     .admin-input { width:120px; min-height:37px; padding:0 10px; border:1px solid #4a403a; border-radius:8px; color:#fff; background:#0e0e0e; font:700 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
+    .admin-input.is-wide { width:100%; min-width:140px; }
+    .admin-select { width:100%; min-height:37px; padding:0 8px; border:1px solid #4a403a; border-radius:8px; color:#fff; background:#0e0e0e; font:700 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
     .admin-input:focus-visible { border-color:var(--orange); outline:2px solid rgba(255,157,92,.25); outline-offset:2px; }
     .admin-available { display:inline-flex; align-items:center; gap:8px; color:#d5cbc5; cursor:pointer; }
     .admin-available input { width:17px; height:17px; accent-color:var(--orange); }
     .admin-save { min-height:37px; padding:0 13px; border:1px solid var(--orange); border-radius:8px; color:#24150b; background:var(--orange); font:800 12px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; }
+    .admin-save::before { content:"✎ "; }
     .admin-save:hover:not(:disabled) { background:#ffb077; }
     .admin-save:disabled { cursor:wait; opacity:.6; }
     .admin-empty { padding:34px 20px; color:var(--muted); text-align:center; }
     .admin-login { display:inline-flex; min-height:40px; align-items:center; margin-top:18px; padding:0 14px; border:1px solid var(--orange); border-radius:9px; color:#24150b; background:var(--orange); font-weight:800; text-decoration:none; }
-    @media (max-width:650px) { main { width:calc(100% - 28px); margin-top:36px; } .admin-intro { align-items:start; flex-direction:column; } .admin-user { text-align:left; } }
+    @media (max-width:650px) { main { width:calc(100% - 28px); margin-top:36px; } .admin-intro,.admin-product-editor { align-items:start; flex-direction:column; } .admin-user { text-align:left; } .admin-versions { grid-template-columns:1fr; } .admin-product-editor .admin-field,.admin-product-editor .admin-save { width:100%; } }
   </style>
   <script src="../scripts/site-footer.js" defer></script>
   <script src="../scripts/site-i18n.js" defer></script>
@@ -45,15 +59,16 @@
 </head>
 <body data-page="admin">
   <nav class="site-header" aria-label="Primary navigation">
-    <a class="site-brand" href="index.html"><span class="brand-mark">◢</span>Cheat<span>Blox</span></a>
+    <a class="site-brand" href="index.html"><img class="brand-mark" src="../assets/icons/cheatblox-mark.svg" alt="" width="28" height="28">Cheat<span>Blox</span></a>
     <div class="site-nav"><a href="index.html" data-i18n="nav-home">Home</a><a href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a></div>
     <div class="site-controls"><div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div><a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a></div>
   </nav>
   <main>
-    <div class="admin-intro"><div><h1>Admin panel</h1><p>Manage product prices and availability.</p></div><p class="admin-user" data-admin-user></p></div>
+    <div class="admin-intro"><div><h1>Admin panel</h1><p>Edit products, plans, prices, stock, access and release versions.</p></div><p class="admin-user" data-admin-user></p></div>
     <p class="admin-status" data-admin-status role="status" aria-live="polite">Checking access...</p>
     <div data-admin-content hidden>
-      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Product</th><th>Plan</th><th>Price USD</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead><tbody data-admin-rows></tbody></table><p class="admin-empty" data-admin-empty hidden>No products configured.</p></div>
+      <section class="admin-section" aria-labelledby="platform-versions-title"><h2 id="platform-versions-title">Platform versions</h2><p>Set a version manually, or clear the field to return to the automatic version.</p><div class="admin-versions" data-admin-versions></div></section>
+      <section class="admin-section" aria-labelledby="products-title"><h2 id="products-title">Products and plans</h2><p>Use the pencil buttons to save each product or plan after editing.</p><div data-admin-products></div><p class="admin-empty" data-admin-empty hidden>No products configured.</p></section>
     </div>
     <a class="admin-login" href="auth.html?mode=login" data-admin-login hidden>Sign in as admin</a>
   </main>

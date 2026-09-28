@@ -1,4 +1,4 @@
-const { cloneCatalog, readCatalog } = require("../lib/catalog");
+const { cloneCatalog, readCatalog, readVersions } = require("../lib/catalog");
 
 module.exports = async (req, res) => {
   if (req.method !== "GET") {
@@ -8,14 +8,14 @@ module.exports = async (req, res) => {
   try {
     if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
       res.setHeader("Cache-Control", "no-store");
-      return res.status(200).json({ catalog: cloneCatalog(), fallback: true });
+      return res.status(200).json({ catalog: cloneCatalog(), versions: {}, fallback: true });
     }
-    const catalog = await readCatalog();
+    const [catalog, versions] = await Promise.all([readCatalog(), readVersions()]);
     res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ catalog });
+    return res.status(200).json({ catalog, versions });
   } catch (error) {
     console.error("Catalog API error", error.message);
     res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json({ catalog: cloneCatalog(), fallback: true });
+    return res.status(200).json({ catalog: cloneCatalog(), versions: {}, fallback: true });
   }
 };

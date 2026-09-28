@@ -10,7 +10,7 @@ Before deploying, add these Vercel environment variables for Production (and Pre
 - `KV_REST_API_TOKEN`
 - `RESEND_API_KEY`
 - `AUTH_FROM_EMAIL`
-- `ADMIN_EMAILS` (set to `1mmx1mmxxx@gmail.com` for the requested admin account)
+- `ADMIN_EMAILS` (optional comma-separated additional administrator addresses)
 
 Create a Vercel KV/Upstash Redis store to obtain the first two values. Create a Resend account, verify the sending domain, create an API key, and set `AUTH_FROM_EMAIL` to an address on that verified domain. Never commit real values to the repository.
 
@@ -20,6 +20,6 @@ Registration can also save one optional Discord or Telegram username in the user
 
 ## Admin panel
 
-Open `/admin.html` after signing in with an account whose verified email is listed in `ADMIN_EMAILS`. The panel can update each product plan's USD price, stock count, and availability. Changes are stored in the same KV database and are applied to the public catalog on the next page load.
+After registration and email verification, `1mmx1mmxxx@gmail.com` is recognized as the owner account and redirected to the admin panel. The header also shows an **✎ Admin** link when that account signs in. The panel can update product names and versions, plan names, access descriptions, USD prices, stock counts, availability, and manual Windows/macOS/Android/iOS version overrides. Clearing a platform override returns it to the automatic WEAO version. Changes are stored in the same KV database and applied on the next public page load.
 
-The admin endpoint checks the HttpOnly session cookie, the verified account email, and the request origin before accepting updates. Keep `ADMIN_EMAILS` restricted to owner-controlled addresses and never put KV or email provider tokens in client-side files.
+The admin endpoint checks the HttpOnly session cookie, the verified account email, and the request origin before accepting updates. `ADMIN_EMAILS` can grant access to additional trusted addresses; leave it unset if only the owner should have access. Never put KV or email provider tokens in client-side files.

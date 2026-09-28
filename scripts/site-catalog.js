@@ -12,12 +12,40 @@
     return window.CheatBloxCurrency ? window.CheatBloxCurrency.format(amount) : `$${Number(amount).toFixed(2)}`;
   }
 
+  function showVersion(container, version) {
+    if (!container) return;
+    let note = container.querySelector(".catalog-product-version");
+    if (!version) {
+      note?.remove();
+      return;
+    }
+    if (!note) {
+      note = document.createElement("p");
+      note.className = "catalog-product-version";
+      const title = container.querySelector("h1, h2");
+      if (title) title.insertAdjacentElement("afterend", note);
+      else container.appendChild(note);
+    }
+    note.textContent = `Version: ${version}`;
+  }
+
   function applyCatalogCards(catalog) {
     document.querySelectorAll("[data-product-id]").forEach((card) => {
       const product = catalog[card.dataset.productId];
       if (!product) return;
+      const title = card.querySelector(".store-card__body h2");
+      if (title) title.textContent = product.name;
+      const visualName = card.querySelector(".store-card__visual strong");
+      if (visualName) visualName.textContent = product.name;
+      card.setAttribute("aria-label", `Open ${product.name} product details`);
+      showVersion(card.querySelector(".store-card__body"), product.version);
       const firstPlan = Object.values(product.plans || {}).find((plan) => plan.available) || Object.values(product.plans || {})[0];
       if (!firstPlan) return;
+      const access = card.querySelector(".store-card__access");
+      if (access) {
+        access.removeAttribute("data-i18n");
+        access.textContent = firstPlan.access;
+      }
       const price = card.querySelector("[data-currency-price]");
       if (price) {
         price.dataset.currencyPrice = String(firstPlan.price);
@@ -25,6 +53,7 @@
       }
       const stock = card.querySelector(".store-card__stock");
       if (stock) {
+        stock.removeAttribute("data-i18n");
         stock.textContent = formatStock(firstPlan);
         stock.classList.toggle("is-out", !firstPlan.available);
       }
@@ -35,6 +64,14 @@
     if (!product) return;
     const buttons = [...document.querySelectorAll("[data-plan-option]")];
     const plans = product.plans || {};
+    const heading = document.querySelector(".product-heading");
+    const title = heading?.querySelector("h1");
+    if (title) title.textContent = product.name;
+    showVersion(heading, product.version);
+    buttons.forEach((button) => {
+      const plan = plans[button.dataset.planOption];
+      if (plan) button.textContent = plan.name;
+    });
     const state = { current: buttons.find((button) => button.classList.contains("is-active"))?.dataset.planOption || Object.keys(plans)[0] };
     const page = document.querySelector("main");
     const panel = document.querySelector(".plan-panel");
