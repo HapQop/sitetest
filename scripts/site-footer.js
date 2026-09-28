@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function injectBonusModal() {
-  if (document.querySelector(".bonus-modal")) return;
+  if (document.body.dataset.page !== "nav-home" || document.querySelector(".bonus-modal")) return;
 
   const sessionKey = "cheatblox-bonus-seen";
   if (sessionStorage.getItem(sessionKey) === "true") return;
@@ -56,57 +56,55 @@ function injectBonusModal() {
     <div class="bonus-modal" data-bonus-modal hidden>
       <div class="bonus-modal__backdrop" data-bonus-close></div>
       <section class="bonus-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="bonus-modal-title" aria-describedby="bonus-modal-copy">
-        <button class="bonus-modal__close" type="button" data-bonus-close aria-label="Close bonus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-        <h2 id="bonus-modal-title">Bonus</h2>
-        <p id="bonus-modal-copy" data-i18n="bonus-modal-copy">Use this code for a bonus on your next order.</p>
-        <span class="bonus-modal__tag" data-i18n="bonus-modal-tag">BONUS OFFER</span>
-        <div class="bonus-modal__code-row">
-          <span class="bonus-modal__code-label" data-i18n="bonus-modal-code-label">Your code</span>
-          <code class="bonus-modal__code">BONUS</code>
-          <button class="bonus-modal__copy" type="button" data-bonus-copy aria-label="Copy promo code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8V5.8A1.8 1.8 0 0 1 9.8 4h8.4A1.8 1.8 0 0 1 20 5.8v8.4a1.8 1.8 0 0 1-1.8 1.8H16M5.8 9h7.4A1.8 1.8 0 0 1 15 10.8v7.4A1.8 1.8 0 0 1 13.2 20H5.8A1.8 1.8 0 0 1 4 18.2v-7.4A1.8 1.8 0 0 1 5.8 9Z"/></svg><span class="visually-hidden" data-bonus-copy-label>Copy promo code</span></button>
+        <button class="bonus-modal__close" type="button" data-bonus-close data-i18n-aria-label="bonus-modal-close" aria-label="Close offer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+        <span class="bonus-modal__tag" data-i18n="bonus-modal-tag">WELCOME OFFER</span>
+        <h2 id="bonus-modal-title" data-i18n="bonus-modal-title">Get 10% off</h2>
+        <p id="bonus-modal-copy" data-i18n="bonus-modal-copy">Join our Telegram or Discord to get a promo code. Apply it on a product page to see your discounted price.</p>
+        <div class="bonus-modal__actions">
+          <a class="bonus-modal__cta" href="https://t.me/qop_fun" target="_blank" rel="noopener noreferrer" data-bonus-link data-i18n="bonus-modal-telegram">Open Telegram</a>
+          <a class="bonus-modal__cta bonus-modal__cta--secondary" href="https://discord.gg/qP2xRwhYFt" target="_blank" rel="noopener noreferrer" data-bonus-link data-i18n="bonus-modal-discord">Open Discord</a>
         </div>
-        <p class="bonus-modal__message" data-bonus-message aria-live="polite"></p>
-        <a class="bonus-modal__cta" href="products.html" data-bonus-close data-i18n="bonus-modal-cta">Start shopping</a>
       </section>
     </div>
   `);
 
   const modal = document.querySelector("[data-bonus-modal]");
   const closeButtons = modal.querySelectorAll("[data-bonus-close]");
-  const copyButton = modal.querySelector("[data-bonus-copy]");
-  const message = modal.querySelector("[data-bonus-message]");
-  const code = modal.querySelector(".bonus-modal__code").textContent;
+  const focusable = [modal.querySelector(".bonus-modal__close"), ...modal.querySelectorAll("[data-bonus-link]")];
+  const previousFocus = document.activeElement;
 
-  requestAnimationFrame(() => modal.removeAttribute("hidden"));
+  requestAnimationFrame(() => {
+    modal.removeAttribute("hidden");
+    document.body.classList.add("bonus-modal-open");
+    focusable[0].focus();
+  });
   sessionStorage.setItem(sessionKey, "true");
 
   const close = () => {
+    if (modal.classList.contains("is-closing")) return;
     modal.classList.add("is-closing");
-    window.setTimeout(() => modal.remove(), 170);
+    document.body.classList.remove("bonus-modal-open");
+    document.removeEventListener("keydown", onKeydown);
+    window.setTimeout(() => {
+      modal.remove();
+      previousFocus?.focus?.();
+    }, 170);
   };
 
   closeButtons.forEach((button) => button.addEventListener("click", close));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && document.body.contains(modal)) close();
-  }, { once: true });
-  copyButton.addEventListener("click", async () => {
-    try {
-      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(code);
-      else {
-        const field = document.createElement("textarea");
-        field.value = code;
-        field.setAttribute("readonly", "");
-        field.style.position = "fixed";
-        field.style.opacity = "0";
-        document.body.append(field);
-        field.select();
-        document.execCommand("copy");
-        field.remove();
-      }
-      message.textContent = document.documentElement.lang === "ru" ? "Скопировано" : "Copied";
-      copyButton.classList.add("is-copied");
-    } catch {
-      message.textContent = document.documentElement.lang === "ru" ? "Не удалось скопировать" : "Copy unavailable";
+  modal.querySelectorAll("[data-bonus-link]").forEach((link) => link.addEventListener("click", close));
+  function onKeydown(event) {
+    if (event.key === "Escape") close();
+    if (event.key !== "Tab") return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
-  });
+  }
+  document.addEventListener("keydown", onKeydown);
 }

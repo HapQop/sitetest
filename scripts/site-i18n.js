@@ -59,6 +59,9 @@ const translations = {
     "product-promo-label": "Promo code",
     "product-promo-apply": "Apply",
     "product-promo-hint": "Have a promo code?",
+    "product-promo-applied": "10% discount applied.",
+    "product-promo-invalid": "This promo code is not valid.",
+    "product-promo-empty": "Enter a promo code.",
     exploits: "Exploits",
     reviews: "Reviews",
     "reviews-intro": "Share your experience. Only buyers with a paid order can review — enter your order ID from the success page or email.",
@@ -88,10 +91,12 @@ const translations = {
     "exploits-vng-status": "VNG Status",
     "exploits-no-matches": "No executors match your filters.",
     "exploits-purchase": "Purchase",
-    "bonus-modal-copy": "Use this code for a bonus on your next order.",
-    "bonus-modal-tag": "BONUS OFFER",
-    "bonus-modal-code-label": "Your code",
-    "bonus-modal-cta": "Start shopping",
+    "bonus-modal-title": "Get 10% off",
+    "bonus-modal-copy": "Join our Telegram or Discord to get a promo code. Apply it on a product page to see your discounted price.",
+    "bonus-modal-tag": "WELCOME OFFER",
+    "bonus-modal-telegram": "Open Telegram",
+    "bonus-modal-discord": "Open Discord",
+    "bonus-modal-close": "Close offer",
     download: "Download",
     "android-latest-xapk": "Latest XAPK",
     "android-xapk-note": "Requires an XAPK installer",
@@ -171,6 +176,9 @@ const translations = {
     "product-promo-label": "Промокод",
     "product-promo-apply": "Применить",
     "product-promo-hint": "Есть промокод?",
+    "product-promo-applied": "Скидка 10% применена.",
+    "product-promo-invalid": "Промокод недействителен.",
+    "product-promo-empty": "Введите промокод.",
     exploits: "Эксплойты",
     reviews: "Отзывы",
     "reviews-intro": "Поделитесь опытом. Отзыв могут оставить только покупатели с оплаченным заказом — укажите ID заказа со страницы успеха или из письма.",
@@ -200,10 +208,12 @@ const translations = {
     "exploits-vng-status": "Статус VNG",
     "exploits-no-matches": "По этим фильтрам эксплойты не найдены.",
     "exploits-purchase": "Купить",
-    "bonus-modal-copy": "Используйте этот код для бонуса на следующий заказ.",
-    "bonus-modal-tag": "БОНУС",
-    "bonus-modal-code-label": "Ваш код",
-    "bonus-modal-cta": "К покупкам",
+    "bonus-modal-title": "Скидка 10%",
+    "bonus-modal-copy": "Перейдите в наш Telegram или Discord за промокодом. Примените его на странице продукта, чтобы увидеть цену со скидкой.",
+    "bonus-modal-tag": "ПРЕДЛОЖЕНИЕ ДЛЯ ВАС",
+    "bonus-modal-telegram": "Открыть Telegram",
+    "bonus-modal-discord": "Открыть Discord",
+    "bonus-modal-close": "Закрыть предложение",
     download: "Скачать",
     "android-latest-xapk": "Новый XAPK",
     "android-xapk-note": "Нужен установщик XAPK",
@@ -222,6 +232,12 @@ const translations = {
     "footer-telegram": "Telegram",
     "footer-funpay": "FunPay",
     "footer-email": "Почта",
+  },
+};
+
+window.CheatBloxI18n = {
+  translate(key) {
+    return translations[document.documentElement.lang]?.[key] || translations.en[key];
   },
 };
 
@@ -248,6 +264,11 @@ function setLanguage(language) {
   document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
     const translatedText = dictionary[element.dataset.i18nPlaceholder];
     if (translatedText) element.placeholder = translatedText;
+  });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    const translatedText = dictionary[element.dataset.i18nAriaLabel];
+    if (translatedText) element.setAttribute("aria-label", translatedText);
   });
 
   document.querySelectorAll('input[name="language"]').forEach((input) => {

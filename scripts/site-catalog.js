@@ -59,14 +59,21 @@
       });
       page.dataset.plan = planId;
       panel?.classList.toggle("is-unavailable", !plan.available);
-      if (price) price.textContent = formatPrice(plan.price);
+      if (price) {
+        price.dataset.promoBasePrice = String(plan.price);
+        price.textContent = formatPrice(plan.price);
+      }
       if (headingStock) {
         headingStock.textContent = formatStock(plan);
         headingStock.classList.toggle("is-out", !plan.available);
       }
       if (planName) planName.textContent = plan.access;
       if (summaryName) summaryName.textContent = plan.name;
-      if (summaryPrice) summaryPrice.textContent = formatPrice(plan.price);
+      if (summaryPrice) {
+        summaryPrice.dataset.promoBasePrice = String(plan.price);
+        summaryPrice.textContent = formatPrice(plan.price);
+      }
+      document.dispatchEvent(new CustomEvent("cheatblox:planpricechange", { detail: { price: plan.price } }));
       if (summaryStock) {
         summaryStock.textContent = formatStock(plan);
         summaryStock.classList.toggle("is-out", !plan.available);

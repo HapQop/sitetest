@@ -132,7 +132,8 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   .site-footer__links a { transition: none; }
 }
 
-.bonus-modal {
+.bonus-modal,
+body > .bonus-modal {
   position: fixed;
   z-index: 1000;
   inset: 0;
@@ -141,6 +142,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   padding: 20px;
 }
 
+.bonus-modal-open { overflow: hidden; }
 .bonus-modal[hidden] { display: none; }
 .bonus-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.72); backdrop-filter: blur(3px); }
 .bonus-modal__dialog {
@@ -172,19 +174,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 }
 .bonus-modal__close:hover, .bonus-modal__close:focus-visible { border-color: var(--accent); color: #fff; background: #30231d; outline: none; }
 .bonus-modal__close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.8; }
-.bonus-modal__dialog h2 { max-width: 78%; color: #fff; font-size: clamp(32px, 5vw, 46px); font-weight: 850; letter-spacing: -.04em; line-height: 1.02; }
+.bonus-modal__dialog h2 { max-width: 78%; margin-top: 16px; color: #fff; font-size: clamp(32px, 5vw, 46px); font-weight: 850; letter-spacing: -.04em; line-height: 1.02; }
 .bonus-modal__dialog > p { max-width: 430px; margin-top: 14px; color: #aaa29d; font-size: 15px; line-height: 1.5; }
-.bonus-modal__tag { display: inline-flex; margin-top: 20px; padding: 7px 12px; border: 1px solid rgba(255,157,92,.6); border-radius: 8px; color: var(--accent); background: rgba(255,157,92,.08); font-size: 12px; font-weight: 850; letter-spacing: .08em; }
-.bonus-modal__code-row { display: grid; grid-template-columns: auto minmax(0,1fr) 32px; align-items: center; gap: 12px; margin-top: 24px; min-height: 56px; padding: 0 12px 0 18px; border: 1px solid #353333; border-radius: 10px; background: #0c0d0f; }
-.bonus-modal__code-label { color: #a29b97; font-size: 14px; }
-.bonus-modal__code { overflow: hidden; color: #f5efe9; font: 800 19px/1 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing: .14em; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
-.bonus-modal__copy { display: grid; width: 32px; height: 32px; place-items: center; padding: 0; border: 0; border-radius: 7px; color: #aaa29d; background: transparent; cursor: pointer; }
-.bonus-modal__copy:hover, .bonus-modal__copy:focus-visible, .bonus-modal__copy.is-copied { color: var(--accent); background: rgba(255,157,92,.12); outline: none; }
-.bonus-modal__copy svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linejoin: round; stroke-width: 1.7; }
-.bonus-modal__message { min-height: 17px; margin-top: 7px; color: var(--accent); font-size: 12px; text-align: right; }
-.bonus-modal__cta { display:flex; min-height: 48px; align-items:center; justify-content:center; margin-top: 14px; border: 1px solid #c2763c; border-radius: 10px; color: #21140c; background: var(--accent); font-size: 15px; font-weight: 800; text-decoration: none; transition: background .18s ease, transform .18s ease; }
-.bonus-modal__cta:hover, .bonus-modal__cta:focus-visible { background: #ffb077; transform: translateY(-1px); outline: none; }
+.bonus-modal__tag { display: inline-flex; padding: 7px 12px; border: 1px solid rgba(255,157,92,.6); border-radius: 8px; color: var(--accent); background: rgba(255,157,92,.08); font-size: 12px; font-weight: 850; letter-spacing: .08em; }
+.bonus-modal__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 26px; }
+.bonus-modal__cta { display:flex; min-height: 50px; align-items:center; justify-content:center; padding: 10px; border: 1px solid #c2763c; border-radius: 10px; color: #21140c; background: var(--accent); font-size: 15px; font-weight: 800; text-align: center; text-decoration: none; transition: background .18s ease, transform .18s ease; }
+.bonus-modal__cta:hover, .bonus-modal__cta:focus-visible { background: #ffb077; transform: translateY(-1px); outline: 2px solid #fff; outline-offset: 2px; }
+.bonus-modal__cta--secondary { color: #f7eee8; background: #30231d; }
+.bonus-modal__cta--secondary:hover, .bonus-modal__cta--secondary:focus-visible { color: #21140c; }
 @keyframes bonus-modal-enter { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes bonus-modal-exit { to { opacity: 0; transform: translateY(8px) scale(.98); } }
-@media (max-width: 520px) { .bonus-modal { padding: 12px; } .bonus-modal__dialog { padding: 28px 18px 20px; border-radius: 15px; } .bonus-modal__code-row { grid-template-columns: 1fr 32px; gap: 8px; padding-left: 13px; } .bonus-modal__code-label { grid-column: 1 / -1; padding-top: 10px; font-size: 12px; } .bonus-modal__code { padding-bottom: 10px; text-align: left; } .bonus-modal__copy { grid-column: 2; grid-row: 2; } }
+@media (max-width: 520px) { .bonus-modal { padding: 12px; } .bonus-modal__dialog { padding: 28px 18px 20px; border-radius: 15px; } .bonus-modal__actions { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .bonus-modal__dialog, .bonus-modal__cta { animation: none; transition: none; } }

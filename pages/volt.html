@@ -85,6 +85,7 @@
   <script src="../scripts/site-i18n.js" defer></script>
   <script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
   <script src="../scripts/site-catalog.js" defer></script>
+  <script src="../scripts/site-promo.js" defer></script>
 </head>
 <body data-page="volt">
   <nav class="site-header" aria-label="Primary navigation">
@@ -167,9 +168,6 @@
       const selectPlan = document.querySelector("[data-select-plan]");
       const planLabel = document.querySelector("[data-plan-label]");
       const message = document.querySelector("[data-plan-message]");
-      const promoForm = document.querySelector("[data-promo-form]");
-      const promoInput = document.querySelector("#promo-code");
-      const promoMessage = document.querySelector("[data-promo-message]");
       let currentPlanId = "weekly";
 
       function formatPrice(amount) {
@@ -187,12 +185,15 @@
         });
         page.dataset.plan = planId;
         panel.classList.toggle("is-unavailable", !plan.available);
+        price.dataset.promoBasePrice = String(plan.price);
         price.textContent = formatPrice(plan.price);
         headingStock.textContent = plan.stock;
         headingStock.classList.toggle("is-out", !plan.available);
         planName.textContent = plan.access;
         summaryName.textContent = plan.name;
+        summaryPrice.dataset.promoBasePrice = String(plan.price);
         summaryPrice.textContent = formatPrice(plan.price);
+        document.dispatchEvent(new CustomEvent("cheatblox:planpricechange", { detail: { price: plan.price } }));
         summaryStock.textContent = plan.stock;
         summaryStock.classList.toggle("is-out", !plan.available);
         selectPlan.disabled = !plan.available;
@@ -205,12 +206,6 @@
         button.addEventListener("click", () => setPlan(button.dataset.planOption));
       });
       document.addEventListener("currencychange", () => setPlan(currentPlanId));
-      promoForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const code = promoInput.value.trim();
-        promoMessage.classList.toggle("is-applied", Boolean(code));
-        promoMessage.textContent = code ? "Promo code entered. Discount will be checked at checkout." : "Enter a promo code.";
-      });
       setPlan("weekly");
     })();
   </script>
