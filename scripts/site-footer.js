@@ -61,8 +61,8 @@ function injectBonusModal() {
         <h2 id="bonus-modal-title" data-i18n="bonus-modal-title">Get 10% off</h2>
         <p id="bonus-modal-copy" data-i18n="bonus-modal-copy">Join our Telegram or Discord to get a promo code. Apply it on a product page to see your discounted price.</p>
         <div class="bonus-modal__actions">
-          <a class="bonus-modal__cta" href="https://t.me/qop_fun" target="_blank" rel="noopener noreferrer" data-bonus-link data-i18n="bonus-modal-telegram">Open Telegram</a>
-          <a class="bonus-modal__cta bonus-modal__cta--secondary" href="https://discord.gg/qP2xRwhYFt" target="_blank" rel="noopener noreferrer" data-bonus-link data-i18n="bonus-modal-discord">Open Discord</a>
+          <a class="bonus-modal__cta" href="https://t.me/qop_fun" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--telegram" aria-hidden="true"></span><span data-i18n="bonus-modal-telegram">Open Telegram</span></a>
+          <a class="bonus-modal__cta bonus-modal__cta--secondary" href="https://discord.gg/qP2xRwhYFt" target="_blank" rel="noopener noreferrer" data-bonus-link><span class="bonus-modal__icon bonus-modal__icon--discord" aria-hidden="true"></span><span data-i18n="bonus-modal-discord">Open Discord</span></a>
         </div>
       </section>
     </div>

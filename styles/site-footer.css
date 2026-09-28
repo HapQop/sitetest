@@ -178,7 +178,10 @@ body > .bonus-modal {
 .bonus-modal__dialog > p { max-width: 430px; margin-top: 14px; color: #aaa29d; font-size: 15px; line-height: 1.5; }
 .bonus-modal__tag { display: inline-flex; padding: 7px 12px; border: 1px solid rgba(255,157,92,.6); border-radius: 8px; color: var(--accent); background: rgba(255,157,92,.08); font-size: 12px; font-weight: 850; letter-spacing: .08em; }
 .bonus-modal__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 26px; }
-.bonus-modal__cta { display:flex; min-height: 50px; align-items:center; justify-content:center; padding: 10px; border: 1px solid #c2763c; border-radius: 10px; color: #21140c; background: var(--accent); font-size: 15px; font-weight: 800; text-align: center; text-decoration: none; transition: background .18s ease, transform .18s ease; }
+.bonus-modal__cta { display:flex; min-height: 50px; align-items:center; justify-content:center; gap: 9px; padding: 10px; border: 1px solid #c2763c; border-radius: 10px; color: #21140c; background: var(--accent); font-size: 15px; font-weight: 800; text-align: center; text-decoration: none; transition: background .18s ease, transform .18s ease; }
+.bonus-modal__icon { display: inline-block; width: 19px; height: 19px; flex: 0 0 19px; background: currentColor; mask-position: center; mask-size: contain; mask-repeat: no-repeat; }
+.bonus-modal__icon--telegram { mask-image: url("../assets/icons/telegram.svg"); }
+.bonus-modal__icon--discord { mask-image: url("../assets/icons/discord.svg"); }
 .bonus-modal__cta:hover, .bonus-modal__cta:focus-visible { background: #ffb077; transform: translateY(-1px); outline: 2px solid #fff; outline-offset: 2px; }
 .bonus-modal__cta--secondary { color: #f7eee8; background: #30231d; }
 .bonus-modal__cta--secondary:hover, .bonus-modal__cta--secondary:focus-visible { color: #21140c; }
