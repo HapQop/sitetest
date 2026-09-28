@@ -73,12 +73,15 @@ function injectBonusModal() {
   const focusable = [modal.querySelector(".bonus-modal__close"), ...modal.querySelectorAll("[data-bonus-link]")];
   const previousFocus = document.activeElement;
 
-  requestAnimationFrame(() => {
-    modal.removeAttribute("hidden");
-    document.body.classList.add("bonus-modal-open");
-    focusable[0].focus();
-  });
-  sessionStorage.setItem(sessionKey, "true");
+  window.setTimeout(() => {
+    requestAnimationFrame(() => {
+      modal.removeAttribute("hidden");
+      document.body.classList.add("bonus-modal-open");
+      focusable[0].focus();
+      document.addEventListener("keydown", onKeydown);
+      sessionStorage.setItem(sessionKey, "true");
+    });
+  }, 5000);
 
   const close = () => {
     if (modal.classList.contains("is-closing")) return;
@@ -106,5 +109,4 @@ function injectBonusModal() {
       first.focus();
     }
   }
-  document.addEventListener("keydown", onKeydown);
 }
