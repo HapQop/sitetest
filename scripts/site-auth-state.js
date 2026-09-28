@@ -36,11 +36,18 @@
     // Создаем элемент с именем пользователя и кнопкой выхода
     const siteControls = document.querySelector(".site-controls");
     if (siteControls && !document.querySelector(".user-menu")) {
+      const page = document.body.dataset.page;
+      const productPages = ["isaeva", "cosmic", "volt", "pottasium", "real", "lumen", "wave"];
+      const section = page === "nav-home" ? "home" : page === "exploits" ? "exploits" : page === "products" || productPages.includes(page) ? "products" : null;
+      const productHash = productPages.includes(page) ? `#product-${page}` : "";
+      const adminHref = section ? `admin.html?section=${section}${productHash}` : "admin.html";
+      const adminLabel = section ? "Редактировать текущую страницу" : "Открыть админ-панель";
+      const adminText = section ? "✎ Редактировать" : "✎ Панель";
       const userMenu = document.createElement("div");
       userMenu.className = "user-menu";
       userMenu.innerHTML = `
         <span class="user-name">${escapeHtml(user.username)}</span>
-        ${user.isAdmin === true ? '<a class="admin-link" href="admin.html" aria-label="Open admin panel">✎ Admin</a>' : ""}
+        ${user.isAdmin === true && page !== "admin" ? `<a class="admin-link" href="${adminHref}" aria-label="${adminLabel}">${adminText}</a>` : ""}
         <button class="logout-btn" aria-label="Logout">Logout</button>
       `;
 

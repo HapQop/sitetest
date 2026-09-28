@@ -1,6 +1,8 @@
 const crypto = require("node:crypto");
 const { readCatalog, writeCatalog, readVersions, writeVersions, VERSION_PLATFORMS, kv } = require("../lib/catalog");
 const { isAdminUser } = require("../lib/admin-access");
+const { readHomeSettings, validateHomeSettings, writeHomeSettings } = require("../lib/home-settings");
+const { EXPLOIT_CARDS, VNG_CARD_IDS, readExploitOverrides, writeExploitOverrides } = require("../lib/exploit-overrides");
 
 const SESSION_TTL = 60 * 60 * 24 * 7;
 
@@ -77,8 +79,8 @@ module.exports = async (req, res) => {
     const admin = await currentAdmin(req);
     if (!admin) return json(res, 403, { error: "Admin access is not available for this account." });
     if (req.method === "GET") {
-      const [catalog, versions] = await Promise.all([readCatalog(), readVersions()]);
-      return json(res, 200, { admin, catalog, versions });
+      const [catalog, versions, home, exploitOverrides] = await Promise.all([readCatalog(), readVersions(), readHomeSettings(), readExploitOverrides()]);
+      return json(res, 200, { admin, catalog, versions, home, exploitCards: EXPLOIT_CARDS, exploitOverrides });
     }
     if (req.method !== "POST") {
       res.setHeader("Allow", "GET, POST");
@@ -87,6 +89,25 @@ module.exports = async (req, res) => {
     if (!String(req.headers["content-type"] || "").toLowerCase().includes("application/json")) return json(res, 415, { error: "JSON content type is required." });
     if (!sameOrigin(req)) return json(res, 403, { error: "Request origin rejected." });
     const action = req.body?.action || "plan";
+    if (action === "home") {
+      const validation = validateHomeSettings(req.body?.settings);
+      if (!validation.valid) return json(res, 400, { error: validation.error });
+      const home = await writeHomeSettings(validation.home);
+      return json(res, 200, { ok: true, home });
+    }
+    if (action === "exploit") {
+      const id = bodyValue(req.body, "id");
+      const version = bodyValue(req.body, "version");
+      const status = bodyValue(req.body, "status");
+      const vngStatus = bodyValue(req.body, "vngStatus") || "auto";
+      if (!EXPLOIT_CARDS.some((card) => card.id === id)) return json(res, 400, { error: "Unknown exploit." });
+      if (!validText(version, 80, true) || !["auto", "online", "offline"].includes(status) || !["auto", "online", "offline"].includes(vngStatus) || (!VNG_CARD_IDS.has(id) && vngStatus !== "auto")) return json(res, 400, { error: "Invalid exploit version or status." });
+      const overrides = await readExploitOverrides();
+      if (!version && status === "auto" && vngStatus === "auto") delete overrides[id];
+      else overrides[id] = VNG_CARD_IDS.has(id) ? { version, status, vngStatus } : { version, status };
+      const exploitOverrides = await writeExploitOverrides(overrides);
+      return json(res, 200, { ok: true, exploitOverrides, updated: { id } });
+    }
     if (action === "version") {
       const platform = bodyValue(req.body, "platform");
       const version = bodyValue(req.body, "version");

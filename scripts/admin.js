@@ -6,6 +6,21 @@
   const empty = document.querySelector("[data-admin-empty]");
   const user = document.querySelector("[data-admin-user]");
   const login = document.querySelector("[data-admin-login]");
+  const homeForm = document.querySelector("[data-admin-home-form]");
+  const exploitRows = document.querySelector("[data-admin-exploit-rows]");
+  const exploitSearch = document.querySelector("[data-admin-exploit-search]");
+  const sectionNames = { home: "главной страницы", products: "каталога товаров", exploits: "страницы эксплоитов" };
+  const requestedSection = new URLSearchParams(window.location.search).get("section");
+  const section = Object.hasOwn(sectionNames, requestedSection) ? requestedSection : "home";
+
+  document.querySelectorAll("[data-admin-section]").forEach((panel) => { panel.hidden = panel.dataset.adminSection !== section; });
+  document.querySelectorAll("[data-admin-tab]").forEach((tab) => {
+    const active = tab.dataset.adminTab === section;
+    tab.classList.toggle("is-active", active);
+    if (active) tab.setAttribute("aria-current", "page");
+  });
+  document.querySelector("[data-admin-intro]").textContent = `Настройки ${sectionNames[section]}. Изменения появятся на сайте после сохранения.`;
+  document.querySelector("[data-admin-back]").href = { home: "index.html", products: "products.html", exploits: "exploits.html" }[section];
 
   function setStatus(message, type = "") {
     status.textContent = message;
@@ -44,13 +59,13 @@
     const planName = createInput(plan.name, { type: "text", maxLength: 80, className: "admin-input is-wide" });
     const access = createInput(plan.access || "", { type: "text", maxLength: 120, className: "admin-input is-wide" });
     const price = createInput(Number(plan.price).toFixed(2), { type: "number", min: "0", max: "100000", step: "0.01", inputMode: "decimal" });
-    const stockInput = createInput(stock, { type: "number", min: "0", max: "1000000000", step: "1", inputMode: "numeric", placeholder: "Unlimited" });
+    const stockInput = createInput(stock, { type: "number", min: "0", max: "1000000000", step: "1", inputMode: "numeric", placeholder: "Без лимита" });
     const available = document.createElement("input");
     available.type = "checkbox";
     available.checked = Boolean(plan.available);
     const availability = createElement("label", "admin-available");
-    availability.append(available, createElement("span", "", "Available"));
-    const button = createElement("button", "admin-save", "Save plan");
+    availability.append(available, createElement("span", "", "Доступен"));
+    const button = createElement("button", "admin-save", "Сохранить тариф");
     button.type = "button";
     [[planName], [access], [price], [stockInput], [availability], [button]].forEach(([child]) => { const cell = document.createElement("td"); cell.append(child); row.append(cell); });
     button.addEventListener("click", async () => {
@@ -65,10 +80,10 @@
         available: available.checked,
       };
       button.disabled = true;
-      setStatus(`Saving ${product.name} / ${plan.name}...`);
+      setStatus(`Сохраняю ${product.name} / ${plan.name}...`);
       try {
         await post(payload);
-        setStatus("Saved. The public catalog will use the new value on its next load.", "success");
+        setStatus("Тариф сохранён. Новые данные появятся в каталоге после обновления страницы.", "success");
       } catch (error) {
         setStatus(error.message, "error");
       } finally {
@@ -82,26 +97,27 @@
     products.replaceChildren();
     Object.entries(catalog || {}).forEach(([productId, product]) => {
       const card = createElement("article", "admin-product-card");
+      card.id = `product-${productId}`;
       const editor = createElement("div", "admin-product-editor");
       const nameField = createElement("label", "admin-field");
-      nameField.append(createElement("span", "admin-field-label", "Product name"));
+      nameField.append(createElement("span", "admin-field-label", "Название товара"));
       const name = createInput(product.name, { type: "text", maxLength: 80, className: "admin-input is-wide" });
       nameField.append(name);
       const versionField = createElement("label", "admin-field");
-      versionField.append(createElement("span", "admin-field-label", "Product version (optional)"));
-      const version = createInput(product.version || "", { type: "text", maxLength: 80, placeholder: "For example, 2.4.1", className: "admin-input is-wide" });
+      versionField.append(createElement("span", "admin-field-label", "Версия товара (необязательно)"));
+      const version = createInput(product.version || "", { type: "text", maxLength: 80, placeholder: "Например, 2.4.1", className: "admin-input is-wide" });
       versionField.append(version);
-      const save = createElement("button", "admin-save", "Save product"); save.type = "button";
+      const save = createElement("button", "admin-save", "Сохранить товар"); save.type = "button";
       save.addEventListener("click", async () => {
-        save.disabled = true; setStatus(`Saving ${product.name}...`);
-        try { await post({ action: "product", productId, name: name.value, version: version.value }); setStatus("Product saved.", "success"); }
+        save.disabled = true; setStatus(`Сохраняю ${product.name}...`);
+        try { await post({ action: "product", productId, name: name.value, version: version.value }); setStatus("Товар сохранён.", "success"); }
         catch (error) { setStatus(error.message, "error"); }
         finally { save.disabled = false; }
       });
       editor.append(nameField, versionField, save);
       const wrap = createElement("div", "admin-table-wrap");
       const table = createElement("table", "admin-table");
-      table.innerHTML = "<thead><tr><th>Plan</th><th>Access</th><th>Price USD</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead>";
+      table.innerHTML = "<thead><tr><th>Тариф</th><th>Описание</th><th>Цена USD</th><th>Остаток</th><th>Доступность</th><th>Действие</th></tr></thead>";
       const tbody = document.createElement("tbody"); table.append(tbody); wrap.append(table); card.append(editor, wrap);
       Object.entries(product.plans || {}).forEach(([planId, plan]) => addRow(tbody, productId, product, planId, plan));
       products.append(card);
@@ -111,13 +127,14 @@
 
   function renderVersions(currentVersions) {
     versions.replaceChildren();
-    ["windows", "mac", "android", "ios"].forEach((platform) => {
-      const label = createElement("label", "admin-version-field", platform);
-      const input = createInput((currentVersions || {})[platform] || "", { type: "text", maxLength: 80, placeholder: "Automatic", className: "admin-input is-wide" });
-      const button = createElement("button", "admin-save", "Save"); button.type = "button";
+    const platformNames = { windows: "Windows", mac: "macOS", android: "Android", ios: "iOS" };
+    Object.keys(platformNames).forEach((platform) => {
+      const label = createElement("label", "admin-version-field", platformNames[platform]);
+      const input = createInput((currentVersions || {})[platform] || "", { type: "text", maxLength: 80, placeholder: "Автоматически", className: "admin-input is-wide" });
+      const button = createElement("button", "admin-save", "Сохранить"); button.type = "button";
       button.addEventListener("click", async () => {
-        button.disabled = true; setStatus(`Saving ${platform} version...`);
-        try { await post({ action: "version", platform, version: input.value }); setStatus(input.value ? `${platform} version saved.` : `${platform} override cleared.`, "success"); }
+        button.disabled = true; setStatus(`Сохраняю версию ${platform}...`);
+        try { await post({ action: "version", platform, version: input.value }); setStatus(input.value ? `Версия ${platform} сохранена.` : `Для ${platform} восстановлено автоматическое обновление.`, "success"); }
         catch (error) { setStatus(error.message, "error"); }
         finally { button.disabled = false; }
       });
@@ -125,14 +142,96 @@
     });
   }
 
+  function renderHome(settings) {
+    for (const [key, value] of Object.entries(settings || {})) {
+      const field = homeForm.elements.namedItem(key);
+      if (field) field.value = value;
+    }
+  }
+
+  function renderExploitCards(cards, overrides) {
+    exploitRows.replaceChildren();
+    function createStatusSelect(value) {
+      const select = document.createElement("select");
+      [["auto", "Автоматически"], ["online", "В сети"], ["offline", "Не в сети"]].forEach(([optionValue, label]) => {
+        const option = createElement("option", "", label);
+        option.value = optionValue;
+        select.append(option);
+      });
+      select.value = value || "auto";
+      return select;
+    }
+    (cards || []).forEach((card) => {
+      const override = (overrides || {})[card.id] || {};
+      const row = document.createElement("tr");
+      row.dataset.search = `${card.title} ${card.platform}`.toLocaleLowerCase();
+      const nameCell = createElement("td", "", card.title);
+      const platformCell = createElement("td", "", card.platform);
+      const version = createInput(override.version || "", { type: "text", maxLength: 80, placeholder: "Автоматически", className: "admin-input" });
+      const versionCell = document.createElement("td"); versionCell.append(version);
+      const status = createStatusSelect(override.status);
+      const statusCell = document.createElement("td"); statusCell.append(status);
+      const vngStatus = card.hasVng ? createStatusSelect(override.vngStatus) : null;
+      const vngCell = document.createElement("td");
+      if (vngStatus) vngCell.append(vngStatus);
+      else vngCell.textContent = "—";
+      const save = createElement("button", "admin-save", "Сохранить");
+      save.type = "button";
+      save.addEventListener("click", async () => {
+        save.disabled = true;
+        setStatus(`Сохраняю ${card.title}...`);
+        try {
+          await post({ action: "exploit", id: card.id, version: version.value, status: status.value, vngStatus: vngStatus?.value || "auto" });
+          setStatus(`Изменения ${card.title} сохранены.`, "success");
+        } catch (error) {
+          setStatus(error.message, "error");
+        } finally {
+          save.disabled = false;
+        }
+      });
+      const actionCell = document.createElement("td"); actionCell.append(save);
+      row.append(nameCell, platformCell, versionCell, statusCell, vngCell, actionCell);
+      exploitRows.append(row);
+    });
+  }
+
+  homeForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!homeForm.reportValidity()) return;
+    const button = homeForm.querySelector("[type=submit]");
+    const settings = Object.fromEntries(new FormData(homeForm).entries());
+    settings.promoPercent = Number(settings.promoPercent);
+    button.disabled = true;
+    setStatus("Сохраняю настройки главной...");
+    try {
+      await post({ action: "home", settings });
+      setStatus("Главная страница сохранена.", "success");
+    } catch (error) {
+      setStatus(error.message, "error");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  exploitSearch.addEventListener("input", () => {
+    const query = exploitSearch.value.trim().toLocaleLowerCase();
+    [...exploitRows.children].forEach((row) => { row.hidden = !row.dataset.search.includes(query); });
+  });
+
   async function init() {
     try {
       const data = await request();
       user.textContent = `${data.admin.username} · ${data.admin.email}`;
       renderCatalog(data.catalog);
       renderVersions(data.versions);
+      renderHome(data.home);
+      renderExploitCards(data.exploitCards, data.exploitOverrides);
       content.hidden = false;
-      setStatus("Admin access granted.", "success");
+      setStatus("Доступ администратора подтверждён.", "success");
+      if (section === "products" && location.hash) {
+        const productId = location.hash.slice(1);
+        if (/^product-[a-z]+$/.test(productId)) document.getElementById(productId)?.scrollIntoView({ block: "start" });
+      }
     } catch (error) {
       setStatus(error.message, "error");
       login.hidden = false;
