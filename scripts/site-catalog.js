@@ -116,7 +116,7 @@
         summaryStock.classList.toggle("is-out", !plan.available);
       }
       if (selectPlan) selectPlan.disabled = !plan.available;
-      if (planLabel) planLabel.textContent = `Purchase ${plan.name}`;
+      if (planLabel) planLabel.textContent = "Purchase";
       if (message) {
         message.textContent = plan.available ? "Available now" : "Out of stock";
         message.classList.toggle("is-out", !plan.available);
@@ -142,4 +142,24 @@
   }
 
   document.addEventListener("DOMContentLoaded", loadCatalog);
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!bodyProductId) return;
+    const purchaseButton = document.querySelector("[data-select-plan]");
+    purchaseButton?.addEventListener("click", () => {
+      if (purchaseButton.disabled) return;
+
+      const orderId = window.crypto?.randomUUID?.() || `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}`;
+      const price = document.querySelector("[data-plan-price]");
+      const order = {
+        id: orderId,
+        productId: bodyProductId,
+        planId: document.querySelector("main")?.dataset.plan || "",
+        productName: document.querySelector(".product-heading h1")?.textContent.trim() || bodyProductId,
+        planName: document.querySelector("[data-plan-summary-name]")?.textContent.trim() || "",
+        total: price?.querySelector(".promo-discounted-price")?.textContent.trim() || price?.textContent.trim() || "—",
+      };
+      try { window.sessionStorage.setItem(`cheatblox-order:${orderId}`, JSON.stringify(order)); } catch { /* The preview still opens without storage. */ }
+      window.location.href = `checkout.html?order=${encodeURIComponent(orderId)}&product=${encodeURIComponent(bodyProductId)}&plan=${encodeURIComponent(order.planId)}`;
+    });
+  });
 })();

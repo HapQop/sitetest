@@ -7,6 +7,7 @@ const USER_TTL = 60 * 60 * 24 * 365;
 const CHALLENGE_TTL = 10 * 60;
 const SESSION_TTL = 60 * 60 * 24 * 7;
 const MAX_CODE_ATTEMPTS = 5;
+const LOGIN_CODE_COOLDOWN = 60;
 
 function publicUser(user) {
   return { username: user.username, email: user.email, isAdmin: isAdminUser(user) };
@@ -113,8 +114,7 @@ async function sendCode(email, code, purpose) {
   if (!response.ok) throw new Error("Email provider rejected the message");
 }
 
-async function createChallenge(data) {
-  const challengeId = crypto.randomUUID();
+async function createChallenge(data, challengeId = crypto.randomUUID()) {
   const code = randomCode();
   await setJson(`auth:challenge:${challengeId}`, {
     ...data,
@@ -199,6 +199,29 @@ async function login(req, res) {
   return json(res, 200, { ok: true, user: publicUser(user) });
 }
 
+async function loginCode(req, res) {
+  const email = normalizeEmail(bodyValue(req.body, "email"));
+  if (!validEmail(email)) return json(res, 400, { error: "Enter a valid email address." });
+
+  const cooldownKey = `auth:login-code-cooldown:${digest(email)}`;
+  const proposedId = crypto.randomUUID();
+  const claimed = await kv(["SET", cooldownKey, proposedId, "EX", String(LOGIN_CODE_COOLDOWN), "NX"]);
+  const challengeId = claimed ? proposedId : await kv(["GET", cooldownKey]);
+  if (claimed) {
+    const userId = await kv(["GET", `auth:email:${email}`]);
+    const user = userId ? await getJson(`auth:user:${userId}`) : null;
+    if (user && user.email === email) {
+      try {
+        await createChallenge({ type: "login", userId: user.id, email }, challengeId);
+      } catch (error) {
+        await kv(["DEL", cooldownKey]);
+        throw error;
+      }
+    }
+  }
+  return json(res, 200, { challengeId });
+}
+
 async function forgot(req, res) {
   const email = normalizeEmail(bodyValue(req.body, "email"));
   if (!validEmail(email)) return json(res, 400, { error: "Enter a valid email address." });
@@ -276,6 +299,7 @@ module.exports = async (req, res) => {
     if (req.method !== "POST") return json(res, 405, { error: "Method not allowed." });
     if (action === "register") return await register(req, res);
     if (action === "login") return await login(req, res);
+    if (action === "login-code") return await loginCode(req, res);
     if (action === "forgot") return await forgot(req, res);
     if (action === "verify") return await verify(req, res);
     if (action === "reset") return await reset(req, res);

@@ -5,8 +5,13 @@ const translations = {
     "nav-exploits": "Exploits",
     "nav-reviews": "Reviews",
     "nav-contact": "Contact",
+    "page-loading": "Loading page",
     login: "Login",
     register: "Register",
+    "cart-title": "Cart",
+    "cart-add": "Add to cart",
+    "cart-close": "Close cart",
+    "cart-coming-soon": "Checkout is coming soon.",
     products: "Products",
     isaeva: "Isaeva",
     cosmic: "Cosmic",
@@ -19,7 +24,18 @@ const translations = {
     admin: "Admin",
     "auth-welcome-copy": "Your CheatBlox account brings everything together in one place.",
     "auth-welcome-bottom": "Welcome to CheatBlox",
-    "auth-intro": "Create an account or sign in with email verification.",
+    "auth-intro": "Sign in with a password or a one-time email code.",
+    "auth-method-password": "Password",
+    "auth-method-code": "Email code",
+    "auth-email": "Email",
+    "auth-email-or-username": "Email or username",
+    "auth-send-login-code": "Send sign-in code",
+    "auth-sign-in": "Sign in",
+    "auth-code-note": "We will send a six-digit code to your account email.",
+    "auth-code-sent": "If this account exists, a six-digit code has been sent.",
+    "auth-create-account": "New here? Create an account",
+    "auth-login-social-label": "Or continue with",
+    "auth-social-coming-soon": "Social sign-in is coming soon.",
     "auth-social-provider": "Additional contact (optional)",
     "auth-social-none": "Email only",
     "auth-social-handle": "Discord or Telegram username",
@@ -123,8 +139,13 @@ const translations = {
     "nav-exploits": "Эксплойты",
     "nav-reviews": "Отзывы",
     "nav-contact": "Контакты",
+    "page-loading": "Загрузка страницы",
     login: "Войти",
     register: "Регистрация",
+    "cart-title": "Корзина",
+    "cart-add": "В корзину",
+    "cart-close": "Закрыть корзину",
+    "cart-coming-soon": "Оформление заказа появится позже.",
     products: "Продукты",
     isaeva: "Isaeva",
     cosmic: "Cosmic",
@@ -137,7 +158,18 @@ const translations = {
     admin: "Админка",
     "auth-welcome-copy": "Твой аккаунт CheatBlox объединяет всё в одном месте.",
     "auth-welcome-bottom": "Добро пожаловать в CheatBlox",
-    "auth-intro": "Создайте аккаунт или войдите с подтверждением по почте.",
+    "auth-intro": "Войдите по паролю или одноразовому коду из письма.",
+    "auth-method-password": "Пароль",
+    "auth-method-code": "Код из письма",
+    "auth-email": "Электронная почта",
+    "auth-email-or-username": "Почта или имя пользователя",
+    "auth-send-login-code": "Отправить код для входа",
+    "auth-sign-in": "Войти",
+    "auth-code-note": "Отправим шестизначный код на почту вашего аккаунта.",
+    "auth-code-sent": "Если аккаунт существует, мы отправили шестизначный код.",
+    "auth-create-account": "Впервые здесь? Создать аккаунт",
+    "auth-login-social-label": "Или войти через",
+    "auth-social-coming-soon": "Вход через соцсети скоро появится.",
     "auth-social-provider": "Дополнительный контакт (необязательно)",
     "auth-social-none": "Только почта",
     "auth-social-handle": "Имя пользователя Discord или Telegram",
@@ -279,7 +311,7 @@ function setLanguage(language) {
 
   const pageName = document.body.dataset.page;
   if (pageName) document.title = `CheatBlox — ${dictionary[pageName]}`;
-  localStorage.setItem("cheatblox-language", language);
+  document.dispatchEvent(new CustomEvent("languagechange", { detail: { language } }));
 
   // Убираем класс после завершения анимации
   setTimeout(() => {
@@ -288,10 +320,22 @@ function setLanguage(language) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const storedLanguage = localStorage.getItem("cheatblox-language");
-  setLanguage(storedLanguage && translations[storedLanguage] ? storedLanguage : "ru");
+  let storedLanguage;
+  try { storedLanguage = localStorage.getItem("cheatblox-language"); } catch { /* Automatic defaults remain available. */ }
+  setLanguage(window.CheatBloxLocale?.language || (translations[storedLanguage] ? storedLanguage : "ru"));
 
   document.querySelectorAll('input[name="language"]').forEach((input) => {
-    input.addEventListener("change", () => setLanguage(input.value));
+    input.addEventListener("change", () => {
+      if (window.CheatBloxLocale) {
+        window.CheatBloxLocale.setLanguage(input.value);
+      } else {
+        setLanguage(input.value);
+        try { localStorage.setItem("cheatblox-language", input.value); } catch { /* Keep the current selection. */ }
+      }
+    });
   });
+});
+
+document.addEventListener("cheatblox:localechange", (event) => {
+  if (event.detail.language !== document.documentElement.lang) setLanguage(event.detail.language);
 });

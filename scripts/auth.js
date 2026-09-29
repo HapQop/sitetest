@@ -11,8 +11,16 @@
     reset: { ru: "Новый пароль", en: "New password" },
   };
   let currentMode = "login";
+  let loginMethod = "password";
   let challengeId = "";
   let resetEmail = "";
+  const loginIdentifier = document.querySelector("#login-identifier");
+  const loginPasswordField = document.querySelector("[data-login-password-field]");
+  const loginPassword = document.querySelector("#login-password");
+  const loginSubmit = document.querySelector("[data-login-submit]");
+  const loginNote = document.querySelector("[data-login-note]");
+  const loginIdentifierLabel = document.querySelector("[data-login-identifier-label]");
+  const loginMethodButtons = [...document.querySelectorAll("[data-auth-method]")];
   const socialProvider = document.querySelector("#register-social-provider");
   const socialHandleField = document.querySelector("[data-social-handle-field]");
   const socialHandle = document.querySelector("#register-social-handle");
@@ -21,6 +29,45 @@
   function updateAuthTitle(language = document.documentElement.lang) {
     authTitle.textContent = authTitles[currentMode][language === "en" ? "en" : "ru"];
   }
+
+  function translate(key, fallback) {
+    return window.CheatBloxI18n?.translate(key) || fallback;
+  }
+
+  function updateLoginMethod() {
+    const code = loginMethod === "code";
+    loginMethodButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.authMethod === loginMethod)));
+    loginIdentifier.type = code ? "email" : "text";
+    loginIdentifier.autocomplete = code ? "email" : "username";
+    loginIdentifierLabel.textContent = code
+      ? translate("auth-email", "Email")
+      : translate("auth-email-or-username", "Email or username");
+    loginPasswordField.hidden = code;
+    loginPassword.disabled = code;
+    loginPassword.required = !code;
+    loginSubmit.textContent = code
+      ? translate("auth-send-login-code", "Send sign-in code")
+      : translate("auth-sign-in", "Sign in");
+    loginNote.textContent = code
+      ? translate("auth-code-note", "We will send a six-digit code to your account email.")
+      : "";
+  }
+
+  loginMethodButtons.forEach((button) => button.addEventListener("click", () => {
+    loginMethod = button.dataset.authMethod;
+    updateLoginMethod();
+    showStatus("");
+  }));
+  updateLoginMethod();
+
+  document.querySelectorAll("[data-login-social]").forEach((button) => button.addEventListener("click", () => {
+    document.querySelectorAll("[data-login-social]").forEach((option) => {
+      const selected = option === button;
+      option.classList.toggle("is-selected", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    });
+    showStatus(translate("auth-social-coming-soon", "Social sign-in is coming soon."));
+  }));
 
   function updateSocialHandle() {
     const selected = socialProvider.value === "discord" || socialProvider.value === "telegram";
@@ -47,10 +94,8 @@
     });
   });
   updateSocialHandle();
-  document.addEventListener("DOMContentLoaded", () => updateAuthTitle());
-  document.querySelectorAll('input[name="language"]').forEach((input) => {
-    input.addEventListener("change", () => updateAuthTitle(input.value));
-  });
+  document.addEventListener("DOMContentLoaded", () => { updateAuthTitle(); updateLoginMethod(); });
+  document.addEventListener("languagechange", () => { updateAuthTitle(); updateLoginMethod(); });
 
   document.querySelectorAll("[data-password-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -117,7 +162,15 @@
         showView("verify");
         showStatus("Check your email for the six-digit verification code.", "success");
       } else if (mode === "login") {
-        const result = await request("login", data);
+        const result = loginMethod === "code"
+          ? await request("login-code", { email: data.identifier })
+          : await request("login", data);
+        if (loginMethod === "code") {
+          challengeId = result.challengeId;
+          showView("verify");
+          showStatus(translate("auth-code-sent", "If this account exists, a six-digit code has been sent."), "success");
+          return;
+        }
         if (result.ok && result.user) {
           // Уже верифицированный пользователь - сразу логиним
           showStatus("Login successful! Redirecting...", "success");

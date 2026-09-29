@@ -14,9 +14,21 @@
     { code: "GBP", symbol: "£", name: "British Pound", rate: 0.78, digits: 2 },
     { code: "JPY", symbol: "¥", name: "Japanese Yen", rate: 155, digits: 0 },
     { code: "INR", symbol: "₹", name: "Indian Rupee", rate: 84, digits: 2 },
+    { code: "AMD", symbol: "֏", name: "Armenian Dram", rate: 363.612931, digits: 2 },
+    { code: "AZN", symbol: "₼", name: "Azerbaijani Manat", rate: 1.7, digits: 2 },
+    { code: "GEL", symbol: "₾", name: "Georgian Lari", rate: 2.601676, digits: 2 },
+    { code: "KGS", symbol: "сом", name: "Kyrgyzstani Som", rate: 87.466985, digits: 2 },
+    { code: "MDL", symbol: "L", name: "Moldovan Leu", rate: 17.63128, digits: 2 },
+    { code: "TJS", symbol: "ЅМ", name: "Tajikistani Somoni", rate: 9.227178, digits: 2 },
+    { code: "TMT", symbol: "m", name: "Turkmenistan Manat", rate: 3.5, digits: 2 },
+    { code: "UZS", symbol: "soʻm", name: "Uzbekistani Som", rate: 11830.201553, digits: 2 },
   ];
 
-  let selected = currencies.find((currency) => currency.code === localStorage.getItem(storageKey)) || currencies[0];
+  function readSavedCurrency() {
+    try { return localStorage.getItem(storageKey); } catch { return null; }
+  }
+
+  let selected = currencies.find((currency) => currency.code === (window.CheatBloxLocale?.currency || readSavedCurrency())) || currencies[0];
 
   function formatPrice(usdAmount) {
     const value = Number(usdAmount) * selected.rate;
@@ -77,8 +89,8 @@
       if (!response.ok) throw new Error(`Rates request failed: ${response.status}`);
       const data = await response.json();
       if (data.result !== "success" || !data.rates || typeof data.rates !== "object") throw new Error("Rates response is invalid");
-      localStorage.setItem(ratesStorageKey, JSON.stringify({ savedAt: Date.now(), rates: data.rates }));
       applyRates(data.rates);
+      localStorage.setItem(ratesStorageKey, JSON.stringify({ savedAt: Date.now(), rates: data.rates }));
     } catch {
       // Static rates remain active when the remote service is unavailable.
     } finally {
@@ -106,10 +118,14 @@
       option.dataset.currency = currency.code;
       option.innerHTML = `<span><strong>${currency.symbol}</strong><b>${currency.code}</b></span><small>${currency.name}</small>`;
       option.addEventListener("click", () => {
-        selected = currency;
-        localStorage.setItem(storageKey, currency.code);
         closeMenus();
-        applyCurrency();
+        if (window.CheatBloxLocale) {
+          window.CheatBloxLocale.setCurrency(currency.code);
+        } else {
+          selected = currency;
+          try { localStorage.setItem(storageKey, currency.code); } catch { /* Keep the current selection. */ }
+          applyCurrency();
+        }
       });
       panel.appendChild(option);
     });
@@ -132,6 +148,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    selected = currencies.find((currency) => currency.code === window.CheatBloxLocale?.currency) || selected;
     document.querySelectorAll(".site-controls").forEach(createMenu);
     applyCurrency();
     refreshRates();
@@ -141,5 +158,12 @@
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeMenus();
     });
+  });
+
+  document.addEventListener("cheatblox:localechange", (event) => {
+    const next = currencies.find((currency) => currency.code === event.detail.currency);
+    if (!next || next === selected) return;
+    selected = next;
+    applyCurrency();
   });
 })();

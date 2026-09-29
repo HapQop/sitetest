@@ -82,7 +82,7 @@
   <script src="../scripts/site-reveal.js" defer></script>
   <link rel="stylesheet" href="../styles/site-footer.css">
   <script src="../scripts/site-footer.js" defer></script>
-  <script src="../scripts/site-i18n.js" defer></script>
+  <script src="../scripts/site-locale.js" defer></script><script src="../scripts/site-i18n.js" defer></script>
   <script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
   <script src="../scripts/site-catalog.js" defer></script>
   <script src="../scripts/site-promo.js" defer></script>
@@ -95,7 +95,7 @@
     </div>
     <div class="site-controls">
       <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
-            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a>
     </div>
   </nav>
   <main>
@@ -140,7 +140,7 @@
         <strong class="plan-price" data-plan-price>$4.99</strong>
         <h2 id="choose-plan-title" data-i18n="product-choose-plan">Choose your plan</h2>
         <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Weekly</span><span class="stock-badge" data-plan-summary-stock>2 available</span><strong class="plan-summary__price" data-plan-summary-price>$4.99</strong></div>
-        <button class="select-plan" type="button" data-select-plan><span data-plan-label>Purchase Weekly</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
+        <button class="select-plan" type="button" data-select-plan><span data-plan-label>Purchase</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
         <p class="plan-message" data-plan-message data-i18n="product-available-message">Available now</p>
         <form class="promo-form" data-promo-form>
           <label class="promo-form__label" for="promo-code" data-i18n="product-promo-label">Promo code</label>
@@ -197,7 +197,7 @@
         summaryStock.textContent = plan.stock;
         summaryStock.classList.toggle("is-out", !plan.available);
         selectPlan.disabled = !plan.available;
-        planLabel.textContent = `Purchase ${plan.name}`;
+        planLabel.textContent = "Purchase";
         message.textContent = plan.available ? "Available now" : "Out of stock";
         message.classList.toggle("is-out", !plan.available);
       }

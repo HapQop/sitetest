@@ -14,7 +14,7 @@ Before deploying, add these Vercel environment variables for Production (and Pre
 
 Create a Vercel KV/Upstash Redis store to obtain the first two values. Create a Resend account, verify the sending domain, create an API key, and set `AUTH_FROM_EMAIL` to an address on that verified domain. Never commit real values to the repository.
 
-The API stores password hashes, short-lived verification challenges, and seven-day sessions. It sends a six-digit code for registration and login, and a recovery code for password resets.
+The API stores password hashes, short-lived verification challenges, and seven-day sessions. It sends a six-digit code for registration and login, and a recovery code for password resets. `POST /api/auth/login-code` accepts `{ "email": "..." }` and returns a `challengeId` for passwordless sign-in. Submit that ID and the emailed six-digit code to `POST /api/auth/verify`; a successful response sets the normal session cookie. This route only sends codes to existing accounts, gives the same response for unknown addresses, and limits each address to one code per minute. Codes expire after ten minutes and allow five attempts.
 
 Registration can also save one optional Discord or Telegram username in the user record as `socialContact` with `status: "pending"`. This is a contact preference, not a verified account link. After the bots are available, verify ownership through the chosen bot and store the platform user ID before treating the account as connected. Existing email-only registrations continue to work.
 

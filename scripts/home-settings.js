@@ -57,9 +57,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     render();
-    document.querySelectorAll('input[name="language"]').forEach((input) => input.addEventListener("change", () => {
-      window.setTimeout(render, 160);
-    }));
+    document.addEventListener("languagechange", render);
     load();
   });
 })();

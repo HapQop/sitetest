@@ -30,6 +30,10 @@
     .auth-view { margin-top:22px; }
     .auth-view[hidden] { display:none; }
     .auth-form { display:grid; gap:14px; }
+    .auth-methods { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:16px; padding:4px; border:1px solid #3b3532; border-radius:10px; background:#0d0d0d; }
+    .auth-methods button { min-height:40px; border:0; border-radius:7px; color:#aaa5a2; background:transparent; font:750 12px/1 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; }
+    .auth-methods button[aria-pressed="true"] { color:#21140c; background:var(--orange); }
+    .auth-methods button:focus-visible,.auth-login-social .auth-social-button:focus-visible { outline:2px solid #fff; outline-offset:2px; }
     .auth-field { display:grid; gap:7px; }
     .auth-field label { color:#c2bbb7; font-size:12px; font-weight:750; }
     .auth-input-wrap { position:relative; }
@@ -54,6 +58,12 @@
     .auth-social-choice { display:grid; justify-items:center; gap:12px; padding-top:8px; border-top:1px solid #342924; }
     .auth-social-choice > p { color:#a89f99; font-size:12px; font-weight:750; text-align:center; }
     .auth-social-options { display:flex; justify-content:center; gap:28px; }
+    .auth-login-social { margin-top:22px; padding-top:18px; }
+    .auth-login-social .auth-social-options { flex-wrap:wrap; gap:18px; }
+    .auth-login-social .auth-social-button { display:grid; justify-items:center; gap:7px; min-width:72px; padding:0; border:0; color:#c9bfb9; background:transparent; font:700 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; }
+    .auth-social-icon--google { background:#fff; }
+    .auth-social-icon--google img { width:38px; height:38px; }
+    .auth-social-availability { color:#8e8885; font-size:11px; text-align:center; }
     .auth-form .auth-social-button { display:grid; justify-items:center; gap:7px; min-width:72px; padding:0; border:0; color:#c9bfb9; background:transparent; font:700 11px/1.2 Inter,ui-sans-serif,system-ui,sans-serif; cursor:pointer; }
     .auth-social-icon { display:grid; width:56px; height:56px; place-items:center; overflow:hidden; border:2px solid #47372f; border-radius:50%; background:#211c1a; box-shadow:0 8px 18px rgba(0,0,0,.23); transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease; }
     .auth-social-icon img { display:block; width:100%; height:100%; }
@@ -67,6 +77,7 @@
     .auth-note { margin-top:14px; color:#8e8885; font-size:12px; line-height:1.5; }
     .auth-form .auth-note { margin-top:0; }
     .auth-switch { display:inline-block; margin-top:14px; color:var(--orange); font-size:12px; font-weight:750; text-underline-offset:3px; }
+    [data-auth-view="login"] .auth-switch { display:block; }
     .auth-status { min-height:19px; margin-top:16px; color:#aaa5a2; font-size:12px; line-height:1.5; }
     .auth-status.is-error { color:var(--danger); }
     .auth-status.is-success { color:var(--success); }
@@ -80,7 +91,7 @@
   <script src="../scripts/site-reveal.js" defer></script>
   <link rel="stylesheet" href="../styles/site-footer.css">
   <script src="../scripts/site-footer.js" defer></script>
-  <script src="../scripts/site-i18n.js" defer></script>
+  <script src="../scripts/site-locale.js" defer></script><script src="../scripts/site-i18n.js" defer></script>
   <script src="../scripts/site-currency.js" defer></script>
   <script src="../scripts/site-auth-state.js" defer></script>
   <script src="../scripts/auth.js" defer></script>
@@ -93,7 +104,7 @@
     </div>
     <div class="site-controls">
       <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
-            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a><a class="register-link" href="auth.html?mode=register" data-i18n="register">Register</a>
+            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a>
     </div>
   </nav>
   <main>
@@ -109,15 +120,29 @@
       <div class="auth-panel">
       <span class="auth-eyebrow">Secure account access</span>
       <h1 id="auth-title">Account</h1>
-      <p class="auth-intro" data-i18n="auth-intro">Create an account or sign in with email verification.</p>
+      <p class="auth-intro" data-i18n="auth-intro">Sign in with a password or a one-time email code.</p>
       <div class="auth-view" data-auth-view="login">
+        <div class="auth-methods" role="group" aria-label="Sign-in method">
+          <button type="button" data-auth-method="password" aria-pressed="true" data-i18n="auth-method-password">Password</button>
+          <button type="button" data-auth-method="code" aria-pressed="false" data-i18n="auth-method-code">Email code</button>
+        </div>
         <form class="auth-form" data-auth-form="login">
-          <div class="auth-field"><label for="login-identifier">Email or username</label><input id="login-identifier" name="identifier" autocomplete="username" required></div>
-          <div class="auth-field"><label for="login-password">Password</label><div class="auth-input-wrap"><input id="login-password" name="password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-toggle data-target="login-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 1-3.3 3.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
-          <button type="submit">Continue with email verification</button>
+          <div class="auth-field"><label for="login-identifier" data-login-identifier-label>Email or username</label><input id="login-identifier" name="identifier" autocomplete="username" required></div>
+          <div class="auth-field" data-login-password-field><label for="login-password">Password</label><div class="auth-input-wrap"><input id="login-password" name="password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-toggle data-target="login-password" aria-label="Show password" aria-pressed="false" title="Show password"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.2"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.9A10.5 10.5 0 0 1 12 7c6.1 0 9.5 5 9.5 5a17 17 0 0 0 3.3-.4M6.7 6.7C4 8.2 2.5 12 2.5 12s3.4 5 9.5 5a10 10 0 0 0 3.3-.6M9.9 9.9a2.9 2.9 0 0 0 4.2 4.2"/></svg></button></div></div>
+          <button type="submit" data-login-submit>Sign in</button>
         </form>
-        <p class="auth-note">A six-digit code is required after your password is accepted.</p>
+        <p class="auth-note" data-login-note></p>
         <a class="auth-switch" href="auth.html?mode=forgot">Forgot password?</a>
+        <a class="auth-switch" href="auth.html?mode=register" data-i18n="auth-create-account">New here? Create an account</a>
+        <div class="auth-social-choice auth-login-social" role="group" aria-labelledby="auth-login-social-label">
+          <p id="auth-login-social-label" data-i18n="auth-login-social-label">Or continue with</p>
+          <div class="auth-social-options">
+            <button class="auth-social-button" type="button" data-login-social="telegram"><span class="auth-social-icon auth-social-icon--telegram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.4 3.4 2.9 10.6c-.9.4-.9 1.1-.1 1.4l4.7 1.5 1.8 5.7c.2.7.4.9.8.9.3 0 .5-.1.8-.4l2.6-2.5 4.9 3.6c.9.5 1.5.3 1.7-.9l3.1-14.8c.3-1.4-.5-2-1.8-1.5ZM8.2 13.1l10.8-6.8-8.6 8.3-.3 3.2-1.9-4.7Z"/></svg></span><span>Telegram</span></button>
+            <button class="auth-social-button" type="button" data-login-social="discord"><span class="auth-social-icon" aria-hidden="true"><img src="../assets/discord-logo.png" alt=""></span><span>Discord</span></button>
+            <button class="auth-social-button" type="button" data-login-social="google"><span class="auth-social-icon auth-social-icon--google" aria-hidden="true"><img src="../assets/google-logo.png" alt=""></span><span>Google</span></button>
+          </div>
+          <p class="auth-social-availability" data-i18n="auth-social-coming-soon">Social sign-in is coming soon.</p>
+        </div>
       </div>
 
       <div class="auth-view" data-auth-view="register" hidden>

@@ -166,9 +166,7 @@ async function copyVersion(button) {
 document.addEventListener("DOMContentLoaded", () => {
   refreshProductDates();
   if (document.querySelector(".product[data-version]")) refreshRobloxVersions();
-  document.querySelectorAll('input[name="language"]').forEach((input) => {
-    input.addEventListener("change", refreshProductDates);
-  });
+  document.addEventListener("languagechange", refreshProductDates);
   document.querySelectorAll("[data-copy-version]").forEach((button) => {
     button.setAttribute("aria-label", copyLabels[currentLanguage()].copy);
     button.addEventListener("click", () => copyVersion(button));

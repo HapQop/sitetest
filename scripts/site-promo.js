@@ -118,8 +118,8 @@
     installStyles();
     initialize();
     loadHomeSettings();
-    document.querySelectorAll('input[name="language"]').forEach((input) => input.addEventListener("change", () => {
-      if (active) window.setTimeout(() => setMessage("applied"), 160);
-    }));
+    document.addEventListener("languagechange", () => {
+      if (active) setMessage("applied");
+    });
   });
 })();
