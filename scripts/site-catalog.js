@@ -1,6 +1,6 @@
 (() => {
   const apiUrl = "/api/catalog";
-  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave" };
+  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt" };
   const bodyProductId = productByPage[document.body?.dataset.page];
 
   function formatStock(plan) {

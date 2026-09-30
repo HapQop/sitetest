@@ -7,6 +7,7 @@
     real: "real-logo.png",
     lumen: "lumen-logo.png",
     wave: "wave-logo.png",
+    sirhurt: "sirhurt-logo.png",
   };
   const params = new URLSearchParams(window.location.search);
   const orderId = params.get("order") || "";

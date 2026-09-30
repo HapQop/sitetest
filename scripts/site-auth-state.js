@@ -33,7 +33,7 @@
     const siteControls = document.querySelector(".site-controls");
     if (siteControls && !document.querySelector(".user-menu")) {
       const page = document.body.dataset.page;
-      const productPages = ["isaeva", "cosmic", "volt", "pottasium", "real", "lumen", "wave"];
+      const productPages = ["isaeva", "cosmic", "volt", "pottasium", "real", "lumen", "wave", "sirhurt"];
       const section = page === "nav-home" ? "home" : page === "exploits" ? "exploits" : page === "products" || productPages.includes(page) ? "products" : null;
       const productHash = productPages.includes(page) ? `#product-${page}` : "";
       const adminHref = section ? `admin.html?section=${section}${productHash}` : "admin.html";
@@ -115,32 +115,10 @@
       updateCount();
     };
 
-    const productButtons = [];
-    document.querySelectorAll(".catalog-products > .store-card-link[data-product-id]").forEach((link) => {
-      const item = document.createElement("div");
-      item.className = "store-card-item";
-      item.dataset.productGame = link.dataset.productGame;
-      link.removeAttribute("data-product-game");
-      link.before(item);
-      item.appendChild(link);
-
-      const addButton = document.createElement("button");
-      addButton.type = "button";
-      addButton.className = "catalog-add-to-cart";
-      addButton.setAttribute("data-add-to-cart", "");
-      item.appendChild(addButton);
-      const stock = link.querySelector(".store-card__stock");
-      if (stock) {
-        const syncStock = () => { addButton.disabled = stock.classList.contains("is-out"); };
-        syncStock();
-        new MutationObserver(syncStock).observe(stock, { attributes: true, attributeFilter: ["class"] });
-      }
-      productButtons.push(addButton);
-    });
-
     const purchaseButton = document.querySelector(".plan-panel [data-select-plan]");
+    let addButton;
     if (purchaseButton) {
-      const addButton = document.createElement("button");
+      addButton = document.createElement("button");
       addButton.type = "button";
       addButton.className = "detail-add-to-cart";
       addButton.setAttribute("data-add-to-cart", "");
@@ -148,7 +126,6 @@
       const syncPlan = () => { addButton.disabled = purchaseButton.disabled; };
       syncPlan();
       new MutationObserver(syncPlan).observe(purchaseButton, { attributes: true, attributeFilter: ["disabled"] });
-      productButtons.push(addButton);
     }
 
     function updateLabels() {
@@ -157,7 +134,7 @@
       updateCount();
       dialog.querySelector(".cart-dialog__message").textContent = translate("cart-coming-soon");
       dialog.querySelector(".cart-dialog__close").setAttribute("aria-label", translate("cart-close"));
-      productButtons.forEach((button) => { button.textContent = translate("cart-add"); });
+      if (addButton) addButton.textContent = translate("cart-add");
     }
 
     async function openCart() {

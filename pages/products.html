@@ -75,10 +75,10 @@
     .roblox-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:14px; color:#fff; }
     .roblox-product-mark__icon { width:70px; height:70px; flex:0 0 70px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
     .roblox-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
-    .cosmic-product-mark,.volt-product-mark,.pottasium-product-mark,.real-product-mark,.lumen-product-mark,.wave-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:11px; color:#fff; }
-    .cosmic-product-mark__icon,.volt-product-mark__icon,.pottasium-product-mark__icon,.real-product-mark__icon,.lumen-product-mark__icon,.wave-product-mark__icon { width:78px; height:78px; flex:0 0 78px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
+    .cosmic-product-mark,.volt-product-mark,.pottasium-product-mark,.real-product-mark,.lumen-product-mark,.wave-product-mark,.sirhurt-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:11px; color:#fff; }
+    .cosmic-product-mark__icon,.volt-product-mark__icon,.pottasium-product-mark__icon,.real-product-mark__icon,.lumen-product-mark__icon,.wave-product-mark__icon,.sirhurt-product-mark__icon { width:78px; height:78px; flex:0 0 78px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
     .volt-product-mark__icon { filter:drop-shadow(0 7px 12px rgba(255,157,92,.16)); }
-    .cosmic-product-mark strong,.volt-product-mark strong,.pottasium-product-mark strong,.real-product-mark strong,.lumen-product-mark strong,.wave-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
+    .cosmic-product-mark strong,.volt-product-mark strong,.pottasium-product-mark strong,.real-product-mark strong,.lumen-product-mark strong,.wave-product-mark strong,.sirhurt-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
     .store-card__body { padding:16px 17px 18px; }
     .store-card__game { display:inline-block; padding:4px 7px; border-radius:6px; color:#c4c0bd; background:#242424; font-size:11px; font-weight:750; }
     .store-card__body h2 { margin-top:12px; color:#fff; font-size:19px; letter-spacing:-.3px; }
@@ -130,8 +130,8 @@
         <div class="catalog-filters__body">
           <h3 class="catalog-filters__heading" id="catalog-product-type">Product type</h3>
           <div class="catalog-filters__options" role="group" aria-labelledby="catalog-product-type">
-            <button class="catalog-filter is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label">All</span><span class="catalog-filter__count">7</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Executors</span><span class="catalog-filter__count">7</span></button>
+            <button class="catalog-filter is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label">All</span><span class="catalog-filter__count">8</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Executors</span><span class="catalog-filter__count">8</span></button>
             <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Externals</span><span class="catalog-filter__count">0</span></button>
             <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Scripts</span><span class="catalog-filter__count">0</span></button>
             <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Tools</span><span class="catalog-filter__count">0</span></button>
@@ -141,8 +141,8 @@
         <div class="catalog-filters__body">
           <h3 class="catalog-filters__heading" id="catalog-product-status">Status</h3>
           <div class="catalog-filters__options" role="group" aria-labelledby="catalog-product-status">
-            <button class="catalog-filter catalog-filter--status is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>All statuses</span></span><span class="catalog-filter__count">7</span></button>
-            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>Online</span></span><span class="catalog-filter__count">7</span></button>
+            <button class="catalog-filter catalog-filter--status is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>All statuses</span></span><span class="catalog-filter__count">8</span></button>
+            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>Online</span></span><span class="catalog-filter__count">8</span></button>
             <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot catalog-filter__dot--updating" aria-hidden="true"></span><span>Updating</span></span><span class="catalog-filter__count">0</span></button>
             <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot catalog-filter__dot--fixing" aria-hidden="true"></span><span>Fixing</span></span><span class="catalog-filter__count">0</span></button>
           </div>
@@ -273,6 +273,20 @@
             <h2>Wave</h2>
             <p class="store-card__access" data-i18n="product-wave-access">7-day access</p>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="sirhurt.html" data-product-id="sirhurt" data-product-game="roblox" aria-label="Open Sirhurt product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out" data-i18n="product-sirhurt-stock">0 available</span></div>
+            <div class="sirhurt-product-mark" aria-label="Sirhurt for Roblox"><img class="sirhurt-product-mark__icon" src="../assets/sirhurt-logo.png" alt=""><strong>Sirhurt</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Sirhurt</h2>
+            <p class="store-card__access" data-i18n="product-sirhurt-access">7-day access</p>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.8">$2.80</strong></div></div>
           </div>
         </article>
       </a>

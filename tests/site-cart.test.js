@@ -140,7 +140,8 @@ test("cart count persists across pages for the same account and stays separate f
   const nextPage = setupCart({ signedIn: true, catalog: true, storage });
   await nextPage.window.CheatBloxAuth.checkSession();
   assert.equal(nextPage.cartButton.querySelector(".cart-trigger__count").textContent, "2");
-  await nextPage.clickAdd(nextPage.link.wrapper.children[1]);
+  const anotherProductPage = setupCart({ signedIn: true, detail: true, storage });
+  await anotherProductPage.clickAdd();
   assert.equal(storage.get("cheatblox-cart-count:Buyer"), "3");
 
   const otherAccount = setupCart({ signedIn: true, storage, username: "Other" });
@@ -148,10 +149,9 @@ test("cart count persists across pages for the same account and stays separate f
   assert.equal(otherAccount.cartButton.querySelector(".cart-trigger__count").textContent, "0");
 });
 
-test("catalog buttons remain outside product links and filtering targets their wrapper", () => {
+test("catalog cards remain direct links without add-to-cart buttons", () => {
   const page = setupCart({ catalog: true });
-  assert.equal(page.link.wrapper.dataset.productGame, "roblox");
-  assert.equal(page.link.dataset.productGame, undefined);
-  assert.equal(page.link.wrapper.children[0], page.link);
-  assert.equal(page.link.wrapper.children[1].textContent, "Add to cart");
+  assert.equal(page.link.wrapper, undefined);
+  assert.equal(page.link.dataset.productGame, "roblox");
+  assert.equal(page.addButton, undefined);
 });
