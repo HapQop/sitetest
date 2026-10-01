@@ -101,7 +101,7 @@
   <main>
     <a class="back-link" href="products.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h10"/></svg><span data-i18n="product-back-catalog">Back to products</span></a>
     <header class="product-heading">
-      <div class="product-badges"><span class="product-badge" data-i18n="product-executor">Executor</span><span class="stock-badge" data-plan-stock>Available</span></div>
+      <div class="product-badges"><span class="product-badge" data-i18n="product-executor">Executor</span><span class="stock-badge is-out" data-plan-stock>0 available</span></div>
       <h1>Wave</h1>
       <p data-plan-name>7-day access</p>
     </header>
@@ -136,13 +136,13 @@
           </article>
         </div>
       </section>
-      <aside class="plan-panel" aria-labelledby="choose-plan-title">
+      <aside class="plan-panel is-unavailable" aria-labelledby="choose-plan-title">
         <span class="eyebrow" data-i18n="product-starting-at">Starting at</span>
         <strong class="plan-price" data-plan-price>$2.99</strong>
         <h2 id="choose-plan-title" data-i18n="product-choose-plan">Choose your plan</h2>
-        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Weekly</span><span class="stock-badge" data-plan-summary-stock>Available</span><strong class="plan-summary__price" data-plan-summary-price>$2.99</strong></div>
-        <button class="select-plan" type="button" data-select-plan><span data-plan-label>Purchase</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
-        <p class="plan-message" data-plan-message data-i18n="product-available-message">Available now</p>
+        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Weekly</span><span class="stock-badge is-out" data-plan-summary-stock>0 available</span><strong class="plan-summary__price" data-plan-summary-price>$2.99</strong></div>
+        <button class="select-plan" type="button" data-select-plan disabled><span data-plan-label>Purchase</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
+        <p class="plan-message is-out" data-plan-message data-i18n="product-out-of-stock-message">Out of stock</p>
         <form class="promo-form" data-promo-form>
           <label class="promo-form__label" for="promo-code" data-i18n="product-promo-label">Promo code</label>
           <div class="promo-form__row"><input id="promo-code" name="promo-code" type="text" autocomplete="off" placeholder="Enter promo code"><button type="submit" data-i18n="product-promo-apply">Apply</button></div>
@@ -154,10 +154,10 @@
   <script>
     (() => {
       const plans = {
-        weekly: { name: "Weekly", access: "7-day access", price: 2.99, stock: "Available", available: true },
-        monthly: { name: "30 days", access: "30-day access", price: 12, stock: "Available", available: true },
-        ninety: { name: "90 days", access: "90-day access", price: 30, stock: "Available", available: true },
-        yearly: { name: "365 days", access: "365-day access", price: 75, stock: "Available", available: true },
+        weekly: { name: "Weekly", access: "7-day access", price: 2.99, stock: "0 available", available: false },
+        monthly: { name: "30 days", access: "30-day access", price: 12, stock: "0 available", available: false },
+        ninety: { name: "90 days", access: "90-day access", price: 30, stock: "0 available", available: false },
+        yearly: { name: "365 days", access: "365-day access", price: 75, stock: "0 available", available: false },
       };
       const page = document.querySelector("main");
       const panel = document.querySelector(".plan-panel");

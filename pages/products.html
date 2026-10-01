@@ -25,6 +25,9 @@
     .catalog-filters__heading { margin:0 0 13px; color:#827b76; font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
     .catalog-filters__options { display:grid; gap:2px; }
     .catalog-filter { display:flex; width:100%; min-height:44px; align-items:center; justify-content:space-between; gap:12px; padding:8px 11px; border:1px solid transparent; border-radius:9px; color:#96918d; background:transparent; font:500 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif; text-align:left; cursor:default; }
+    .catalog-filter[data-product-type-filter],.catalog-filter[data-product-status-filter],.catalog-filter[data-product-price-filter],.catalog-filters__reset:not(:disabled) { cursor:pointer; }
+    .catalog-filter[data-product-type-filter]:hover,.catalog-filter[data-product-status-filter]:hover,.catalog-filter[data-product-price-filter]:hover { color:#fff; background:rgba(255,157,92,.06); }
+    .catalog-filter[data-product-type-filter]:focus-visible,.catalog-filter[data-product-status-filter]:focus-visible,.catalog-filter[data-product-price-filter]:focus-visible,.catalog-filters__reset:focus-visible { outline:2px solid var(--orange); outline-offset:2px; }
     .catalog-filter__label { min-width:0; }
     .catalog-filter__count { display:grid; width:27px; min-height:27px; flex:0 0 27px; place-items:center; border-radius:7px; color:#8a817a; background:#1d1b19; font-size:11px; font-weight:750; }
     .catalog-filter.is-active { border-color:rgba(255,157,92,.25); color:#ffe0cb; background:rgba(255,157,92,.08); }
@@ -34,8 +37,7 @@
     .catalog-filter--status .catalog-filter__label { display:inline-flex; align-items:center; gap:8px; }
     .catalog-filter--status .catalog-filter__count { width:22px; min-height:22px; flex-basis:22px; border-radius:6px; font-size:10px; }
     .catalog-filter__dot { width:6px; height:6px; flex:0 0 6px; border-radius:50%; background:#5dca8c; box-shadow:0 0 7px rgba(93,202,140,.35); }
-    .catalog-filter__dot--updating { background:var(--orange); box-shadow:0 0 7px rgba(255,157,92,.35); }
-    .catalog-filter__dot--fixing { background:#ed7180; box-shadow:0 0 7px rgba(237,113,128,.3); }
+    .catalog-filter__dot--offline { background:#ed7180; box-shadow:0 0 7px rgba(237,113,128,.3); }
     .catalog-price-range { display:grid; grid-template-columns:minmax(0,1fr) 10px minmax(0,1fr); align-items:end; gap:9px; margin-top:20px; }
     .catalog-price-range label { display:grid; min-width:0; gap:8px; color:#827b76; font-size:9px; font-weight:750; text-transform:uppercase; }
     .catalog-price-range input { width:100%; min-width:0; height:40px; padding:0 10px; border:1px solid #2b2724; border-radius:9px; color:#96918d; background:#0b0b0a; font:500 12px/1 Inter,ui-sans-serif,system-ui,sans-serif; opacity:1; appearance:textfield; }
@@ -43,13 +45,10 @@
     .catalog-price-range input::-webkit-inner-spin-button,.catalog-price-range input::-webkit-outer-spin-button { margin:0; -webkit-appearance:none; }
     .catalog-price-range__separator { display:grid; height:40px; place-items:center; color:#5a524c; font-size:16px; }
     .catalog-filters__footer { display:grid; gap:10px; padding:20px; border-top:1px solid #282522; }
-    .catalog-filters__reset,.catalog-filters__support { display:flex; width:100%; align-items:center; gap:10px; border:1px solid rgba(255,157,92,.25); border-radius:9px; color:#eee6df; background:linear-gradient(115deg,rgba(255,157,92,.09),rgba(255,157,92,.025)); font:600 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif; cursor:default; }
+    .catalog-filters__reset { display:flex; width:100%; align-items:center; gap:10px; border:1px solid rgba(255,157,92,.25); border-radius:9px; color:#eee6df; background:linear-gradient(115deg,rgba(255,157,92,.09),rgba(255,157,92,.025)); font:600 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif; cursor:default; }
     .catalog-filters__reset { min-height:40px; justify-content:center; padding:8px 10px; }
-    .catalog-filters__reset svg,.catalog-filters__support svg { width:18px; height:18px; flex:0 0 18px; color:var(--orange); fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .catalog-filters__support { min-height:68px; justify-content:space-between; padding:12px; text-align:left; }
-    .catalog-filters__support > span { display:grid; min-width:0; gap:3px; }
-    .catalog-filters__support small { color:#827873; font-size:10px; font-weight:500; }
-    .catalog-filters__support strong { color:#f5e9df; font-size:12px; font-weight:750; }
+    .catalog-filters__reset svg { width:18px; height:18px; flex:0 0 18px; color:var(--orange); fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
     .catalog-toolbar { display:flex; align-items:center; justify-content:space-between; gap:18px; }
     .catalog-toolbar .game-tabs { margin:0; }
     .catalog-search { width:min(260px,32vw); min-height:42px; padding:0 13px; border:1px solid #383331; border-radius:10px; color:#eee9e6; background:#171717; font:600 13px/1 Inter,ui-sans-serif,system-ui,sans-serif; }
@@ -63,22 +62,33 @@
     .game-tab:focus-visible { outline:2px solid #fff; outline-offset:3px; }
     .catalog-products { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,265px),1fr)); justify-items:stretch; gap:14px; margin-top:24px; }
     .store-card-link { display:block; width:100%; color:inherit; text-decoration:none; }
+    .catalog-products > .store-card-link[data-scroll-reveal].scroll-reveal-pending { transform:translate3d(-22px,0,0); }
+    .catalog-products > .store-card-link.catalog-card-enter { animation:catalog-card-enter 320ms cubic-bezier(.22,.8,.28,1) both; animation-delay:var(--catalog-card-enter-delay,0ms); }
+    @keyframes catalog-card-enter { from { opacity:0; transform:translate3d(-22px,0,0); } to { opacity:1; transform:translate3d(0,0,0); } }
     .store-card { width:100%; overflow:hidden; border:1px solid #3b3530; border-radius:18px; background:#151515; box-shadow:0 18px 36px rgba(0,0,0,.28); text-align:left; transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease; }
     .store-card-link:hover .store-card, .store-card-link:focus-visible .store-card { border-color:rgba(255,157,92,.72); transform:translateY(-3px); box-shadow:0 22px 42px rgba(0,0,0,.36); }
     .store-card-link:focus-visible { outline:2px solid #fff; outline-offset:5px; border-radius:20px; }
     .store-card__visual { position:relative; display:flex; min-height:174px; align-items:center; justify-content:center; overflow:hidden; padding:22px 16px; background:radial-gradient(circle at 18% 18%,rgba(255,157,92,.2),transparent 38%),linear-gradient(135deg,#12100f,#070707 68%); }
     .store-card__visual::before { position:absolute; inset:0; background:linear-gradient(135deg,transparent 47%,rgba(255,157,92,.1) 47.5%,transparent 48%); content:""; }
-    .store-card__meta { position:absolute; z-index:1; top:13px; right:13px; display:grid; justify-items:end; gap:5px; }
-    .store-card__type { padding:5px 7px; border:1px solid rgba(255,157,92,.62); border-radius:6px; color:#ffc49d; background:rgba(38,23,13,.78); font-size:10px; font-weight:800; }
-    .store-card__stock { color:#f3c09c; font-size:11px; font-weight:750; }
+    .store-card__meta { position:absolute; z-index:1; top:13px; right:13px; }
+    .store-card__status-badge { display:inline-flex; align-items:center; gap:5px; padding:5px 8px; border:1px solid #5a5754; border-radius:7px; color:#b2aeaa; background:rgba(17,17,17,.82); font-size:10px; font-weight:800; white-space:nowrap; }
+    .store-card__status-badge::before { width:5px; height:5px; border-radius:50%; background:currentColor; content:""; }
+    .store-card__status-badge.is-online { border-color:rgba(93,202,140,.62); color:#74d79c; background:rgba(33,82,54,.28); }
+    .store-card__status-badge.is-offline { border-color:rgba(237,113,128,.62); color:#f08b98; background:rgba(101,37,47,.3); }
+    .store-card__signals { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; min-height:17px; margin-top:10px; color:#aaa5a2; font-size:11px; font-weight:750; }
+    .store-card__stock { color:#f3c09c; }
     .store-card__stock.is-out { color:#ff8179; }
     .roblox-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:14px; color:#fff; }
     .roblox-product-mark__icon { width:70px; height:70px; flex:0 0 70px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
     .roblox-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
-    .cosmic-product-mark,.volt-product-mark,.pottasium-product-mark,.real-product-mark,.lumen-product-mark,.wave-product-mark,.sirhurt-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:11px; color:#fff; }
-    .cosmic-product-mark__icon,.volt-product-mark__icon,.pottasium-product-mark__icon,.real-product-mark__icon,.lumen-product-mark__icon,.wave-product-mark__icon,.sirhurt-product-mark__icon { width:78px; height:78px; flex:0 0 78px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
+    .cosmic-product-mark,.volt-product-mark,.pottasium-product-mark,.real-product-mark,.lumen-product-mark,.wave-product-mark,.sirhurt-product-mark,.matcha-product-mark,.serotonin-product-mark,.kiciahook-product-mark,.yabujin-product-mark,.severe-product-mark,.mspaint-product-mark,.matrixhub-product-mark { position:relative; z-index:1; display:flex; align-items:center; gap:11px; color:#fff; }
+    .cosmic-product-mark__icon,.volt-product-mark__icon,.pottasium-product-mark__icon,.real-product-mark__icon,.lumen-product-mark__icon,.wave-product-mark__icon,.sirhurt-product-mark__icon,.matcha-product-mark__icon,.serotonin-product-mark__icon,.kiciahook-product-mark__icon,.yabujin-product-mark__icon,.severe-product-mark__icon,.mspaint-product-mark__icon,.matrixhub-product-mark__icon { width:78px; height:78px; flex:0 0 78px; object-fit:contain; filter:drop-shadow(0 7px 12px rgba(0,0,0,.45)); }
     .volt-product-mark__icon { filter:drop-shadow(0 7px 12px rgba(255,157,92,.16)); }
-    .cosmic-product-mark strong,.volt-product-mark strong,.pottasium-product-mark strong,.real-product-mark strong,.lumen-product-mark strong,.wave-product-mark strong,.sirhurt-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
+    .yabujin-product-mark__icon { width:100px; height:100px; flex-basis:100px; margin:-11px; }
+    .severe-product-mark__icon { width:100px; height:100px; flex-basis:100px; margin:-11px; }
+    .mspaint-product-mark__icon { width:94px; height:94px; flex-basis:94px; margin:-8px; }
+    .matrixhub-product-mark__icon { width:96px; height:96px; flex-basis:96px; margin:-9px; }
+    .cosmic-product-mark strong,.volt-product-mark strong,.pottasium-product-mark strong,.real-product-mark strong,.lumen-product-mark strong,.wave-product-mark strong,.sirhurt-product-mark strong,.matcha-product-mark strong,.serotonin-product-mark strong,.kiciahook-product-mark strong,.yabujin-product-mark strong,.severe-product-mark strong,.mspaint-product-mark strong,.matrixhub-product-mark strong { font-size:29px; font-weight:850; letter-spacing:-.04em; }
     .store-card__body { padding:16px 17px 18px; }
     .store-card__game { display:inline-block; padding:4px 7px; border-radius:6px; color:#c4c0bd; background:#242424; font-size:11px; font-weight:750; }
     .store-card__body h2 { margin-top:12px; color:#fff; font-size:19px; letter-spacing:-.3px; }
@@ -90,10 +100,10 @@
     .catalog-empty { width:min(420px,100%); padding:40px 24px; border:1px dashed #3a342f; border-radius:16px; color:#938d89; background:rgba(21,21,21,.72); font-size:14px; line-height:1.5; }
     .catalog-products > .catalog-empty { grid-column:1/-1; justify-self:center; }
     .catalog-products [hidden] { display:none !important; }
-    @media (prefers-reduced-motion:reduce) { .game-tab,.store-card { transition:none; } }
+    @media (prefers-reduced-motion:reduce) { .game-tab,.store-card { transition:none; } .catalog-products > .store-card-link.catalog-card-enter { animation:none; } }
     @media (max-width:1460px) { .catalog-filters { top:146px; } }
     @media (max-width:960px) { .catalog-layout { grid-template-columns:minmax(0,1fr); gap:22px; } .catalog-filters { position:static; } .catalog-filters__header { padding:18px 20px; } .catalog-filters__body { padding:18px 20px; } .catalog-filters__options { grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; } }
-    @media (min-width:561px) and (max-width:960px) { .catalog-filters__sections { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); } .catalog-filters__body + .catalog-filters__body { border-top:0; border-left:1px solid #282522; } .catalog-filters__options { grid-template-columns:minmax(0,1fr); } .catalog-filters__footer { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; } }
+    @media (min-width:561px) and (max-width:960px) { .catalog-filters__sections { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); } .catalog-filters__body + .catalog-filters__body { border-top:0; border-left:1px solid #282522; } .catalog-filters__options { grid-template-columns:minmax(0,1fr); } }
     @media (max-width:560px) { .catalog-products { grid-template-columns:minmax(0,420px); justify-content:center; } }
     @media (max-width:700px) { .catalog-toolbar { align-items:stretch; flex-direction:column; gap:12px; } .catalog-toolbar .game-tabs { width:100%; } .catalog-search { width:100%; } }
     @media (max-width:560px) { main { width:calc(100% - 28px); margin-top:64px; } .catalog-title { font-size:34px; } .game-tabs { width:100%; flex-wrap:wrap; } .game-tab { flex:1 1 130px; padding:0 13px; } .catalog-filters__body { padding:16px; } .catalog-filters__options { grid-template-columns:repeat(2,minmax(0,1fr)); } .catalog-filter { gap:7px; padding:8px; font-size:12px; } .catalog-filter__count { width:22px; min-height:24px; flex-basis:22px; font-size:10px; } }
@@ -105,6 +115,7 @@
   <script src="../scripts/site-footer.js" defer></script><script src="../scripts/site-locale.js" defer></script><script src="../scripts/site-i18n.js" defer></script><script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
   <script src="../scripts/site-catalog.js" defer></script>
   <script src="../scripts/catalog.js" defer></script>
+  <script src="../scripts/catalog-status.js" defer></script>
 </head>
 <body data-page="products">
   <nav class="site-header" aria-label="Primary navigation">
@@ -130,42 +141,39 @@
         <div class="catalog-filters__body">
           <h3 class="catalog-filters__heading" id="catalog-product-type">Product type</h3>
           <div class="catalog-filters__options" role="group" aria-labelledby="catalog-product-type">
-            <button class="catalog-filter is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label">All</span><span class="catalog-filter__count">8</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Executors</span><span class="catalog-filter__count">8</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Externals</span><span class="catalog-filter__count">0</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Scripts</span><span class="catalog-filter__count">0</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Tools</span><span class="catalog-filter__count">0</span></button>
-            <button class="catalog-filter" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Game Accounts</span><span class="catalog-filter__count">0</span></button>
+            <button class="catalog-filter is-active" type="button" aria-pressed="true" data-product-type-filter="all"><span class="catalog-filter__label">All</span><span class="catalog-filter__count">15</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" data-product-type-filter="executor"><span class="catalog-filter__label">Executors</span><span class="catalog-filter__count">7</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" data-product-type-filter="external"><span class="catalog-filter__label">Externals</span><span class="catalog-filter__count">5</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" data-product-type-filter="script"><span class="catalog-filter__label">Scripts</span><span class="catalog-filter__count">3</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" data-product-type-filter="tool"><span class="catalog-filter__label">Tools</span><span class="catalog-filter__count">0</span></button>
+            <button class="catalog-filter" type="button" aria-pressed="false" data-product-type-filter="account"><span class="catalog-filter__label">Game Accounts</span><span class="catalog-filter__count">0</span></button>
           </div>
         </div>
         <div class="catalog-filters__body">
           <h3 class="catalog-filters__heading" id="catalog-product-status">Status</h3>
           <div class="catalog-filters__options" role="group" aria-labelledby="catalog-product-status">
-            <button class="catalog-filter catalog-filter--status is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>All statuses</span></span><span class="catalog-filter__count">8</span></button>
-            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>Online</span></span><span class="catalog-filter__count">8</span></button>
-            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot catalog-filter__dot--updating" aria-hidden="true"></span><span>Updating</span></span><span class="catalog-filter__count">0</span></button>
-            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" disabled><span class="catalog-filter__label"><span class="catalog-filter__dot catalog-filter__dot--fixing" aria-hidden="true"></span><span>Fixing</span></span><span class="catalog-filter__count">0</span></button>
+            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" data-product-status-filter="online"><span class="catalog-filter__label"><span class="catalog-filter__dot" aria-hidden="true"></span><span>Online</span></span><span class="catalog-filter__count">0</span></button>
+            <button class="catalog-filter catalog-filter--status" type="button" aria-pressed="false" data-product-status-filter="offline"><span class="catalog-filter__label"><span class="catalog-filter__dot catalog-filter__dot--offline" aria-hidden="true"></span><span>Offline</span></span><span class="catalog-filter__count">0</span></button>
           </div>
         </div>
         <div class="catalog-filters__body">
           <h3 class="catalog-filters__heading" id="catalog-product-price">Price</h3>
           <div class="catalog-filters__options" role="group" aria-labelledby="catalog-product-price">
-            <button class="catalog-filter catalog-filter--price is-active" type="button" aria-pressed="true" disabled><span class="catalog-filter__label">Any price</span></button>
-            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">Under $10</span></button>
-            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">$10 – $25</span></button>
-            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">$25 – $50</span></button>
-            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" disabled><span class="catalog-filter__label">$50+</span></button>
+            <button class="catalog-filter catalog-filter--price is-active" type="button" aria-pressed="true" data-product-price-filter="all"><span class="catalog-filter__label">Any price</span></button>
+            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" data-product-price-filter="under-10"><span class="catalog-filter__label">Under $10</span></button>
+            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" data-product-price-filter="10-25"><span class="catalog-filter__label">$10 – $25</span></button>
+            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" data-product-price-filter="25-50"><span class="catalog-filter__label">$25 – $50</span></button>
+            <button class="catalog-filter catalog-filter--price" type="button" aria-pressed="false" data-product-price-filter="50-plus"><span class="catalog-filter__label">$50+</span></button>
           </div>
           <div class="catalog-price-range">
-            <label for="catalog-price-min">Minimum<input id="catalog-price-min" type="number" min="0" step="1" placeholder="1" disabled></label>
+            <label for="catalog-price-min">Minimum ($)<input id="catalog-price-min" type="number" min="0" step="0.01" placeholder="1"></label>
             <span class="catalog-price-range__separator" aria-hidden="true">–</span>
-            <label for="catalog-price-max">Maximum<input id="catalog-price-max" type="number" min="0" step="1" placeholder="50" disabled></label>
+            <label for="catalog-price-max">Maximum ($)<input id="catalog-price-max" type="number" min="0" step="0.01" placeholder="50"></label>
           </div>
         </div>
         </div>
         <div class="catalog-filters__footer">
-          <button class="catalog-filters__reset" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 7a7 7 0 0 1 11.5-2L20 8M4 16l2.4 3A7 7 0 0 0 17.9 17"/></svg><span>Reset all filters</span></button>
-          <button class="catalog-filters__support" type="button" disabled><span><small>Not sure what fits?</small><strong>Ask our support team</strong></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+          <button class="catalog-filters__reset" type="button" data-reset-product-filters><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 7a7 7 0 0 1 11.5-2L20 8M4 16l2.4 3A7 7 0 0 0 17.9 17"/></svg><span>Reset all filters</span></button>
         </div>
       </aside>
       <div class="catalog-content">
@@ -178,120 +186,233 @@
       <input class="catalog-search" type="text" inputmode="search" data-product-search data-i18n-placeholder="products-search-placeholder" placeholder="Search products" aria-label="Search products by name">
     </div>
     <section class="catalog-products" aria-live="polite">
-      <a class="store-card-link" href="isaeva.html" data-product-id="isaeva" data-product-game="roblox" aria-label="Open Isaeva product details">
+      <a class="store-card-link" href="isaeva.html" data-product-id="isaeva" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Isaeva product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-stock">9 available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="roblox-product-mark" aria-label="Isaeva for Roblox"><img class="roblox-product-mark__icon" src="../assets/isaeva-logo-red.png" alt=""><strong>Isaeva</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Isaeva</h2>
-            <p class="store-card__access" data-i18n="product-access">7-day access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock" lang="en" translate="no">9 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="cosmic.html" data-product-id="cosmic" data-product-game="roblox" aria-label="Open Cosmic product details">
+      <a class="store-card-link" href="cosmic.html" data-product-id="cosmic" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Cosmic product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out">0 available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="cosmic-product-mark" aria-label="Cosmic for Roblox"><img class="cosmic-product-mark__icon" src="../assets/cosmic-logo.png" alt=""><strong>Cosmic</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Cosmic</h2>
-            <p class="store-card__access">Executor access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="3.99">$3.99</strong></div><span class="store-card__price-note" data-i18n="product-details">Details soon</span></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="volt.html" data-product-id="volt" data-product-game="roblox" aria-label="Open Volt product details">
+      <a class="store-card-link" href="volt.html" data-product-id="volt" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Volt product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-volt-stock">2 available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="volt-product-mark" aria-label="Volt for Roblox"><img class="volt-product-mark__icon" src="../assets/volt-logo.png" alt=""><strong>Volt</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Volt</h2>
-            <p class="store-card__access" data-i18n="product-volt-access">7-day access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="4.99">$4.99</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="pottasium.html" data-product-id="pottasium" data-product-game="roblox" aria-label="Open Potassium product details">
+      <a class="store-card-link" href="pottasium.html" data-product-id="pottasium" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Potassium product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out" data-i18n="product-pottasium-stock">0 available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="pottasium-product-mark" aria-label="Potassium for Roblox"><img class="pottasium-product-mark__icon" src="../assets/pottasium-logo.png" alt=""><strong>Potassium</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Potassium</h2>
-            <p class="store-card__access" data-i18n="product-pottasium-access">Lifetime access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="18">$18.00</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="real.html" data-product-id="real" data-product-game="roblox" aria-label="Open Real product details">
+      <a class="store-card-link" href="real.html" data-product-id="real" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Real product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-real-stock">Available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="real-product-mark" aria-label="Real for Roblox"><img class="real-product-mark__icon" src="../assets/real-logo.png" alt=""><strong>Real</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Real</h2>
-            <p class="store-card__access" data-i18n="product-real-access">7-day access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="lumen.html" data-product-id="lumen" data-product-game="roblox" aria-label="Open Lumen product details">
+      <a class="store-card-link" href="lumen.html" data-product-id="lumen" data-product-type="external" data-product-status="unknown" data-product-game="roblox" aria-label="Open Lumen product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-lumen-stock">Available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="lumen-product-mark" aria-label="Lumen for Roblox"><img class="lumen-product-mark__icon" src="../assets/lumen-logo.png" alt=""><strong>Lumen</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Lumen</h2>
-            <p class="store-card__access" data-i18n="product-lumen-access">Lifetime access</p>
+            <p class="store-card__access" data-i18n="product-external">External</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="9.99">$9.99</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="wave.html" data-product-id="wave" data-product-game="roblox" aria-label="Open Wave product details">
+      <a class="store-card-link" href="wave.html" data-product-id="wave" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Wave product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock" data-i18n="product-wave-stock">Available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="wave-product-mark" aria-label="Wave for Roblox"><img class="wave-product-mark__icon" src="../assets/wave-logo.png" alt=""><strong>Wave</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Wave</h2>
-            <p class="store-card__access" data-i18n="product-wave-access">7-day access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
           </div>
         </article>
       </a>
-      <a class="store-card-link" href="sirhurt.html" data-product-id="sirhurt" data-product-game="roblox" aria-label="Open Sirhurt product details">
+      <a class="store-card-link" href="sirhurt.html" data-product-id="sirhurt" data-product-type="executor" data-product-status="unknown" data-product-game="roblox" aria-label="Open Sirhurt product details">
         <article class="store-card">
           <div class="store-card__visual">
-            <div class="store-card__meta"><span class="store-card__type" data-i18n="product-executor">Executor</span><span class="store-card__stock is-out" data-i18n="product-sirhurt-stock">0 available</span></div>
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
             <div class="sirhurt-product-mark" aria-label="Sirhurt for Roblox"><img class="sirhurt-product-mark__icon" src="../assets/sirhurt-logo.png" alt=""><strong>Sirhurt</strong></div>
           </div>
           <div class="store-card__body">
             <span class="store-card__game">Roblox</span>
             <h2>Sirhurt</h2>
-            <p class="store-card__access" data-i18n="product-sirhurt-access">7-day access</p>
+            <p class="store-card__access" data-i18n="product-executor">Executor</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
             <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.8">$2.80</strong></div></div>
           </div>
         </article>
       </a>
+      <a class="store-card-link" href="matcha.html" data-product-id="matcha" data-product-type="external" data-product-status="unknown" data-product-game="roblox" aria-label="Open Matcha product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
+            <div class="matcha-product-mark" aria-label="Matcha for Roblox"><img class="matcha-product-mark__icon" src="../assets/matcha-logo.png" alt=""><strong>Matcha</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Matcha</h2>
+            <p class="store-card__access" data-i18n="product-external">External</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="11">$11.00</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="serotonin.html" data-product-id="serotonin" data-product-type="external" data-product-status="unknown" data-product-game="roblox" aria-label="Open Serotonin product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
+            <div class="serotonin-product-mark" aria-label="Serotonin for Roblox"><img class="serotonin-product-mark__icon" src="../assets/serotonin-logo.png" alt=""><strong>Serotonin</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Serotonin</h2>
+            <p class="store-card__access" data-i18n="product-external">External</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="9.99">$9.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="kiciahook.html" data-product-id="kiciahook" data-product-type="script" data-product-status="online" data-product-game="roblox" aria-label="Open KiciaHook product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge is-online" data-product-status-label>Online</span></div>
+            <div class="kiciahook-product-mark" aria-label="KiciaHook for Roblox"><img class="kiciahook-product-mark__icon" src="../assets/kiciahook-logo.png" alt=""><strong>KiciaHook</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>KiciaHook</h2>
+            <p class="store-card__access" data-i18n="product-script">Script</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="yabujin.html" data-product-id="yabujin" data-product-type="script" data-product-status="online" data-product-game="roblox" aria-label="Open Yabujin product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge is-online" data-product-status-label>Online</span></div>
+            <div class="yabujin-product-mark" aria-label="Yabujin for Roblox"><img class="yabujin-product-mark__icon" src="../assets/yabujin-logo.png" alt=""><strong>Yabujin</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Yabujin</h2>
+            <p class="store-card__access" data-i18n="product-script">Script</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="severe.html" data-product-id="severe" data-product-type="external" data-product-status="unknown" data-product-game="roblox" aria-label="Open Severe product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
+            <div class="severe-product-mark" aria-label="Severe for Roblox"><img class="severe-product-mark__icon" src="../assets/severe-logo.png" alt=""><strong>Severe</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Severe</h2>
+            <p class="store-card__access" data-i18n="product-external">External</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="9.99">$9.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="mspaint.html" data-product-id="mspaint" data-product-type="script" data-product-status="online" data-product-game="roblox" aria-label="Open MsPaint product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge is-online" data-product-status-label>Online</span></div>
+            <div class="mspaint-product-mark" aria-label="MsPaint for Roblox"><img class="mspaint-product-mark__icon" src="../assets/mspaint-logo.png" alt=""><strong>MsPaint</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>MsPaint</h2>
+            <p class="store-card__access" data-i18n="product-script">Script</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="2.99">$2.99</strong></div></div>
+          </div>
+        </article>
+      </a>
+      <a class="store-card-link" href="matrixhub.html" data-product-id="matrixhub" data-product-type="external" data-product-status="unknown" data-product-game="roblox" aria-label="Open Matrix Hub product details">
+        <article class="store-card">
+          <div class="store-card__visual">
+            <div class="store-card__meta"><span class="store-card__status-badge" data-product-status-label>Checking status…</span></div>
+            <div class="matrixhub-product-mark" aria-label="Matrix Hub for Roblox"><img class="matrixhub-product-mark__icon" src="../assets/matrixhub-logo.png" alt=""><strong>Matrix Hub</strong></div>
+          </div>
+          <div class="store-card__body">
+            <span class="store-card__game">Roblox</span>
+            <h2>Matrix Hub</h2>
+            <p class="store-card__access" data-i18n="product-external">External</p>
+            <div class="store-card__signals"><span class="store-card__stock is-out" lang="en" translate="no">0 available</span></div>
+            <div class="store-card__price-row"><div><span class="store-card__price-label" data-i18n="product-from">From</span><strong class="store-card__price" data-currency-price="7.99">$7.99</strong></div></div>
+          </div>
+        </article>
+      </a>
       <p class="catalog-empty" data-empty-game="cs2" data-i18n="product-cs2-empty" hidden>CS2 products will be added soon.</p>
-      <p class="catalog-empty" data-search-empty data-i18n="products-no-matches" hidden>No products match your search.</p>
+      <p class="catalog-empty" data-search-empty data-i18n="products-no-filter-matches" hidden>No products match these filters.</p>
     </section>
       </div>
     </div>

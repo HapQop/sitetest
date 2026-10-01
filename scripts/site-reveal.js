@@ -8,7 +8,7 @@
     "main > section",
     "main > .detail-grid > section",
     "main > .contacts > .contact-card",
-    "main > .catalog-products > .store-card-link",
+    "main .catalog-products > .store-card-link",
     "main .exploit-grid > .exploit-card",
     "main .products > .product",
     "main .info-grid > .info-card",
@@ -37,7 +37,8 @@
     const parent = element.parentElement;
     const index = siblingIndexes.get(parent) || 0;
     siblingIndexes.set(parent, index + 1);
-    element.style.setProperty("--scroll-reveal-delay", `${Math.min(index * 100, 400)}ms`);
+    const isCatalogCard = element.matches(".catalog-products > .store-card-link");
+    element.style.setProperty("--scroll-reveal-delay", `${Math.min(index * (isCatalogCard ? 55 : 100), isCatalogCard ? 220 : 400)}ms`);
     element.classList.add("scroll-reveal-pending");
     observer.observe(element);
   });

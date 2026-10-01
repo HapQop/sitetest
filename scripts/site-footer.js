@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         '<div class="site-footer__grid">' +
           '<section>' +
             '<a class="site-footer__brand" href="index.html"><img src="../assets/icons/cheatblox-mark.svg" alt="" width="26" height="26">Cheat<span>Blox</span></a>' +
-            '<p class="site-footer__description" data-i18n="footer-description">CheatBlox is a streamlined gaming hub for versions, products, and community resources.</p>' +
+            '<p class="site-footer__description" data-i18n="footer-description">CheatBlox – a reliable and trusted store for purchasing game licenses and keys.</p>' +
           '</section>' +
           '<section>' +
             '<h2 class="site-footer__title" data-i18n="footer-navigation">Navigation</h2>' +

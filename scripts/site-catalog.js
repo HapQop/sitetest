@@ -1,6 +1,6 @@
 (() => {
   const apiUrl = "/api/catalog";
-  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt" };
+  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt", matcha: "matcha", serotonin: "serotonin", kiciahook: "kiciahook", yabujin: "yabujin", severe: "severe", mspaint: "mspaint", matrixhub: "matrixhub" };
   const bodyProductId = productByPage[document.body?.dataset.page];
 
   function formatStock(plan) {
@@ -33,6 +33,15 @@
     document.querySelectorAll("[data-product-id]").forEach((card) => {
       const product = catalog[card.dataset.productId];
       if (!product) return;
+      if (product.type) {
+        card.dataset.productType = product.type;
+        const category = card.querySelector(".store-card__access");
+        if (category) {
+          const typeKey = `product-${product.type}`;
+          category.dataset.i18n = typeKey;
+          category.textContent = window.CheatBloxI18n?.translate(typeKey) || ({ executor: "Executor", external: "External", script: "Script" }[product.type] || product.type);
+        }
+      }
       const title = card.querySelector(".store-card__body h2");
       if (title) title.textContent = product.name;
       const visualName = card.querySelector(".store-card__visual strong");
@@ -41,11 +50,6 @@
       showVersion(card.querySelector(".store-card__body"), product.version);
       const firstPlan = Object.values(product.plans || {}).find((plan) => plan.available) || Object.values(product.plans || {})[0];
       if (!firstPlan) return;
-      const access = card.querySelector(".store-card__access");
-      if (access) {
-        access.removeAttribute("data-i18n");
-        access.textContent = firstPlan.access;
-      }
       const price = card.querySelector("[data-currency-price]");
       if (price) {
         price.dataset.currencyPrice = String(firstPlan.price);
@@ -58,6 +62,7 @@
         stock.classList.toggle("is-out", !firstPlan.available);
       }
     });
+    document.dispatchEvent(new CustomEvent("cheatblox:catalogchange"));
   }
 
   function applyDetailProduct(product) {
@@ -118,7 +123,9 @@
       if (selectPlan) selectPlan.disabled = !plan.available;
       if (planLabel) planLabel.textContent = "Purchase";
       if (message) {
-        message.textContent = plan.available ? "Available now" : "Out of stock";
+        const messageKey = plan.available ? "product-available-message" : "product-out-of-stock-message";
+        message.dataset.i18n = messageKey;
+        message.textContent = window.CheatBloxI18n?.translate(messageKey) || (plan.available ? "Available now" : "Out of stock");
         message.classList.toggle("is-out", !plan.available);
       }
     }

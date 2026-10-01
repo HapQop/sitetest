@@ -1,7 +1,7 @@
 (() => {
   const fallback = {
     titleRu: "CheatBlox", titleEn: "CheatBlox",
-    descriptionRu: "Открой максимум возможностей", descriptionEn: "Unlock maximum possibilities",
+    descriptionRu: "Открой максимум возможностей", descriptionEn: "Premium Gaming Tools",
     modalTitleRu: "Скидка 10%", modalTitleEn: "Get 10% off",
     modalDescriptionRu: "Перейдите в наш Telegram или Discord за промокодом. Примените его на странице продукта, чтобы увидеть цену со скидкой.",
     modalDescriptionEn: "Join our Telegram or Discord to get a promo code. Apply it on a product page to see your discounted price.",

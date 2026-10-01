@@ -8,6 +8,7 @@
     lumen: "lumen-logo.png",
     wave: "wave-logo.png",
     sirhurt: "sirhurt-logo.png",
+    matcha: "matcha-logo.png",
   };
   const params = new URLSearchParams(window.location.search);
   const orderId = params.get("order") || "";
