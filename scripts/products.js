@@ -47,6 +47,18 @@ function versionAliases(platform) {
   return ["iOS", "ios", "IOS", "iOSVersion", "iosVersion"];
 }
 
+function versionDateAliases(platform) {
+  if (platform === "windows") return ["WindowsDate", "windowsDate"];
+  if (platform === "mac") return ["MacDate", "macDate", "MacOSDate", "macOSDate"];
+  if (platform === "android") return ["AndroidDate", "androidDate"];
+  return ["iOSDate", "iosDate", "IOSDate"];
+}
+
+function toIsoTimestamp(value) {
+  const timestamp = Date.parse(String(value || ""));
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : "";
+}
+
 function getVersionPlatform(product) {
   const icon = product.querySelector(".platform-icon");
   if (!icon) return "";
@@ -57,9 +69,14 @@ function applyVersions(payload, overrides = {}) {
   let updated = 0;
   document.querySelectorAll(".product[data-version]").forEach((product) => {
     const platform = getVersionPlatform(product);
+    const isManuallyOverridden = Boolean(overrides[platform]);
     const version = overrides[platform] || findVersionValue(payload, versionAliases(platform));
     if (!platform || !version) return;
     product.dataset.version = version;
+    if (!isManuallyOverridden) {
+      const updatedAt = toIsoTimestamp(findVersionValue(payload, versionDateAliases(platform)));
+      if (updatedAt) product.dataset.updatedAt = updatedAt;
+    }
     const code = product.querySelector(".version-chip code");
     if (code) code.textContent = version;
     updated += 1;
@@ -86,7 +103,7 @@ async function refreshRobloxVersions() {
     // Static and automatic versions remain available without the catalog API.
   }
   const cached = readCachedVersions();
-  applyVersions(cached || {}, overrides);
+  if (applyVersions(cached || {}, overrides)) refreshProductDates();
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 5000);
@@ -96,6 +113,7 @@ async function refreshRobloxVersions() {
     const payload = await response.json();
     const updated = applyVersions(payload, overrides);
     if (!updated) throw new Error("Versions response did not contain supported platforms");
+    refreshProductDates();
     localStorage.setItem(versionsCacheKey, JSON.stringify({ savedAt: Date.now(), payload }));
   } catch {
     // The HTML values remain visible when the remote API is unavailable.

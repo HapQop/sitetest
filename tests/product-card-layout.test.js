@@ -7,7 +7,13 @@ const cards = productsPage.match(/<a class="store-card-link"[\s\S]*?<\/a>/g) || 
 const categoryLabels = { executor: "Executor", external: "External", script: "Script" };
 
 test("catalog cards reserve the upper-right visual area for framed operational status", () => {
-  assert.equal(cards.length, 15, "all product cards are present");
+  assert.equal(cards.length, 18, "all product cards are present");
+  const orderedIds = cards.map((card) => /data-product-id="([^"]+)"/.exec(card)?.[1]);
+  assert.deepEqual(orderedIds, [
+    "pottasium", "isaeva", "volt", "cosmic", "real", "wave", "sirhurt", "synapsez",
+    "lumen", "matcha", "serotonin", "severe", "matrixhub", "ronin", "axis",
+    "kiciahook", "yabujin", "mspaint",
+  ], "All Products lists executors first, then externals, then scripts");
 
   for (const card of cards) {
     const productId = /data-product-id="([^"]+)"/.exec(card)?.[1];
@@ -56,9 +62,27 @@ test("catalog cards reserve the upper-right visual area for framed operational s
   assert.match(mspaint, /src="\.\.\/assets\/mspaint-logo\.png"/, "MsPaint uses the cleaned supplied logo");
   assert.match(mspaint, /data-currency-price="2\.99">\$2\.99/, "MsPaint card starts at $2.99");
 
+  const synapsez = cards.find((card) => card.includes('data-product-id="synapsez"'));
+  assert.match(synapsez, /href="synapsez\.html"/, "SynapseZ card opens its detail page");
+  assert.match(synapsez, /data-product-type="executor"/, "SynapseZ is presented as an Executor product");
+  assert.match(synapsez, /src="\.\.\/assets\/synapsez-logo\.png"/, "SynapseZ uses the supplied logo");
+  assert.match(synapsez, /data-currency-price="3\.99">\$3\.99/, "SynapseZ card starts at $3.99");
+
   const matrixHub = cards.find((card) => card.includes('data-product-id="matrixhub"'));
   assert.match(matrixHub, /href="matrixhub\.html"/, "Matrix Hub card opens its detail page");
   assert.match(matrixHub, /data-product-type="external"/, "Matrix Hub is presented as an External product");
   assert.match(matrixHub, /src="\.\.\/assets\/matrixhub-logo\.png"/, "Matrix Hub uses the supplied logo");
   assert.match(matrixHub, /data-currency-price="7\.99">\$7\.99/, "Matrix Hub card starts at $7.99");
+
+  const ronin = cards.find((card) => card.includes('data-product-id="ronin"'));
+  assert.match(ronin, /href="ronin\.html"/, "Ronin card opens its detail page");
+  assert.match(ronin, /data-product-type="external"/, "Ronin is presented as an External product");
+  assert.match(ronin, /src="\.\.\/assets\/ronin-logo\.png"/, "Ronin uses the supplied logo");
+  assert.match(ronin, /data-currency-price="9\.99">\$9\.99/, "Ronin card starts at $9.99");
+
+  const axis = cards.find((card) => card.includes('data-product-id="axis"'));
+  assert.match(axis, /href="axis\.html"/, "Axis card opens its detail page");
+  assert.match(axis, /data-product-type="external"/, "Axis is presented as an External product");
+  assert.match(axis, /src="\.\.\/assets\/axis-logo\.png"/, "Axis uses the supplied logo");
+  assert.match(axis, /data-currency-price="4\.99">\$4\.99/, "Axis card starts at $4.99");
 });

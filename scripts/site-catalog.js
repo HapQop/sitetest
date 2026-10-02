@@ -1,6 +1,6 @@
 (() => {
   const apiUrl = "/api/catalog";
-  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt", matcha: "matcha", serotonin: "serotonin", kiciahook: "kiciahook", yabujin: "yabujin", severe: "severe", mspaint: "mspaint", matrixhub: "matrixhub" };
+  const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt", synapsez: "synapsez", matcha: "matcha", serotonin: "serotonin", kiciahook: "kiciahook", yabujin: "yabujin", severe: "severe", mspaint: "mspaint", matrixhub: "matrixhub", ronin: "ronin", axis: "axis" };
   const bodyProductId = productByPage[document.body?.dataset.page];
 
   function formatStock(plan) {

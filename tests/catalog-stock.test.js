@@ -15,7 +15,7 @@ test("default catalog marks all plans unavailable except Isaeva weekly", () => {
 
 test("default catalog assigns product types", () => {
   for (const [productId, product] of Object.entries(DEFAULT_CATALOG)) {
-    const expectedType = ["lumen", "matcha", "serotonin", "severe", "matrixhub"].includes(productId) ? "external" : ["kiciahook", "yabujin", "mspaint"].includes(productId) ? "script" : "executor";
+    const expectedType = ["lumen", "matcha", "serotonin", "severe", "matrixhub", "ronin", "axis"].includes(productId) ? "external" : ["kiciahook", "yabujin", "mspaint"].includes(productId) ? "script" : "executor";
     assert.equal(product.type, expectedType, productId);
   }
 });
@@ -81,6 +81,38 @@ test("Matrix Hub has an unavailable lifetime External plan at the configured pri
     type: "external",
     plans: {
       lifetime: { name: "Lifetime", access: "Lifetime access", price: 7.99, stock: 0, available: false },
+    },
+  });
+});
+
+test("SynapseZ has unavailable weekly and monthly Executor plans at the configured prices", () => {
+  assert.deepEqual(DEFAULT_CATALOG.synapsez, {
+    name: "SynapseZ",
+    type: "executor",
+    plans: {
+      weekly: { name: "7 days", access: "7-day access", price: 3.99, stock: 0, available: false },
+      monthly: { name: "30 days", access: "30-day access", price: 10.99, stock: 0, available: false },
+    },
+  });
+});
+
+test("Ronin has an unavailable lifetime External plan at the configured price", () => {
+  assert.deepEqual(DEFAULT_CATALOG.ronin, {
+    name: "Ronin",
+    type: "external",
+    plans: {
+      lifetime: { name: "Lifetime", access: "Lifetime access", price: 9.99, stock: 0, available: false },
+    },
+  });
+});
+
+test("Axis has two unavailable 30-day External plans at the configured prices", () => {
+  assert.deepEqual(DEFAULT_CATALOG.axis, {
+    name: "Axis",
+    type: "external",
+    plans: {
+      thirty: { name: "30 days", access: "30-day access", price: 4.99, stock: 0, available: false },
+      thirtyPremium: { name: "30 days", access: "30-day access", price: 9.99, stock: 0, available: false },
     },
   });
 });
