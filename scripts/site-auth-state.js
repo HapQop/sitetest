@@ -47,19 +47,10 @@
       const userMenu = document.createElement("div");
       userMenu.className = "user-menu";
       userMenu.innerHTML = `
-        <span class="user-name">${escapeHtml(user.username)}</span>
+        <a class="user-name" href="/account" aria-label="Open account">${escapeHtml(user.username)}</a>
         ${user.isAdmin === true && page !== "admin" ? `<a class="admin-link" href="${adminHref}" aria-label="${adminLabel}">${adminText}</a>` : ""}
-        <button class="logout-btn" aria-label="Logout">Logout</button>
       `;
       siteControls.appendChild(userMenu);
-      userMenu.querySelector(".logout-btn").addEventListener("click", async () => {
-        try {
-          await fetch(`${apiBase}/logout`, { method: "POST", credentials: "include" });
-          window.location.reload();
-        } catch (error) {
-          console.error("Logout failed:", error);
-        }
-      });
     }
   }
 

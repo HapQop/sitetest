@@ -1,4 +1,13 @@
 (() => {
+  function ensureFavicon() {
+    if (document.querySelector('link[rel="icon"]')) return;
+    const favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.type = "image/svg+xml";
+    favicon.href = "./assets/icons/cheatblox-mark.svg";
+    document.head?.appendChild(favicon);
+  }
+
   function initNavigationLoader(header) {
     const storageKey = "cheatblox-navigation-start";
     let loader;
@@ -98,6 +107,7 @@
     initNavigationLoader(header);
   }
 
+  ensureFavicon();
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initHeader, { once: true });
   } else {

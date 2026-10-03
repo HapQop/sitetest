@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>CheatBlox — Account</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/cheatblox-mark.svg">
+  <link rel="stylesheet" href="./styles/site-header.css">
+  <link rel="stylesheet" href="./styles/account.css">
+  <script src="./scripts/site-header.js" defer></script>
+  <script src="./scripts/site-locale.js" defer></script>
+  <script src="./scripts/site-i18n.js" defer></script>
+  <script src="./scripts/site-auth-state.js" defer></script>
+  <script src="./scripts/account.js" defer></script>
+</head>
+<body data-page="account">
+  <nav class="site-header" aria-label="Primary navigation">
+    <a class="site-brand" href="/"><img class="brand-mark" src="./assets/icons/cheatblox-mark.svg" alt="" width="28" height="28">Cheat<span>Blox</span></a>
+    <div class="site-nav">
+      <a href="/" data-i18n="nav-home">Home</a><a href="/products" data-i18n="nav-products">Products</a><a href="/exploits" data-i18n="nav-exploits">Exploits</a><a href="/reviews" data-i18n="nav-reviews">Reviews</a><a href="/contact" data-i18n="nav-contact">Contact</a>
+    </div>
+    <div class="site-controls">
+      <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
+      <a class="login-link" href="/auth?mode=login" data-i18n="login">Login</a>
+    </div>
+  </nav>
+
+  <main class="account-page">
+    <section class="account-hero" aria-labelledby="account-title">
+      <div>
+        <p class="account-eyebrow" data-i18n="account-eyebrow">YOUR CHEATBLOX ACCOUNT</p>
+        <h1 id="account-title" data-i18n="account-title">Account</h1>
+        <p data-i18n="account-intro">Manage your access, purchased keys, and security.</p>
+      </div>
+      <div class="account-avatar" aria-hidden="true"><img src="./assets/icons/cheatblox-mark.svg" alt=""></div>
+    </section>
+
+    <div class="account-grid">
+      <section class="account-card account-details" aria-labelledby="account-details-title">
+        <h2 id="account-details-title" data-i18n="account-details">Account details</h2>
+        <dl>
+          <div><dt data-i18n="account-username">Username</dt><dd data-account-username>—</dd></div>
+          <div><dt data-i18n="account-email">Email</dt><dd data-account-email>—</dd></div>
+        </dl>
+      </section>
+
+      <section class="account-card account-keys" aria-labelledby="account-keys-title">
+        <div class="account-card__heading"><div><h2 id="account-keys-title" data-i18n="account-keys">Purchased keys</h2><p data-i18n="account-keys-copy">Keys appear here after a confirmed payment.</p></div><span class="account-key-count" data-account-key-count>0</span></div>
+        <div class="account-key-list" data-account-keys aria-live="polite"></div>
+      </section>
+
+      <section class="account-card account-password" aria-labelledby="account-password-title">
+        <div class="account-card__heading"><div><h2 id="account-password-title" data-i18n="account-password">Change password</h2><p data-i18n="account-password-copy">Use a unique password with at least 8 characters.</p></div></div>
+        <form class="account-password-form" data-account-password-form>
+          <label><span data-i18n="account-current-password">Current password</span><input name="currentPassword" type="password" autocomplete="current-password" required></label>
+          <label><span data-i18n="account-new-password">New password</span><input name="newPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+          <label><span data-i18n="account-confirm-password">Confirm new password</span><input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button type="submit" data-i18n="account-password-save">Update password</button>
+        </form>
+        <p class="account-status" data-account-password-status role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="account-card account-logout" aria-labelledby="account-logout-title">
+        <div><h2 id="account-logout-title" data-i18n="account-logout">Log out</h2><p data-i18n="account-logout-copy">End this session on this device.</p></div>
+        <button type="button" data-account-logout data-i18n="account-logout">Log out</button>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

@@ -146,6 +146,32 @@ async function issueSession(res, userId) {
   res.setHeader("Set-Cookie", cookieHeader(token));
 }
 
+async function authenticatedSession(req) {
+  const cookies = req.headers.cookie || "";
+  const match = cookies.match(/auth_session=([^;]+)/);
+  if (!match) return null;
+  const token = match[1];
+  const session = await getJson(`auth:session:${digest(token)}`);
+  if (!session) return null;
+  const user = await getJson(`auth:user:${session.userId}`);
+  return user ? { token, user } : null;
+}
+
+function purchasedKeys(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => {
+    const key = typeof item?.key === "string" ? item.key.trim() : "";
+    if (!key || key.length > 512) return null;
+    return {
+      id: typeof item.id === "string" ? item.id.slice(0, 120) : "",
+      productName: typeof item.productName === "string" ? item.productName.slice(0, 120) : "CheatBlox product",
+      planName: typeof item.planName === "string" ? item.planName.slice(0, 120) : "",
+      key,
+      purchasedAt: typeof item.purchasedAt === "string" ? item.purchasedAt : "",
+    };
+  }).filter(Boolean);
+}
+
 function bodyValue(body, key) {
   return typeof body?.[key] === "string" ? body[key] : "";
 }
@@ -280,15 +306,36 @@ async function reset(req, res) {
 }
 
 async function getSession(req, res) {
-  const cookies = req.headers.cookie || "";
-  const match = cookies.match(/auth_session=([^;]+)/);
-  if (!match) return json(res, 401, { error: "Not authenticated." });
-  const token = match[1];
-  const session = await getJson(`auth:session:${digest(token)}`);
-  if (!session) return json(res, 401, { error: "Session expired." });
-  const user = await getJson(`auth:user:${session.userId}`);
-  if (!user) return json(res, 401, { error: "User not found." });
-  return json(res, 200, { ok: true, user: publicUser(user) });
+  const authenticated = await authenticatedSession(req);
+  if (!authenticated) return json(res, 401, { error: "Not authenticated." });
+  return json(res, 200, { ok: true, user: publicUser(authenticated.user) });
+}
+
+async function account(req, res) {
+  const authenticated = await authenticatedSession(req);
+  if (!authenticated) return json(res, 401, { error: "Not authenticated." });
+  const keys = purchasedKeys(await getJson(`auth:keys:${authenticated.user.id}`));
+  return json(res, 200, { ok: true, user: publicUser(authenticated.user), keys });
+}
+
+async function changePassword(req, res) {
+  const authenticated = await authenticatedSession(req);
+  if (!authenticated) return json(res, 401, { error: "Not authenticated." });
+
+  const currentPassword = bodyValue(req.body, "currentPassword");
+  const newPassword = bodyValue(req.body, "newPassword");
+  if (!validPassword(newPassword)) return json(res, 400, { error: "Password must be 8–128 characters." });
+  if (currentPassword === newPassword) return json(res, 400, { error: "Choose a different password." });
+  if (!(await verifyPassword(currentPassword, authenticated.user.passwordHash))) {
+    return json(res, 400, { error: "Current password is incorrect." });
+  }
+
+  authenticated.user.passwordHash = await hashPassword(newPassword);
+  authenticated.user.updatedAt = new Date().toISOString();
+  await setJson(`auth:user:${authenticated.user.id}`, authenticated.user);
+  await kv(["DEL", `auth:session:${digest(authenticated.token)}`]);
+  await issueSession(res, authenticated.user.id);
+  return json(res, 200, { ok: true });
 }
 
 async function logout(req, res) {
@@ -305,6 +352,7 @@ module.exports = async (req, res) => {
   try {
     const action = String(req.query?.action || "").toLowerCase();
     if (req.method === "GET" && action === "session") return await getSession(req, res);
+    if (req.method === "GET" && action === "account") return await account(req, res);
     if (req.method === "POST" && action === "logout") return await logout(req, res);
     if (req.method !== "POST") return json(res, 405, { error: "Method not allowed." });
     if (action === "register") return await register(req, res);
@@ -313,6 +361,7 @@ module.exports = async (req, res) => {
     if (action === "forgot") return await forgot(req, res);
     if (action === "verify") return await verify(req, res);
     if (action === "reset") return await reset(req, res);
+    if (action === "change-password") return await changePassword(req, res);
     return json(res, 404, { error: "Unknown auth action." });
   } catch (error) {
     console.error("Auth API error", error.message);
