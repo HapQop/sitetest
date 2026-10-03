@@ -12,6 +12,151 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/admin",
+      "destination": "/pages/admin",
+      "permanent": false
+    },
+    {
+      "source": "/auth",
+      "destination": "/pages/auth",
+      "permanent": false
+    },
+    {
+      "source": "/axis",
+      "destination": "/pages/axis",
+      "permanent": false
+    },
+    {
+      "source": "/checkout",
+      "destination": "/pages/checkout",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "/pages/contact",
+      "permanent": false
+    },
+    {
+      "source": "/cosmic",
+      "destination": "/pages/cosmic",
+      "permanent": false
+    },
+    {
+      "source": "/exploits",
+      "destination": "/pages/exploits",
+      "permanent": false
+    },
+    {
+      "source": "/isaeva",
+      "destination": "/pages/isaeva",
+      "permanent": false
+    },
+    {
+      "source": "/kiciahook",
+      "destination": "/pages/kiciahook",
+      "permanent": false
+    },
+    {
+      "source": "/lumen",
+      "destination": "/pages/lumen",
+      "permanent": false
+    },
+    {
+      "source": "/matcha",
+      "destination": "/pages/matcha",
+      "permanent": false
+    },
+    {
+      "source": "/matrixhub",
+      "destination": "/pages/matrixhub",
+      "permanent": false
+    },
+    {
+      "source": "/mspaint",
+      "destination": "/pages/mspaint",
+      "permanent": false
+    },
+    {
+      "source": "/pottasium",
+      "destination": "/pages/pottasium",
+      "permanent": false
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/pages/privacy-policy",
+      "permanent": false
+    },
+    {
+      "source": "/products",
+      "destination": "/pages/products",
+      "permanent": false
+    },
+    {
+      "source": "/real",
+      "destination": "/pages/real",
+      "permanent": false
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/pages/refund-policy",
+      "permanent": false
+    },
+    {
+      "source": "/reviews",
+      "destination": "/pages/reviews",
+      "permanent": false
+    },
+    {
+      "source": "/ronin",
+      "destination": "/pages/ronin",
+      "permanent": false
+    },
+    {
+      "source": "/serotonin",
+      "destination": "/pages/serotonin",
+      "permanent": false
+    },
+    {
+      "source": "/severe",
+      "destination": "/pages/severe",
+      "permanent": false
+    },
+    {
+      "source": "/sirhurt",
+      "destination": "/pages/sirhurt",
+      "permanent": false
+    },
+    {
+      "source": "/synapsez",
+      "destination": "/pages/synapsez",
+      "permanent": false
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/pages/terms-of-service",
+      "permanent": false
+    },
+    {
+      "source": "/thumbnail",
+      "destination": "/pages/thumbnail",
+      "permanent": false
+    },
+    {
+      "source": "/volt",
+      "destination": "/pages/volt",
+      "permanent": false
+    },
+    {
+      "source": "/wave",
+      "destination": "/pages/wave",
+      "permanent": false
+    },
+    {
+      "source": "/yabujin",
+      "destination": "/pages/yabujin",
+      "permanent": false
     }
   ],
   "headers": [
@@ -58,122 +203,6 @@
     {
       "source": "/",
       "destination": "/pages/index.html"
-    },
-    {
-      "source": "/admin.html",
-      "destination": "/pages/admin.html"
-    },
-    {
-      "source": "/auth.html",
-      "destination": "/pages/auth.html"
-    },
-    {
-      "source": "/axis.html",
-      "destination": "/pages/axis.html"
-    },
-    {
-      "source": "/checkout.html",
-      "destination": "/pages/checkout.html"
-    },
-    {
-      "source": "/contact.html",
-      "destination": "/pages/contact.html"
-    },
-    {
-      "source": "/cosmic.html",
-      "destination": "/pages/cosmic.html"
-    },
-    {
-      "source": "/exploits.html",
-      "destination": "/pages/exploits.html"
-    },
-    {
-      "source": "/isaeva.html",
-      "destination": "/pages/isaeva.html"
-    },
-    {
-      "source": "/kiciahook.html",
-      "destination": "/pages/kiciahook.html"
-    },
-    {
-      "source": "/lumen.html",
-      "destination": "/pages/lumen.html"
-    },
-    {
-      "source": "/matcha.html",
-      "destination": "/pages/matcha.html"
-    },
-    {
-      "source": "/matrixhub.html",
-      "destination": "/pages/matrixhub.html"
-    },
-    {
-      "source": "/mspaint.html",
-      "destination": "/pages/mspaint.html"
-    },
-    {
-      "source": "/pottasium.html",
-      "destination": "/pages/pottasium.html"
-    },
-    {
-      "source": "/privacy-policy.html",
-      "destination": "/pages/privacy-policy.html"
-    },
-    {
-      "source": "/products.html",
-      "destination": "/pages/products.html"
-    },
-    {
-      "source": "/real.html",
-      "destination": "/pages/real.html"
-    },
-    {
-      "source": "/refund-policy.html",
-      "destination": "/pages/refund-policy.html"
-    },
-    {
-      "source": "/reviews.html",
-      "destination": "/pages/reviews.html"
-    },
-    {
-      "source": "/ronin.html",
-      "destination": "/pages/ronin.html"
-    },
-    {
-      "source": "/serotonin.html",
-      "destination": "/pages/serotonin.html"
-    },
-    {
-      "source": "/severe.html",
-      "destination": "/pages/severe.html"
-    },
-    {
-      "source": "/sirhurt.html",
-      "destination": "/pages/sirhurt.html"
-    },
-    {
-      "source": "/synapsez.html",
-      "destination": "/pages/synapsez.html"
-    },
-    {
-      "source": "/terms-of-service.html",
-      "destination": "/pages/terms-of-service.html"
-    },
-    {
-      "source": "/thumbnail.html",
-      "destination": "/pages/thumbnail.html"
-    },
-    {
-      "source": "/volt.html",
-      "destination": "/pages/volt.html"
-    },
-    {
-      "source": "/wave.html",
-      "destination": "/pages/wave.html"
-    },
-    {
-      "source": "/yabujin.html",
-      "destination": "/pages/yabujin.html"
     }
   ]
 }
