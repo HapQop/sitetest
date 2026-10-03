@@ -3,6 +3,7 @@ const { readCatalog, writeCatalog, readVersions, writeVersions, VERSION_PLATFORM
 const { isAdminUser } = require("../lib/admin-access");
 const { readHomeSettings, validateHomeSettings, writeHomeSettings } = require("../lib/home-settings");
 const { EXPLOIT_CARDS, VNG_CARD_IDS, readExploitOverrides, writeExploitOverrides } = require("../lib/exploit-overrides");
+const { BASE_CARDS, createCustomExploitCard, customExploitOverrides, isExploitPlatform, isExploitStatus, isExploitTitle, publicExploitCards, readExploitDirectory, writeExploitDirectory } = require("../lib/exploit-directory");
 
 const SESSION_TTL = 60 * 60 * 24 * 7;
 
@@ -79,8 +80,8 @@ module.exports = async (req, res) => {
     const admin = await currentAdmin(req);
     if (!admin) return json(res, 403, { error: "Admin access is not available for this account." });
     if (req.method === "GET") {
-      const [catalog, versions, home, exploitOverrides] = await Promise.all([readCatalog(), readVersions(), readHomeSettings(), readExploitOverrides()]);
-      return json(res, 200, { admin, catalog, versions, home, exploitCards: EXPLOIT_CARDS, exploitOverrides });
+      const [catalog, versions, home, directory, overrides] = await Promise.all([readCatalog(), readVersions(), readHomeSettings(), readExploitDirectory(), readExploitOverrides()]);
+      return json(res, 200, { admin, catalog, versions, home, exploitCards: publicExploitCards(directory), exploitOverrides: { ...overrides, ...customExploitOverrides(directory) } });
     }
     if (req.method !== "POST") {
       res.setHeader("Allow", "GET, POST");
@@ -107,6 +108,68 @@ module.exports = async (req, res) => {
       else overrides[id] = VNG_CARD_IDS.has(id) ? { version, status, vngStatus } : { version, status };
       const exploitOverrides = await writeExploitOverrides(overrides);
       return json(res, 200, { ok: true, exploitOverrides, updated: { id } });
+    }
+    if (action === "exploit-card") {
+      const id = bodyValue(req.body, "id");
+      const title = bodyValue(req.body, "title");
+      const version = bodyValue(req.body, "version");
+      const status = bodyValue(req.body, "status");
+      const vngStatus = bodyValue(req.body, "vngStatus") || "auto";
+      if (!isExploitTitle(title)) return json(res, 400, { error: "Exploit name is required (max 80 characters)." });
+      const directory = await readExploitDirectory();
+      const custom = directory.customCards.find((card) => card.id === id);
+      if (BASE_CARDS.has(id)) {
+        if (!validText(version, 80, true) || !isExploitStatus(status) || !isExploitStatus(vngStatus) || (!VNG_CARD_IDS.has(id) && vngStatus !== "auto")) return json(res, 400, { error: "Invalid exploit version or status." });
+        const base = BASE_CARDS.get(id);
+        const existing = directory.cards[id] || {};
+        const next = { ...existing };
+        if (title === base.title) delete next.title;
+        else next.title = title;
+        if (Object.keys(next).length) directory.cards[id] = next;
+        else delete directory.cards[id];
+        const overrides = await readExploitOverrides();
+        if (!version && status === "auto" && vngStatus === "auto") delete overrides[id];
+        else overrides[id] = VNG_CARD_IDS.has(id) ? { version, status, vngStatus } : { version, status };
+        const [savedDirectory, savedOverrides] = await Promise.all([writeExploitDirectory(directory), writeExploitOverrides(overrides)]);
+        return json(res, 200, { ok: true, exploitCards: publicExploitCards(savedDirectory), exploitOverrides: { ...savedOverrides, ...customExploitOverrides(savedDirectory) }, updated: { id } });
+      }
+      if (!custom || !isExploitPlatform(req.body?.platform) || !validText(version, 80, true) || !isExploitStatus(status)) return json(res, 400, { error: "Invalid custom exploit data." });
+      custom.title = title;
+      custom.platform = req.body.platform;
+      custom.version = version;
+      custom.status = status;
+      const savedDirectory = await writeExploitDirectory(directory);
+      const overrides = await readExploitOverrides();
+      return json(res, 200, { ok: true, exploitCards: publicExploitCards(savedDirectory), exploitOverrides: { ...overrides, ...customExploitOverrides(savedDirectory) }, updated: { id } });
+    }
+    if (action === "exploit-add") {
+      const card = createCustomExploitCard({ title: bodyValue(req.body, "title"), platform: req.body?.platform, version: bodyValue(req.body, "version") || "", status: bodyValue(req.body, "status") || "auto" });
+      if (!card) return json(res, 400, { error: "Invalid custom exploit data." });
+      const directory = await readExploitDirectory();
+      if (directory.customCards.length >= 100) return json(res, 400, { error: "The custom exploit limit has been reached." });
+      directory.customCards.push(card);
+      const savedDirectory = await writeExploitDirectory(directory);
+      const overrides = await readExploitOverrides();
+      return json(res, 200, { ok: true, exploitCards: publicExploitCards(savedDirectory), exploitOverrides: { ...overrides, ...customExploitOverrides(savedDirectory) }, created: { id: card.id } });
+    }
+    if (action === "exploit-delete" || action === "exploit-restore") {
+      const id = bodyValue(req.body, "id");
+      const directory = await readExploitDirectory();
+      if (BASE_CARDS.has(id)) {
+        const base = BASE_CARDS.get(id);
+        const next = { ...(directory.cards[id] || {}) };
+        if (action === "exploit-delete") next.hidden = true;
+        else delete next.hidden;
+        if (Object.keys(next).length) directory.cards[id] = next;
+        else delete directory.cards[id];
+      } else {
+        const index = directory.customCards.findIndex((card) => card.id === id);
+        if (index < 0 || action !== "exploit-delete") return json(res, 400, { error: "Unknown exploit." });
+        directory.customCards.splice(index, 1);
+      }
+      const savedDirectory = await writeExploitDirectory(directory);
+      const overrides = await readExploitOverrides();
+      return json(res, 200, { ok: true, exploitCards: publicExploitCards(savedDirectory), exploitOverrides: { ...overrides, ...customExploitOverrides(savedDirectory) }, updated: { id } });
     }
     if (action === "version") {
       const platform = bodyValue(req.body, "platform");

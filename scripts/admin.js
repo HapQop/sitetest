@@ -9,6 +9,7 @@
   const homeForm = document.querySelector("[data-admin-home-form]");
   const exploitRows = document.querySelector("[data-admin-exploit-rows]");
   const exploitSearch = document.querySelector("[data-admin-exploit-search]");
+  const addExploitForm = document.querySelector("[data-admin-add-exploit]");
   const sectionNames = { home: "главной страницы", products: "каталога товаров", exploits: "страницы эксплоитов" };
   const requestedSection = new URLSearchParams(window.location.search).get("section");
   const section = Object.hasOwn(sectionNames, requestedSection) ? requestedSection : "home";
@@ -149,8 +150,14 @@
     }
   }
 
+  function filterExploitRows() {
+    const query = exploitSearch.value.trim().toLocaleLowerCase();
+    [...exploitRows.children].forEach((row) => { row.hidden = !row.dataset.search.includes(query); });
+  }
+
   function renderExploitCards(cards, overrides) {
     exploitRows.replaceChildren();
+    const platformNames = { windows: "Windows", external: "Windows Externals", "paid-external": "Paid Externals", macos: "macOS", android: "Android", tools: "Tools" };
     function createStatusSelect(value) {
       const select = document.createElement("select");
       [["auto", "Автоматически"], ["online", "В сети"], ["offline", "Не в сети"]].forEach(([optionValue, label]) => {
@@ -161,12 +168,26 @@
       select.value = value || "auto";
       return select;
     }
+    function createPlatformSelect(value) {
+      const select = document.createElement("select");
+      Object.entries(platformNames).forEach(([platform, label]) => {
+        const option = createElement("option", "", label);
+        option.value = platform;
+        select.append(option);
+      });
+      select.value = value;
+      return select;
+    }
     (cards || []).forEach((card) => {
       const override = (overrides || {})[card.id] || {};
       const row = document.createElement("tr");
       row.dataset.search = `${card.title} ${card.platform}`.toLocaleLowerCase();
-      const nameCell = createElement("td", "", card.title);
-      const platformCell = createElement("td", "", card.platform);
+      row.classList.toggle("is-hidden", card.hidden === true);
+      const name = createInput(card.title, { type: "text", maxLength: 80, className: "admin-input" });
+      const nameCell = document.createElement("td"); nameCell.append(name);
+      const platform = card.custom ? createPlatformSelect(card.platform) : null;
+      const platformCell = createElement("td", "", card.custom ? "" : (platformNames[card.platform] || card.platform));
+      if (platform) platformCell.append(platform);
       const version = createInput(override.version || "", { type: "text", maxLength: 80, placeholder: "Автоматически", className: "admin-input" });
       const versionCell = document.createElement("td"); versionCell.append(version);
       const status = createStatusSelect(override.status);
@@ -181,7 +202,8 @@
         save.disabled = true;
         setStatus(`Сохраняю ${card.title}...`);
         try {
-          await post({ action: "exploit", id: card.id, version: version.value, status: status.value, vngStatus: vngStatus?.value || "auto" });
+          const result = await post({ action: "exploit-card", id: card.id, title: name.value, platform: platform?.value, version: version.value, status: status.value, vngStatus: vngStatus?.value || "auto" });
+          renderExploitCards(result.exploitCards, result.exploitOverrides);
           setStatus(`Изменения ${card.title} сохранены.`, "success");
         } catch (error) {
           setStatus(error.message, "error");
@@ -189,10 +211,50 @@
           save.disabled = false;
         }
       });
-      const actionCell = document.createElement("td"); actionCell.append(save);
+      const actionCell = document.createElement("td");
+      const actions = createElement("div", "admin-exploit-actions");
+      if (card.hidden) {
+        const restore = createElement("button", "admin-save", "Восстановить");
+        restore.type = "button";
+        restore.addEventListener("click", async () => {
+          restore.disabled = true;
+          setStatus(`Восстанавливаю ${card.title}...`);
+          try {
+            const result = await post({ action: "exploit-restore", id: card.id });
+            renderExploitCards(result.exploitCards, result.exploitOverrides);
+            setStatus(`${card.title} восстановлен.`, "success");
+          } catch (error) {
+            setStatus(error.message, "error");
+          } finally {
+            restore.disabled = false;
+          }
+        });
+        actions.append(restore);
+      } else {
+        const remove = createElement("button", "admin-delete", "Удалить");
+        remove.type = "button";
+        remove.addEventListener("click", async () => {
+          const message = card.custom ? `Удалить ${card.title} без возможности восстановления?` : `Убрать ${card.title} с сайта? Его можно будет восстановить.`;
+          if (!window.confirm(message)) return;
+          remove.disabled = true;
+          setStatus(`Удаляю ${card.title}...`);
+          try {
+            const result = await post({ action: "exploit-delete", id: card.id });
+            renderExploitCards(result.exploitCards, result.exploitOverrides);
+            setStatus(card.custom ? `${card.title} удалён.` : `${card.title} убран с сайта.`, "success");
+          } catch (error) {
+            setStatus(error.message, "error");
+          } finally {
+            remove.disabled = false;
+          }
+        });
+        actions.append(save, remove);
+      }
+      actionCell.append(actions);
       row.append(nameCell, platformCell, versionCell, statusCell, vngCell, actionCell);
       exploitRows.append(row);
     });
+    filterExploitRows();
   }
 
   homeForm.addEventListener("submit", async (event) => {
@@ -213,9 +275,25 @@
     }
   });
 
-  exploitSearch.addEventListener("input", () => {
-    const query = exploitSearch.value.trim().toLocaleLowerCase();
-    [...exploitRows.children].forEach((row) => { row.hidden = !row.dataset.search.includes(query); });
+  exploitSearch.addEventListener("input", filterExploitRows);
+
+  addExploitForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!addExploitForm.reportValidity()) return;
+    const button = addExploitForm.querySelector("[type=submit]");
+    const values = Object.fromEntries(new FormData(addExploitForm).entries());
+    button.disabled = true;
+    setStatus(`Добавляю ${values.title}...`);
+    try {
+      const result = await post({ action: "exploit-add", ...values });
+      addExploitForm.reset();
+      renderExploitCards(result.exploitCards, result.exploitOverrides);
+      setStatus(`${values.title} добавлен.`, "success");
+    } catch (error) {
+      setStatus(error.message, "error");
+    } finally {
+      button.disabled = false;
+    }
   });
 
   async function init() {

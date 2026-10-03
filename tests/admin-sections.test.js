@@ -133,6 +133,48 @@ test("admin edits home and exploit sections and publishes the saved content", as
     assert.equal(savedVng.statusCode, 200);
     assert.deepEqual(savedVng.body.exploitOverrides.delta, { version: "", status: "auto", vngStatus: "offline" });
 
+    const renamedExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders,
+      body: { action: "exploit-card", id: "xeno", title: "Xeno Prime", version: "3.3.0", status: "online", vngStatus: "auto" },
+    }));
+    assert.equal(renamedExploit.statusCode, 200);
+    assert.equal(renamedExploit.body.exploitCards.find((card) => card.id === "xeno").title, "Xeno Prime");
+    assert.equal(renamedExploit.body.exploitCards.find((card) => card.id === "xeno").apiTitle, "Xeno");
+
+    const hiddenExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders, body: { action: "exploit-delete", id: "xeno" },
+    }));
+    assert.equal(hiddenExploit.statusCode, 200);
+    assert.equal(hiddenExploit.body.exploitCards.find((card) => card.id === "xeno").hidden, true);
+
+    const restoredExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders, body: { action: "exploit-restore", id: "xeno" },
+    }));
+    assert.equal(restoredExploit.statusCode, 200);
+    assert.equal(restoredExploit.body.exploitCards.find((card) => card.id === "xeno").hidden, false);
+
+    const addedExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders,
+      body: { action: "exploit-add", title: "Custom Tool", platform: "tools", version: "1.0", status: "offline" },
+    }));
+    assert.equal(addedExploit.statusCode, 200);
+    const customId = addedExploit.body.created.id;
+    assert.match(customId, /^custom-/);
+    assert.equal(addedExploit.body.exploitCards.find((card) => card.id === customId).title, "Custom Tool");
+
+    const updatedCustomExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders,
+      body: { action: "exploit-card", id: customId, title: "Custom Tool 2", platform: "android", version: "1.1", status: "online" },
+    }));
+    assert.equal(updatedCustomExploit.statusCode, 200);
+    assert.equal(updatedCustomExploit.body.exploitCards.find((card) => card.id === customId).title, "Custom Tool 2");
+
+    const deletedCustomExploit = await invoke(adminApi, request({
+      method: "POST", token: ownerToken, headers: jsonHeaders, body: { action: "exploit-delete", id: customId },
+    }));
+    assert.equal(deletedCustomExploit.statusCode, 200);
+    assert.equal(deletedCustomExploit.body.exploitCards.some((card) => card.id === customId), false);
+
     const nonAdminWrite = await invoke(adminApi, request({
       method: "POST", token: visitorToken, headers: jsonHeaders, body: { action: "exploit", id: "xeno", version: "1", status: "online" },
     }));
