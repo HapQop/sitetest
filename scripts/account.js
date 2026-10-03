@@ -1,9 +1,12 @@
 (() => {
   const apiBase = window.AUTH_API_BASE || "/api/auth";
   const keyList = document.querySelector("[data-account-keys]");
-  const keyCount = document.querySelector("[data-account-key-count]");
+  const keyCounts = [...document.querySelectorAll("[data-account-key-count]")];
   const passwordForm = document.querySelector("[data-account-password-form]");
   const passwordStatus = document.querySelector("[data-account-password-status]");
+  const purchaseList = document.querySelector("[data-account-purchases]");
+  const tabButtons = [...document.querySelectorAll("[data-account-tab]")];
+  const tabPanels = [...document.querySelectorAll("[data-account-panel]")];
   let account = null;
 
   function translate(key, fallback) {
@@ -27,8 +30,13 @@
     return date.toLocaleDateString(document.documentElement.lang === "ru" ? "ru-RU" : "en-US", { year: "numeric", month: "short", day: "numeric" });
   }
 
+  function formatMoney(value, currency = "USD") {
+    if (!Number.isFinite(value)) return "—";
+    return new Intl.NumberFormat(document.documentElement.lang === "ru" ? "ru-RU" : "en-US", { style: "currency", currency, minimumFractionDigits: 2 }).format(value);
+  }
+
   function renderKeys(keys) {
-    keyCount.textContent = String(keys.length);
+    keyCounts.forEach((element) => { element.textContent = String(keys.length); });
     if (!keys.length) {
       keyList.innerHTML = `<p class="account-key-empty">${escapeHtml(translate("account-keys-empty", "No purchased keys yet. Your keys will appear here after payment is confirmed."))}</p>`;
       return;
@@ -39,11 +47,43 @@
     }).join("");
   }
 
+  function renderStats(keys, stats) {
+    const calculatedStats = {
+      purchases: keys.length,
+      spent: !keys.length ? 0 : (keys.some((item) => Number.isFinite(item.amount)) ? keys.reduce((total, item) => total + (Number.isFinite(item.amount) ? item.amount : 0), 0) : null),
+      currency: "USD",
+    };
+    const currentStats = { ...calculatedStats, ...(stats || {}) };
+    document.querySelector("[data-account-stat-purchases]").textContent = String(currentStats.purchases || 0);
+    document.querySelector("[data-account-stat-spent]").textContent = formatMoney(currentStats.spent, currentStats.currency || "USD");
+    if (!keys.length) {
+      purchaseList.innerHTML = `<p class="account-key-empty">${escapeHtml(translate("account-stats-empty", "No confirmed purchases yet."))}</p>`;
+      return;
+    }
+    purchaseList.className = "account-purchase-list";
+    purchaseList.innerHTML = keys.map((item) => {
+      const date = formatPurchasedAt(item.purchasedAt);
+      return `<article class="account-purchase"><div><strong>${escapeHtml(item.productName)}</strong><span>${escapeHtml(item.planName)}</span></div><time datetime="${escapeHtml(item.purchasedAt)}">${escapeHtml(date || "—")}</time></article>`;
+    }).join("");
+  }
+
   function renderAccount(data) {
     account = data;
-    document.querySelector("[data-account-username]").textContent = data.user.username;
-    document.querySelector("[data-account-email]").textContent = data.user.email;
+    document.querySelectorAll("[data-account-username]").forEach((element) => { element.textContent = data.user.username; });
+    document.querySelectorAll("[data-account-email]").forEach((element) => { element.textContent = data.user.email; });
     renderKeys(data.keys || []);
+    renderStats(data.keys || [], data.stats);
+  }
+
+  function activateTab(tab, updateHash = false) {
+    if (!tabPanels.some((panel) => panel.dataset.accountPanel === tab)) return;
+    tabButtons.forEach((button) => {
+      const active = button.dataset.accountTab === tab;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", String(active));
+    });
+    tabPanels.forEach((panel) => { panel.hidden = panel.dataset.accountPanel !== tab; });
+    if (updateHash && window.location.hash !== `#${tab}`) window.history.replaceState(null, "", `#${tab}`);
   }
 
   async function request(action, options = {}) {
@@ -121,6 +161,8 @@
     }
   });
 
+  tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.accountTab, true)));
+  window.addEventListener("hashchange", () => activateTab(window.location.hash.slice(1)));
   document.querySelector("[data-account-logout]").addEventListener("click", async () => {
     try {
       await request("logout", { method: "POST", body: {} });
@@ -132,5 +174,6 @@
   document.addEventListener("languagechange", () => {
     if (account) renderAccount(account);
   });
+  activateTab(window.location.hash.slice(1) || "account");
   loadAccount();
 })();

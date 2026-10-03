@@ -39,7 +39,7 @@ test("account exposes only the signed-in user's purchased keys and can change th
   }));
   values.set(sessionKey, JSON.stringify({ userId }));
   values.set(`auth:keys:${userId}`, JSON.stringify([
-    { id: "purchase-1", productName: "Potassium", planName: "Lifetime", key: "CBX-AAAA-BBBB-CCCC", purchasedAt: "2026-10-04T12:00:00.000Z" },
+    { id: "purchase-1", productName: "Potassium", planName: "Lifetime", key: "CBX-AAAA-BBBB-CCCC", purchasedAt: "2026-10-04T12:00:00.000Z", amount: 18.5 },
     { productName: "Invalid", key: "" },
   ]));
   global.fetch = async (_url, options) => {
@@ -64,8 +64,9 @@ test("account exposes only the signed-in user's purchased keys and can change th
     assert.equal(account.statusCode, 200);
     assert.deepEqual(account.body.user, { username: "buyer", email: "buyer@example.test", isAdmin: false });
     assert.deepEqual(account.body.keys, [{
-      id: "purchase-1", productName: "Potassium", planName: "Lifetime", key: "CBX-AAAA-BBBB-CCCC", purchasedAt: "2026-10-04T12:00:00.000Z",
+      id: "purchase-1", productName: "Potassium", planName: "Lifetime", key: "CBX-AAAA-BBBB-CCCC", purchasedAt: "2026-10-04T12:00:00.000Z", amount: 18.5,
     }]);
+    assert.deepEqual(account.body.stats, { purchases: 1, spent: 18.5, currency: "USD" });
 
     const incorrect = await request("change-password", "POST", { currentPassword: "not-the-password", newPassword: "new-password-123" }, sessionToken);
     assert.equal(incorrect.statusCode, 400);
@@ -91,12 +92,14 @@ test("account exposes only the signed-in user's purchased keys and can change th
   }
 });
 
-test("account page links the user menu and includes a keys, password, and logout section", () => {
+test("account page links the user menu and includes account, keys, stats, spin, and logout navigation", () => {
   const markup = fs.readFileSync("account.html", "utf8");
   const headerScript = fs.readFileSync("scripts/site-auth-state.js", "utf8");
   assert.match(markup, /data-account-keys/);
   assert.match(markup, /data-account-password-form/);
   assert.match(markup, /data-account-logout/);
+  assert.match(markup, /data-account-tab="stats"/);
+  assert.match(markup, /data-account-tab="spin"/);
   assert.match(headerScript, /class="user-name" href="\/account"/);
   assert.doesNotMatch(headerScript, /class="logout-btn"/);
 });

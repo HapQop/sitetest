@@ -162,14 +162,26 @@ function purchasedKeys(value) {
   return value.map((item) => {
     const key = typeof item?.key === "string" ? item.key.trim() : "";
     if (!key || key.length > 512) return null;
+    const rawAmount = item?.amount ?? item?.price;
+    const amount = (typeof rawAmount === "number" || (typeof rawAmount === "string" && rawAmount.trim() !== "")) ? Number(rawAmount) : null;
     return {
       id: typeof item.id === "string" ? item.id.slice(0, 120) : "",
       productName: typeof item.productName === "string" ? item.productName.slice(0, 120) : "CheatBlox product",
       planName: typeof item.planName === "string" ? item.planName.slice(0, 120) : "",
       key,
       purchasedAt: typeof item.purchasedAt === "string" ? item.purchasedAt : "",
+      ...(Number.isFinite(amount) && amount >= 0 && amount <= 100000 ? { amount: Math.round(amount * 100) / 100 } : {}),
     };
   }).filter(Boolean);
+}
+
+function accountStats(keys) {
+  const amounts = keys.map((item) => item.amount).filter((amount) => Number.isFinite(amount));
+  return {
+    purchases: keys.length,
+    spent: !keys.length ? 0 : (amounts.length ? Math.round(amounts.reduce((total, amount) => total + amount, 0) * 100) / 100 : null),
+    currency: "USD",
+  };
 }
 
 function bodyValue(body, key) {
@@ -315,7 +327,7 @@ async function account(req, res) {
   const authenticated = await authenticatedSession(req);
   if (!authenticated) return json(res, 401, { error: "Not authenticated." });
   const keys = purchasedKeys(await getJson(`auth:keys:${authenticated.user.id}`));
-  return json(res, 200, { ok: true, user: publicUser(authenticated.user), keys });
+  return json(res, 200, { ok: true, user: publicUser(authenticated.user), keys, stats: accountStats(keys) });
 }
 
 async function changePassword(req, res) {
