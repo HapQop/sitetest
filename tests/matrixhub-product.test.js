@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productPage = fs.readFileSync("pages/matrixhub.html", "utf8");
+const productPage = fs.readFileSync("matrixhub.html", "utf8");
 const translations = fs.readFileSync("scripts/site-i18n.js", "utf8");
 
 test("Matrix Hub detail page uses the supplied logo and its unavailable lifetime External plan", () => {

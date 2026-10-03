@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productsPage = fs.readFileSync("pages/products.html", "utf8");
+const productsPage = fs.readFileSync("products.html", "utf8");
 const cards = productsPage.match(/<a class="store-card-link"[\s\S]*?<\/a>/g) || [];
 const categoryLabels = { executor: "Executor", external: "External", script: "Script" };
 

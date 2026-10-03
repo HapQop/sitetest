@@ -21,7 +21,7 @@ function setupStatus({ replies }) {
     return { dataset: { productId: id, productType: type, productGame: "roblox" }, stock, label, querySelector: (selector) => selector === "[data-product-status-label]" ? label : null };
   };
   const products = [
-    product("pottasium", "0 available"),
+    product("pottasium", "8 available"),
     product("lumen", "0 available", "external"),
     product("matcha", "0 available", "external"),
     product("kiciahook", "0 available", "script"),
@@ -68,7 +68,7 @@ test("status loader falls back to WEAO, matches Windows products, and keeps scri
   assert.equal(page.products[2].label.textContent, "Status unavailable");
   assert.equal(page.products.slice(3).every((product) => product.dataset.productStatus === "online"), true, "remote data never overrides script status");
   assert.equal(page.products.slice(3).every((product) => product.label.classList.contains("is-online")), true);
-  assert.deepEqual(page.products.map((product) => product.stock), ["0 available", "0 available", "0 available", "0 available", "0 available", "0 available"]);
+  assert.deepEqual(page.products.map((product) => product.stock), ["8 available", "0 available", "0 available", "0 available", "0 available", "0 available"]);
   assert.equal(page.dispatched[0].type, "cheatblox:productstatuschange");
 });
 
@@ -79,5 +79,5 @@ test("failed or missing status data leaves non-scripts unknown while scripts sta
   assert.equal(page.products.slice(0, 3).every((product) => product.label.textContent === "Status unavailable"), true);
   assert.equal(page.products.slice(3).every((product) => product.dataset.productStatus === "online"), true);
   assert.equal(page.products.slice(3).every((product) => product.label.textContent === "Online"), true);
-  assert.deepEqual(page.products.map((product) => product.stock), ["0 available", "0 available", "0 available", "0 available", "0 available", "0 available"]);
+  assert.deepEqual(page.products.map((product) => product.stock), ["8 available", "0 available", "0 available", "0 available", "0 available", "0 available"]);
 });

@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productPage = fs.readFileSync("pages/axis.html", "utf8");
+const productPage = fs.readFileSync("axis.html", "utf8");
 
 test("Axis detail page uses the supplied logo and its two unavailable 30-day External plans", () => {
   assert.match(productPage, /<body data-page="axis">/);

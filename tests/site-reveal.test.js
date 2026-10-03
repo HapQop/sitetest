@@ -4,7 +4,7 @@ const test = require("node:test");
 const vm = require("node:vm");
 
 const source = fs.readFileSync("scripts/site-reveal.js", "utf8");
-const productsPage = fs.readFileSync("pages/products.html", "utf8");
+const productsPage = fs.readFileSync("products.html", "utf8");
 
 function card(parent, top) {
   const classes = new Set();

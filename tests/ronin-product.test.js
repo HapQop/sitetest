@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productPage = fs.readFileSync("pages/ronin.html", "utf8");
+const productPage = fs.readFileSync("ronin.html", "utf8");
 
 test("Ronin detail page uses the supplied logo and its unavailable lifetime External plan", () => {
   assert.match(productPage, /<body data-page="ronin">/);

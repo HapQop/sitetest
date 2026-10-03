@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productPage = fs.readFileSync("pages/synapsez.html", "utf8");
+const productPage = fs.readFileSync("synapsez.html", "utf8");
 
 test("SynapseZ detail page uses the supplied logo and its two unavailable Executor plans", () => {
   assert.match(productPage, /<body data-page="synapsez">/);

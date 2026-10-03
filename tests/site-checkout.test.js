@@ -76,5 +76,5 @@ test("checkout preview shows the order ID, product, and total without payment co
   assert.equal(elements.get("[data-order-product]")[0].textContent, "Wave");
   assert.equal(elements.get("[data-order-total], [data-order-line-price], [data-order-subtotal], [data-order-grand-total], [data-order-cta-total]")[0].textContent, "$2.99");
   assert.equal(image.src, "../assets/wave-logo.png");
-  assert.match(fs.readFileSync("pages/checkout.html", "utf8"), /class="continue-button" type="button" disabled/);
+  assert.match(fs.readFileSync("checkout.html", "utf8"), /class="continue-button" type="button" disabled/);
 });

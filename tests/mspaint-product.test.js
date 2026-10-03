@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const test = require("node:test");
 
-const productPage = fs.readFileSync("pages/mspaint.html", "utf8");
+const productPage = fs.readFileSync("mspaint.html", "utf8");
 const translations = fs.readFileSync("scripts/site-i18n.js", "utf8");
 
 test("MsPaint detail page uses a transparent version of the supplied icon and two unavailable Script plans", () => {

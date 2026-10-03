@@ -3,7 +3,7 @@ const fs = require("node:fs");
 const test = require("node:test");
 const vm = require("node:vm");
 
-function setupHeader(scrollY = 0, { storage = new Map(), href = "https://site.test/pages/index.html", readyState = "complete" } = {}) {
+function setupHeader(scrollY = 0, { storage = new Map(), href = "https://site.test/", readyState = "complete" } = {}) {
   const classes = new Set();
   const listeners = new Map();
   const headerListeners = new Map();
@@ -134,11 +134,11 @@ test("resizing a scrolled page reserves the expanded height without expanding th
 test("section navigation shows the loader across pages and clears it after load", () => {
   const storage = new Map();
   const page = setupHeader(0, { storage });
-  page.clickNav("https://site.test/pages/products.html");
+  page.clickNav("https://site.test/products");
   assert.equal(page.loader.classList.contains("is-visible"), true);
   assert.ok(Number(storage.get("cheatblox-navigation-start")) > 0);
 
-  const destination = setupHeader(0, { storage, href: "https://site.test/pages/products.html", readyState: "interactive" });
+  const destination = setupHeader(0, { storage, href: "https://site.test/products", readyState: "interactive" });
   assert.equal(destination.loader.classList.contains("is-visible"), true);
   assert.equal(storage.has("cheatblox-navigation-start"), false);
   destination.load();
@@ -148,16 +148,16 @@ test("section navigation shows the loader across pages and clears it after load"
 
 test("current, external, and modified links do not show the loader", () => {
   const page = setupHeader();
-  page.clickNav("https://site.test/pages/index.html");
+  page.clickNav("https://site.test/");
   page.clickNav("https://other.test/products.html");
-  page.clickNav("https://site.test/pages/products.html", { ctrlKey: true });
-  page.clickNav("https://site.test/pages/products.html", { target: "_blank" });
+  page.clickNav("https://site.test/products", { ctrlKey: true });
+  page.clickNav("https://site.test/products", { target: "_blank" });
   assert.equal(page.loader, undefined);
 });
 
 test("back-forward cache restores a page without a stuck loader", () => {
   const page = setupHeader();
-  page.clickNav("https://site.test/pages/products.html");
+  page.clickNav("https://site.test/products");
   page.pageShow(true);
   assert.equal(page.loader.classList.contains("is-visible"), false);
 });
