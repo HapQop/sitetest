@@ -3,6 +3,10 @@
   const productByPage = { isaeva: "isaeva", cosmic: "cosmic", volt: "volt", pottasium: "pottasium", real: "real", lumen: "lumen", wave: "wave", sirhurt: "sirhurt", synapsez: "synapsez", matcha: "matcha", serotonin: "serotonin", kiciahook: "kiciahook", yabujin: "yabujin", severe: "severe", mspaint: "mspaint", matrixhub: "matrixhub", ronin: "ronin", axis: "axis" };
   const bodyProductId = productByPage[document.body?.dataset.page];
 
+  function revealCatalogValues() {
+    document.documentElement?.classList.add("catalog-sync-ready");
+  }
+
   function formatStock(plan) {
     if (plan.stock === null || plan.stock === undefined) return plan.available ? "Available" : "0 available";
     return `${plan.stock} available`;
@@ -145,6 +149,8 @@
       if (bodyProductId) applyDetailProduct(data.catalog[bodyProductId]);
     } catch {
       // Static HTML values remain active when the optional catalog API is unavailable.
+    } finally {
+      revealCatalogValues();
     }
   }
 

@@ -35,6 +35,6 @@
   setText("[data-order-total], [data-order-line-price], [data-order-subtotal], [data-order-grand-total], [data-order-cta-total]", total);
 
   const image = document.querySelector("[data-order-image]");
-  if (image && Object.hasOwn(productImages, productId)) image.src = `../assets/${productImages[productId]}`;
+  if (image && Object.hasOwn(productImages, productId)) image.src = `./assets/${productImages[productId]}`;
   if (orderId) document.title = `Order ${orderId.slice(0, 8)} — CheatBlox`;
 })();

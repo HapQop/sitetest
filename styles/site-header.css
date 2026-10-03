@@ -168,6 +168,30 @@ body > .site-page-loader { position: fixed; z-index: 1000; inset: 0; display: gr
 .admin-link:hover, .admin-link:focus-visible { background: #ffb077; }
 .catalog-product-version { margin: 6px 0 0; color: #ffad78; font-size: 12px; font-weight: 750; }
 
+html:not(.catalog-sync-ready) [data-currency-price],
+html:not(.catalog-sync-ready) [data-plan-price],
+html:not(.catalog-sync-ready) [data-plan-summary-price],
+html:not(.catalog-sync-ready) [data-plan-stock],
+html:not(.catalog-sync-ready) [data-plan-summary-stock],
+html:not(.catalog-sync-ready) .store-card__stock {
+  opacity: 0;
+  animation: catalog-sync-fallback 0s linear 5s forwards;
+}
+
+html.catalog-sync-ready [data-currency-price],
+html.catalog-sync-ready [data-plan-price],
+html.catalog-sync-ready [data-plan-summary-price],
+html.catalog-sync-ready [data-plan-stock],
+html.catalog-sync-ready [data-plan-summary-stock],
+html.catalog-sync-ready .store-card__stock {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes catalog-sync-fallback {
+  to { opacity: 1; }
+}
+
 .user-menu { display: flex; align-items: center; gap: 10px; }
 .user-name { color: #fff; font-size: 14px; font-weight: 700; }
 .logout-btn { display: inline-grid; min-height: 38px; place-items: center; padding: 0 14px; border: 1px solid rgba(255, 157, 92, .65); border-radius: 10px; color: var(--accent); background: transparent; font: inherit; font-size: 13px; font-weight: 800; line-height: 1; cursor: pointer; transition: background .18s ease, color .18s ease, transform .18s ease; }

@@ -3,12 +3,13 @@ const test = require("node:test");
 
 const { CATALOG_KEY, DEFAULT_CATALOG, INVENTORY_REVISION, cloneCatalog, mergeCatalog, writeCatalog } = require("../lib/catalog");
 
-test("default catalog marks all plans unavailable except Isaeva weekly", () => {
+test("default catalog marks Potassium and Isaeva weekly available", () => {
   for (const [productId, product] of Object.entries(DEFAULT_CATALOG)) {
     for (const [planId, plan] of Object.entries(product.plans)) {
       const isAvailableIsaevaWeekly = productId === "isaeva" && planId === "weekly";
-      assert.equal(plan.stock, isAvailableIsaevaWeekly ? 9 : 0, `${productId}/${planId} stock`);
-      assert.equal(plan.available, isAvailableIsaevaWeekly, `${productId}/${planId} availability`);
+      const isAvailablePotassiumLifetime = productId === "pottasium" && planId === "lifetime";
+      assert.equal(plan.stock, isAvailableIsaevaWeekly ? 9 : isAvailablePotassiumLifetime ? 8 : 0, `${productId}/${planId} stock`);
+      assert.equal(plan.available, isAvailableIsaevaWeekly || isAvailablePotassiumLifetime, `${productId}/${planId} availability`);
     }
   }
 });
@@ -142,6 +143,18 @@ test("current inventory snapshots preserve explicit admin overrides", () => {
   assert.equal(mergedOverrides.isaeva.name, "Isaeva Pro");
   assert.equal(mergedOverrides.isaeva.version, "3.0.0");
   assert.deepEqual(mergedOverrides.isaeva.plans.weekly, { ...DEFAULT_CATALOG.isaeva.plans.weekly, price: 7.5, stock: 4, available: true });
+});
+
+test("the Potassium migration replaces only its legacy unavailable inventory", () => {
+  const legacyInventory = {
+    _inventoryRevision: 1,
+    pottasium: { plans: { lifetime: { stock: 0, available: false } } },
+    isaeva: { plans: { weekly: { stock: 4, available: false } } },
+  };
+  const merged = mergeCatalog(legacyInventory);
+
+  assert.deepEqual(merged.pottasium.plans.lifetime, DEFAULT_CATALOG.pottasium.plans.lifetime);
+  assert.deepEqual(merged.isaeva.plans.weekly, { ...DEFAULT_CATALOG.isaeva.plans.weekly, stock: 4, available: false });
 });
 
 test("writeCatalog stamps the current inventory revision", async () => {

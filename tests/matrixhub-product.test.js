@@ -8,7 +8,7 @@ const translations = fs.readFileSync("scripts/site-i18n.js", "utf8");
 test("Matrix Hub detail page uses the supplied logo and its unavailable lifetime External plan", () => {
   assert.match(productPage, /<body data-page="matrixhub">/);
   assert.match(productPage, /data-i18n="product-external">External/);
-  assert.match(productPage, /class="matrixhub-logo" src="\.\.\/assets\/matrixhub-logo\.png" alt="Matrix Hub"/);
+  assert.match(productPage, /class="matrixhub-logo" src="\.\/assets\/matrixhub-logo\.png" alt="Matrix Hub"/);
   assert.match(productPage, /data-plan-name>Lifetime access/);
   assert.match(productPage, /lifetime: \{ name: "Lifetime", access: "Lifetime access", price: 7\.99, stock: "0 available", available: false \}/);
   assert.match(productPage, /data-plan-price>\$7\.99/);

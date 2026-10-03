@@ -8,7 +8,7 @@ const translations = fs.readFileSync("scripts/site-i18n.js", "utf8");
 test("Severe detail page uses the supplied logo and its two unavailable External lifetime plans", () => {
   assert.match(productPage, /<body data-page="severe">/);
   assert.match(productPage, /data-i18n="product-external">External/);
-  assert.match(productPage, /class="severe-logo" src="\.\.\/assets\/severe-logo\.png" alt="Severe"/);
+  assert.match(productPage, /class="severe-logo" src="\.\/assets\/severe-logo\.png" alt="Severe"/);
   assert.match(productPage, /data-plan-option="basic">Lifetime \(Basic\)/);
   assert.match(productPage, /data-plan-option="ultimate">Lifetime \(Ultimate\)/);
   assert.match(productPage, /basic: \{ name: "Lifetime \(Basic\)", access: "Lifetime \(Basic\) access", price: 9\.99, stock: "0 available", available: false \}/);

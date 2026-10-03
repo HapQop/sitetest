@@ -8,7 +8,7 @@ const translations = fs.readFileSync("scripts/site-i18n.js", "utf8");
 test("KiciaHook detail page uses the supplied logo and its two unavailable Script plans", () => {
   assert.match(productPage, /<body data-page="kiciahook">/);
   assert.match(productPage, /data-i18n="product-script">Script/);
-  assert.match(productPage, /src="\.\.\/assets\/kiciahook-logo\.png" alt="KiciaHook"/);
+  assert.match(productPage, /src="\.\/assets\/kiciahook-logo\.png" alt="KiciaHook"/);
   assert.match(productPage, /data-plan-option="weekly">7 days/);
   assert.match(productPage, /data-plan-option="monthly">30 days/);
   assert.match(productPage, /weekly: \{ name: "7 days", access: "7-day access", price: 2\.99, stock: "0 available", available: false \}/);

@@ -7,7 +7,7 @@ const productPage = fs.readFileSync("synapsez.html", "utf8");
 test("SynapseZ detail page uses the supplied logo and its two unavailable Executor plans", () => {
   assert.match(productPage, /<body data-page="synapsez">/);
   assert.match(productPage, /data-i18n="product-executor">Executor/);
-  assert.match(productPage, /class="synapsez-logo" src="\.\.\/assets\/synapsez-logo\.png" alt="SynapseZ"/);
+  assert.match(productPage, /class="synapsez-logo" src="\.\/assets\/synapsez-logo\.png" alt="SynapseZ"/);
   assert.match(productPage, /data-plan-option="weekly">7 days/);
   assert.match(productPage, /data-plan-option="monthly">30 days/);
   assert.match(productPage, /weekly: \{ name: "7 days", access: "7-day access", price: 3\.99, stock: "0 available", available: false \}/);
