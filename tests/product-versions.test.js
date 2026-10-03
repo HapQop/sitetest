@@ -52,6 +52,6 @@ test("automatic platform versions also apply their supplied build date", () => {
   });
 
   assert.equal(product.dataset.version, "version-3bc33ee7ffad426f");
-  assert.equal(product.dataset.updatedAt, "2026-09-29T22:45:58.000Z");
+  assert.equal(product.dataset.updatedAt, "1790721958");
   assert.equal(code.textContent, "version-3bc33ee7ffad426f");
 });

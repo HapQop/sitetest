@@ -3,7 +3,7 @@ const copyLabels = {
   ru: { copy: "Копировать версию", copied: "Скопировано", filesSoon: "Файлы будут добавлены позже", linksSoon: "Ссылка Discord будет добавлена позже", purchaseSoon: "Ссылка для покупки будет добавлена позже" },
 };
 
-const versionsApiUrl = "https://weao.xyz/api/versions/current";
+const versionsApiUrl = "/api/versions";
 const versionsCacheKey = "cheatblox-roblox-versions";
 const versionsCacheTtl = 15 * 60 * 1000;
 
@@ -54,9 +54,16 @@ function versionDateAliases(platform) {
   return ["iOSDate", "iosDate", "IOSDate"];
 }
 
-function toIsoTimestamp(value) {
-  const timestamp = Date.parse(String(value || ""));
-  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : "";
+function toUnixTimestamp(value) {
+  if (typeof value === "number" && Number.isFinite(value)) return Math.floor(value > 10_000_000_000 ? value / 1000 : value);
+  const normalized = String(value || "").trim();
+  if (!normalized) return 0;
+  if (/^\d+(?:\.\d+)?$/.test(normalized)) {
+    const numeric = Number(normalized);
+    return Number.isFinite(numeric) ? Math.floor(numeric > 10_000_000_000 ? numeric / 1000 : numeric) : 0;
+  }
+  const milliseconds = Date.parse(normalized.replace(/\s+at\s+/i, " "));
+  return Number.isFinite(milliseconds) ? Math.floor(milliseconds / 1000) : 0;
 }
 
 function getVersionPlatform(product) {
@@ -74,8 +81,8 @@ function applyVersions(payload, overrides = {}) {
     if (!platform || !version) return;
     product.dataset.version = version;
     if (!isManuallyOverridden) {
-      const updatedAt = toIsoTimestamp(findVersionValue(payload, versionDateAliases(platform)));
-      if (updatedAt) product.dataset.updatedAt = updatedAt;
+      const updatedAt = toUnixTimestamp(findVersionValue(payload, versionDateAliases(platform)));
+      if (updatedAt) product.dataset.updatedAt = String(updatedAt);
     }
     const code = product.querySelector(".version-chip code");
     if (code) code.textContent = version;
@@ -123,7 +130,9 @@ async function refreshRobloxVersions() {
 }
 
 function formatUpdated(timestamp, language) {
-  const elapsedDays = Math.max(0, Math.floor((Date.now() - Date.parse(timestamp)) / 86_400_000));
+  const updatedAt = toUnixTimestamp(timestamp);
+  if (!updatedAt) return "";
+  const elapsedDays = Math.max(0, Math.floor((Date.now() - updatedAt * 1000) / 86_400_000));
   if (elapsedDays === 0) return language === "ru" ? "↻ обновлено сегодня" : "↻ updated today";
   const relative = new Intl.RelativeTimeFormat(language, { numeric: "always" }).format(-elapsedDays, "day");
   return language === "ru" ? `↻ обновлено ${relative}` : `↻ updated ${relative}`;
@@ -133,8 +142,9 @@ function refreshProductDates() {
   const language = currentLanguage();
   document.querySelectorAll(".product[data-updated-at]").forEach((product) => {
     const updatedAt = product.querySelector(".updated-at");
-    updatedAt.textContent = formatUpdated(product.dataset.updatedAt, language);
-    updatedAt.title = new Date(product.dataset.updatedAt).toLocaleString(language, { timeZone: "UTC", timeZoneName: "short" });
+    const timestamp = toUnixTimestamp(product.dataset.updatedAt);
+    updatedAt.textContent = formatUpdated(timestamp, language);
+    updatedAt.title = timestamp ? new Date(timestamp * 1000).toLocaleString(language, { timeZone: "UTC", timeZoneName: "short" }) : "";
   });
   document.querySelectorAll("[data-copy-version]").forEach((button) => {
     if (!button.classList.contains("is-copied")) button.setAttribute("aria-label", copyLabels[language].copy);

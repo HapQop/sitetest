@@ -12,74 +12,100 @@
   <div class="checkout-layout">
     <aside class="order-side" aria-labelledby="order-total-title">
       <div class="order-side__inner">
-        <a class="checkout-brand" href="/products" aria-label="CheatBlox products">
+        <a class="checkout-brand" href="/products" aria-label="CheatBlox products" data-i18n-aria-label="checkout-products-link">
           <img src="./assets/icons/cheatblox-mark.svg" alt="" width="34" height="34">
           <strong>Cheat<span>Blox</span></strong>
         </a>
 
         <div class="order-heading">
-          <span class="eyebrow">ORDER TOTAL</span>
+          <span class="eyebrow" data-i18n="checkout-order-total">ORDER TOTAL</span>
           <h1 id="order-total-title" data-order-total>—</h1>
-          <p class="order-id">Order ID <span data-order-id>—</span></p>
+          <p class="order-id"><span data-i18n="checkout-order-id">Order ID</span> <span data-order-id>—</span></p>
         </div>
 
         <div class="ordered-product">
-          <img data-order-image src="./assets/icons/cheatblox-mark.svg" alt="" width="38" height="38">
+          <span class="ordered-product__image-frame"><img data-order-image src="./assets/icons/cheatblox-mark.svg" alt="" width="38" height="38"></span>
           <div class="ordered-product__details">
-            <strong data-order-product>Selected product</strong>
-            <span data-order-plan>Selected plan</span>
+            <strong data-order-product data-i18n="checkout-selected-product">Selected product</strong>
+            <span data-order-plan data-i18n="checkout-selected-plan">Selected plan</span>
           </div>
           <strong class="ordered-product__price" data-order-line-price>—</strong>
         </div>
 
         <div class="order-totals">
-          <div><span>Subtotal</span><span data-order-subtotal>—</span></div>
-          <div class="order-totals__grand"><strong>Total</strong><strong data-order-grand-total>—</strong></div>
+          <div><span data-i18n="checkout-subtotal">Subtotal</span><span data-order-subtotal>—</span></div>
+          <div class="order-totals__grand"><strong data-i18n="checkout-total">Total</strong><strong data-order-grand-total>—</strong></div>
         </div>
 
         <div class="order-side__footer">
-          <div class="footer-tools"><span>🇬🇧 &nbsp;English⌄</span><span>▯ &nbsp;Pay on mobile</span></div>
-          <div class="footer-links"><span>Terms of Service</span><span>Privacy Policy</span><span>Refund Policy</span></div>
+          <div class="footer-tools">
+            <div class="checkout-language">
+              <button class="footer-tool" type="button" data-language-toggle aria-haspopup="listbox" aria-expanded="false">
+                <span aria-hidden="true">◉</span><span data-checkout-language-label>English</span><span aria-hidden="true">⌄</span>
+              </button>
+              <div class="checkout-language__menu" data-language-menu role="listbox" hidden>
+                <button type="button" role="option" data-checkout-language="en" aria-selected="true">English</button>
+                <button type="button" role="option" data-checkout-language="ru" aria-selected="false">Русский</button>
+                <button type="button" role="option" data-checkout-language="es" aria-selected="false">Español</button>
+              </div>
+            </div>
+            <button class="footer-tool" type="button" data-copy-checkout-link><span aria-hidden="true">▯</span><span data-i18n="checkout-copy-link">Pay on mobile</span></button>
+          </div>
+          <p class="footer-feedback" data-checkout-link-status aria-live="polite"></p>
+          <div class="footer-links">
+            <a href="./terms-of-service.html" data-i18n="checkout-terms">Terms of Service</a>
+            <a href="./privacy-policy.html" data-i18n="checkout-privacy">Privacy Policy</a>
+            <a href="./refund-policy.html" data-i18n="checkout-refund">Refund Policy</a>
+          </div>
         </div>
       </div>
     </aside>
 
     <main class="checkout-main">
       <div class="checkout-main__inner">
-        <ol class="checkout-steps" aria-label="Checkout progress">
-          <li class="is-current" aria-current="step"><span class="checkout-steps__number">1</span><span>Order Information</span></li>
-          <li><span class="checkout-steps__number">2</span><span>Confirm &amp; Pay</span></li>
-          <li><span class="checkout-steps__check">✓</span><span>Receive Your Items</span></li>
+        <ol class="checkout-steps" aria-label="Checkout progress" data-i18n-aria-label="checkout-progress">
+          <li class="is-current" aria-current="step"><span class="checkout-steps__number">1</span><span data-i18n="checkout-step-information">Order Information</span></li>
+          <li><span class="checkout-steps__number">2</span><span data-i18n="checkout-step-pay">Confirm &amp; Pay</span></li>
+          <li><span class="checkout-steps__check">✓</span><span data-i18n="checkout-step-receive">Receive Your Items</span></li>
         </ol>
 
-        <p class="preview-note">Checkout preview only. Payments are not available yet.</p>
+        <p class="preview-note" data-i18n="checkout-preview-note">Crypto checkout preview. Your payment will not be collected.</p>
 
         <section class="checkout-section" aria-labelledby="contact-title">
-          <h2 id="contact-title">CONTACT &amp; DELIVERY</h2>
-          <label class="checkout-label" for="checkout-email">E-mail Address <span aria-hidden="true">*</span></label>
+          <h2 id="contact-title" data-i18n="checkout-contact">CONTACT &amp; DELIVERY</h2>
+          <label class="checkout-label" for="checkout-email"><span data-i18n="checkout-email">E-mail Address</span> <span aria-hidden="true">*</span></label>
           <div class="email-field">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-            <input id="checkout-email" type="email" placeholder="you@example.com" disabled>
+            <input id="checkout-email" type="email" autocomplete="email" placeholder="you@example.com" data-i18n-placeholder="checkout-email-placeholder" required>
           </div>
-          <div class="discount-hint">Have a discount code? <span aria-hidden="true">⌄</span></div>
+          <button class="discount-toggle" type="button" data-discount-toggle aria-expanded="false"><span data-i18n="checkout-discount-question">Have a discount code?</span> <span aria-hidden="true">⌄</span></button>
+          <form class="discount-form" data-discount-form hidden>
+            <label class="visually-hidden" for="checkout-discount" data-i18n="checkout-discount-label">Discount code</label>
+            <input id="checkout-discount" type="text" autocomplete="off" maxlength="40" data-i18n-placeholder="checkout-discount-placeholder" placeholder="Enter code">
+            <button type="submit" data-i18n="checkout-discount-apply">Apply</button>
+          </form>
+          <p class="form-feedback" data-discount-status aria-live="polite"></p>
         </section>
 
         <section class="checkout-section payment-section" aria-labelledby="payment-title">
-          <h2 id="payment-title">PAYMENT</h2>
-          <div class="payment-options" aria-label="Payment methods preview">
-            <div class="payment-option"><span class="payment-option__radio"></span><span class="payment-icon payment-icon--card" aria-hidden="true">▰</span><span class="payment-option__name">Credit &amp; debit cards, Apple Pay, Google Pay</span><span class="payment-option__detail">+2.9%</span></div>
-            <div class="payment-option"><span class="payment-option__radio"></span><span class="payment-icon payment-icon--crypto" aria-hidden="true">◇</span><span class="payment-option__name">Cryptocurrency</span><span class="payment-option__detail">₿ &nbsp;Ξ &nbsp;◎</span></div>
-            <div class="payment-option"><span class="payment-option__radio"></span><span class="payment-icon payment-icon--balance" aria-hidden="true">▣</span><span class="payment-option__name">Customer Balance</span></div>
-            <div class="payment-option is-selected"><span class="payment-option__radio"></span><span class="payment-icon payment-icon--funpay" aria-hidden="true">F</span><span class="payment-option__name">FunPay</span></div>
+          <h2 id="payment-title" data-i18n="checkout-payment">PAYMENT</h2>
+          <div class="payment-options" aria-label="Payment methods" data-i18n-aria-label="checkout-payment-methods">
+            <label class="payment-option is-selected" data-payment-method="crypto">
+              <input class="payment-option__radio" type="radio" name="payment-method" value="crypto" checked>
+              <span class="payment-icon payment-icon--crypto" aria-hidden="true">◇</span>
+              <span class="payment-option__name" data-i18n="checkout-crypto">Cryptocurrency</span>
+              <span class="payment-option__detail">₿ &nbsp;Ξ &nbsp;◎</span>
+            </label>
           </div>
 
           <div class="checkout-consents">
-            <div><span class="consent-box" aria-hidden="true"></span><span>I have read and agree to CheatBlox's Terms of Service.</span></div>
-            <div><span class="consent-box" aria-hidden="true"></span><span>I would like to receive updates and promotions from CheatBlox.</span></div>
+            <label><input type="checkbox" data-terms-consent required><span><span data-i18n="checkout-terms-consent-before">I have read and agree to CheatBlox's</span> <a href="./terms-of-service.html" data-i18n="checkout-terms">Terms of Service</a><span data-i18n="checkout-terms-consent-after">.</span></span></label>
+            <label><input type="checkbox" data-marketing-consent><span data-i18n="checkout-marketing-consent">I would like to receive updates and promotions from CheatBlox.</span></label>
           </div>
 
-          <button class="continue-button" type="button" disabled>Continue to payment · <span data-order-cta-total>—</span><span aria-hidden="true">→</span></button>
-          <p class="secure-note">♧ &nbsp; No payment is processed on this preview page.</p>
+          <button class="continue-button" type="button" data-continue-payment><span data-i18n="checkout-continue">Continue to crypto payment</span> · <span data-order-cta-total>—</span><span aria-hidden="true">→</span></button>
+          <p class="form-feedback payment-feedback" data-payment-status aria-live="polite"></p>
+          <p class="secure-note" data-i18n="checkout-secure-note">♧ &nbsp; No payment is processed on this preview page.</p>
         </section>
       </div>
     </main>

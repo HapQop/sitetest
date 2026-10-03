@@ -163,13 +163,16 @@
 
       const orderId = window.crypto?.randomUUID?.() || `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}`;
       const price = document.querySelector("[data-plan-price]");
+      const discountedPrice = price?.querySelector(".promo-discounted-price")?.textContent.trim();
       const order = {
         id: orderId,
         productId: bodyProductId,
         planId: document.querySelector("main")?.dataset.plan || "",
         productName: document.querySelector(".product-heading h1")?.textContent.trim() || bodyProductId,
         planName: document.querySelector("[data-plan-summary-name]")?.textContent.trim() || "",
-        total: price?.querySelector(".promo-discounted-price")?.textContent.trim() || price?.textContent.trim() || "—",
+        subtotal: price?.querySelector(".promo-original-price")?.textContent.trim() || discountedPrice || price?.textContent.trim() || "—",
+        total: discountedPrice || price?.textContent.trim() || "—",
+        promoCode: discountedPrice ? "OPENING" : "",
       };
       try { window.sessionStorage.setItem(`cheatblox-order:${orderId}`, JSON.stringify(order)); } catch { /* The preview still opens without storage. */ }
       window.location.href = `checkout.html?order=${encodeURIComponent(orderId)}&product=${encodeURIComponent(bodyProductId)}&plan=${encodeURIComponent(order.planId)}`;
