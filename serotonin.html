@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CheatBlox — Severe</title>
+  <title>CheatBlox — Serotonin</title>
   <style>
     :root { --orange:#ff9d5c; --page:#080808; --panel:#151515; --panel-raised:#1b1b1b; --border:#303030; --muted:#9c9c9c; --green:#48d391; --red:#ff6f69; }
     * { box-sizing:border-box; margin:0; }
@@ -28,7 +28,6 @@
     .showcase { min-width:0; }
     .logo-stage { display:grid; min-height:260px; place-items:center; border:1px solid #343434; border-radius:15px; background:#050505; box-shadow:0 20px 38px rgba(0,0,0,.3); }
     .logo-stage img { width:min(60%,260px); height:auto; filter:drop-shadow(0 12px 20px rgba(255,255,255,.08)); }
-    .logo-stage .severe-logo { width:min(88%,420px); }
     .about { margin-top:22px; }
     .about h2 { color:#fff; font-size:18px; letter-spacing:-.3px; }
     .about p { max-width:680px; margin-top:8px; color:#a7a1a0; font-size:13px; line-height:1.55; }
@@ -78,41 +77,41 @@
     @media (max-width:560px) { main { width:calc(100% - 28px); margin-bottom:56px; } .product-heading h1 { font-size:36px; } .logo-stage { min-height:240px; } .logo-stage img { width:min(78%,260px); } .info-grid { grid-template-columns:1fr; } .plan-panel { padding:18px; } }
     @media (prefers-reduced-motion:reduce) { .plan-switch button,.plan-panel,.select-plan,.back-link { transition:none; } }
   </style>
-  <link rel="stylesheet" href="../styles/site-header.css">
-  <script src="../scripts/site-header.js" defer></script>
-  <script src="../scripts/site-reveal.js" defer></script>
-  <link rel="stylesheet" href="../styles/site-footer.css">
-  <script src="../scripts/site-footer.js" defer></script>
-  <script src="../scripts/site-locale.js" defer></script><script src="../scripts/site-i18n.js" defer></script>
-  <script src="../scripts/site-currency.js" defer></script><script src="../scripts/site-auth-state.js" defer></script>
-  <script src="../scripts/site-catalog.js" defer></script>
-  <script src="../scripts/site-promo.js" defer></script>
+  <link rel="stylesheet" href="./styles/site-header.css">
+  <script src="./scripts/site-header.js" defer></script>
+  <script src="./scripts/site-reveal.js" defer></script>
+  <link rel="stylesheet" href="./styles/site-footer.css">
+  <script src="./scripts/site-footer.js" defer></script>
+  <script src="./scripts/site-locale.js" defer></script><script src="./scripts/site-i18n.js" defer></script>
+  <script src="./scripts/site-currency.js" defer></script><script src="./scripts/site-auth-state.js" defer></script>
+  <script src="./scripts/site-catalog.js" defer></script>
+  <script src="./scripts/site-promo.js" defer></script>
 </head>
-<body data-page="severe">
+<body data-page="serotonin">
   <nav class="site-header" aria-label="Primary navigation">
-    <a class="site-brand" href="index.html"><img class="brand-mark" src="../assets/icons/cheatblox-mark.svg" alt="" width="28" height="28">Cheat<span>Blox</span></a>
+    <a class="site-brand" href="/"><img class="brand-mark" src="./assets/icons/cheatblox-mark.svg" alt="" width="28" height="28">Cheat<span>Blox</span></a>
     <div class="site-nav">
-      <a href="index.html" data-i18n="nav-home">Home</a><a class="active" href="products.html" data-i18n="nav-products">Products</a><a href="exploits.html" data-i18n="nav-exploits">Exploits</a><a href="reviews.html" data-i18n="nav-reviews">Reviews</a><a href="contact.html" data-i18n="nav-contact">Contact</a>
+      <a href="/" data-i18n="nav-home">Home</a><a class="active" href="/products" data-i18n="nav-products">Products</a><a href="/exploits" data-i18n="nav-exploits">Exploits</a><a href="/reviews" data-i18n="nav-reviews">Reviews</a><a href="/contact" data-i18n="nav-contact">Contact</a>
     </div>
     <div class="site-controls">
       <div class="language-toggle" role="radiogroup" aria-label="Language"><input id="language-ru" type="radio" name="language" value="ru" checked><label for="language-ru">RU</label><input id="language-en" type="radio" name="language" value="en"><label for="language-en">EN</label><span class="language-slider" aria-hidden="true"></span></div>
-            <a class="login-link" href="auth.html?mode=login" data-i18n="login">Login</a>
+            <a class="login-link" href="/auth?mode=login" data-i18n="login">Login</a>
     </div>
   </nav>
-  <main data-plan="basic">
-    <a class="back-link" href="products.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h10"/></svg><span data-i18n="product-back-catalog">Back to products</span></a>
+  <main data-plan="thirty">
+    <a class="back-link" href="/products"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h10"/></svg><span data-i18n="product-back-catalog">Back to products</span></a>
     <header class="product-heading">
       <div class="product-badges"><span class="product-badge" data-i18n="product-external">External</span><span class="stock-badge is-out" data-plan-stock>0 available</span></div>
-      <h1>Severe</h1>
-      <p data-plan-name>Lifetime (Basic) access</p>
+      <h1>Serotonin</h1>
+      <p data-plan-name>30-day access</p>
     </header>
     <div class="plan-switch" role="tablist" aria-label="Choose access period">
-      <button class="is-active" type="button" role="tab" aria-selected="true" data-plan-option="basic">Lifetime (Basic)</button>
-      <button type="button" role="tab" aria-selected="false" data-plan-option="ultimate">Lifetime (Ultimate)</button>
+      <button class="is-active" type="button" role="tab" aria-selected="true" data-plan-option="thirty">30 days</button>
+      <button type="button" role="tab" aria-selected="false" data-plan-option="ninety">90 days</button>
     </div>
     <div class="detail-grid">
-      <section class="showcase" aria-label="Severe product information">
-        <div class="logo-stage"><img class="severe-logo" src="../assets/severe-logo.png" alt="Severe"></div>
+      <section class="showcase" aria-label="Serotonin product information">
+        <div class="logo-stage"><img src="./assets/serotonin-logo.png" alt="Serotonin"></div>
         <div class="rating-placeholder" aria-label="Product rating coming soon">
           <h2>Rating</h2>
           <div class="rating-placeholder__stars" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></div>
@@ -139,7 +138,7 @@
         <span class="eyebrow" data-i18n="product-starting-at">Starting at</span>
         <strong class="plan-price" data-plan-price>$9.99</strong>
         <h2 id="choose-plan-title" data-i18n="product-choose-plan">Choose your plan</h2>
-        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>Lifetime (Basic)</span><span class="stock-badge is-out" data-plan-summary-stock>0 available</span><strong class="plan-summary__price" data-plan-summary-price>$9.99</strong></div>
+        <div class="plan-summary"><span class="plan-summary__name" data-plan-summary-name>30 days</span><span class="stock-badge is-out" data-plan-summary-stock>0 available</span><strong class="plan-summary__price" data-plan-summary-price>$9.99</strong></div>
         <button class="select-plan" type="button" data-select-plan disabled><span data-plan-label>Purchase</span><span class="purchase-icon" aria-hidden="true"><svg class="purchase-icon__arrow" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg><svg class="purchase-icon__cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L20 8H6"/></svg></span></button>
         <p class="plan-message is-out" data-plan-message data-i18n="product-out-of-stock-message">Out of stock</p>
         <form class="promo-form" data-promo-form>
@@ -153,8 +152,8 @@
   <script>
     (() => {
       const plans = {
-        basic: { name: "Lifetime (Basic)", access: "Lifetime (Basic) access", price: 9.99, stock: "0 available", available: false },
-        ultimate: { name: "Lifetime (Ultimate)", access: "Lifetime (Ultimate) access", price: 19.99, stock: "0 available", available: false },
+        thirty: { name: "30 days", access: "30-day access", price: 9.99, stock: "0 available", available: false },
+        ninety: { name: "90 days", access: "90-day access", price: 24.99, stock: "0 available", available: false },
       };
       const page = document.querySelector("main");
       const panel = document.querySelector(".plan-panel");
@@ -167,7 +166,7 @@
       const selectPlan = document.querySelector("[data-select-plan]");
       const planLabel = document.querySelector("[data-plan-label]");
       const message = document.querySelector("[data-plan-message]");
-      let currentPlanId = "basic";
+      let currentPlanId = "thirty";
 
       function formatPrice(amount) {
         return window.CheatBloxCurrency ? window.CheatBloxCurrency.format(amount) : `$${amount.toFixed(2)}`;
@@ -207,7 +206,7 @@
         button.addEventListener("click", () => setPlan(button.dataset.planOption));
       });
       document.addEventListener("currencychange", () => setPlan(currentPlanId));
-      setPlan("basic");
+      setPlan("thirty");
     })();
   </script>
 </body>

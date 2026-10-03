@@ -4,6 +4,16 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/pages",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/:path*",
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
       "source": "/index",
       "destination": "/",
       "permanent": true
@@ -12,151 +22,6 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
-    },
-    {
-      "source": "/admin",
-      "destination": "/pages/admin",
-      "permanent": false
-    },
-    {
-      "source": "/auth",
-      "destination": "/pages/auth",
-      "permanent": false
-    },
-    {
-      "source": "/axis",
-      "destination": "/pages/axis",
-      "permanent": false
-    },
-    {
-      "source": "/checkout",
-      "destination": "/pages/checkout",
-      "permanent": false
-    },
-    {
-      "source": "/contact",
-      "destination": "/pages/contact",
-      "permanent": false
-    },
-    {
-      "source": "/cosmic",
-      "destination": "/pages/cosmic",
-      "permanent": false
-    },
-    {
-      "source": "/exploits",
-      "destination": "/pages/exploits",
-      "permanent": false
-    },
-    {
-      "source": "/isaeva",
-      "destination": "/pages/isaeva",
-      "permanent": false
-    },
-    {
-      "source": "/kiciahook",
-      "destination": "/pages/kiciahook",
-      "permanent": false
-    },
-    {
-      "source": "/lumen",
-      "destination": "/pages/lumen",
-      "permanent": false
-    },
-    {
-      "source": "/matcha",
-      "destination": "/pages/matcha",
-      "permanent": false
-    },
-    {
-      "source": "/matrixhub",
-      "destination": "/pages/matrixhub",
-      "permanent": false
-    },
-    {
-      "source": "/mspaint",
-      "destination": "/pages/mspaint",
-      "permanent": false
-    },
-    {
-      "source": "/pottasium",
-      "destination": "/pages/pottasium",
-      "permanent": false
-    },
-    {
-      "source": "/privacy-policy",
-      "destination": "/pages/privacy-policy",
-      "permanent": false
-    },
-    {
-      "source": "/products",
-      "destination": "/pages/products",
-      "permanent": false
-    },
-    {
-      "source": "/real",
-      "destination": "/pages/real",
-      "permanent": false
-    },
-    {
-      "source": "/refund-policy",
-      "destination": "/pages/refund-policy",
-      "permanent": false
-    },
-    {
-      "source": "/reviews",
-      "destination": "/pages/reviews",
-      "permanent": false
-    },
-    {
-      "source": "/ronin",
-      "destination": "/pages/ronin",
-      "permanent": false
-    },
-    {
-      "source": "/serotonin",
-      "destination": "/pages/serotonin",
-      "permanent": false
-    },
-    {
-      "source": "/severe",
-      "destination": "/pages/severe",
-      "permanent": false
-    },
-    {
-      "source": "/sirhurt",
-      "destination": "/pages/sirhurt",
-      "permanent": false
-    },
-    {
-      "source": "/synapsez",
-      "destination": "/pages/synapsez",
-      "permanent": false
-    },
-    {
-      "source": "/terms-of-service",
-      "destination": "/pages/terms-of-service",
-      "permanent": false
-    },
-    {
-      "source": "/thumbnail",
-      "destination": "/pages/thumbnail",
-      "permanent": false
-    },
-    {
-      "source": "/volt",
-      "destination": "/pages/volt",
-      "permanent": false
-    },
-    {
-      "source": "/wave",
-      "destination": "/pages/wave",
-      "permanent": false
-    },
-    {
-      "source": "/yabujin",
-      "destination": "/pages/yabujin",
-      "permanent": false
     }
   ],
   "headers": [
@@ -197,12 +62,6 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/pages/index.html"
     }
   ]
 }
