@@ -1,14 +1,14 @@
 {
   "session_id": "01a101d9-7029-7461-afff-aa2a4f18d760",
   "native_session_id": "01a101d9-7029-7461-afff-aa2a4f18d760",
-  "started_at": "2026-10-03T12:59:54.121Z",
+  "started_at": "2026-10-03T13:29:32.224Z",
   "cwd": "F:\\site",
   "state_root": "F:\\site\\.omx\\state\\sessions\\01a101d9-7029-7461-afff-aa2a4f18d760",
-  "pid": 30160,
+  "pid": 29584,
   "platform": "win32",
   "identity_schema_version": 2,
   "process_identity": {
     "platform": "win32",
-    "birth": "134354922639243161"
+    "birth": "134355073565273468"
   }
 }
