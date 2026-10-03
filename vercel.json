@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "cleanUrls": false,
+  "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
     {
       "source": "/index.html",
       "destination": "/",
@@ -55,119 +60,119 @@
       "destination": "/pages/index.html"
     },
     {
-      "source": "/admin.html",
+      "source": "/admin",
       "destination": "/pages/admin.html"
     },
     {
-      "source": "/auth.html",
+      "source": "/auth",
       "destination": "/pages/auth.html"
     },
     {
-      "source": "/axis.html",
+      "source": "/axis",
       "destination": "/pages/axis.html"
     },
     {
-      "source": "/checkout.html",
+      "source": "/checkout",
       "destination": "/pages/checkout.html"
     },
     {
-      "source": "/contact.html",
+      "source": "/contact",
       "destination": "/pages/contact.html"
     },
     {
-      "source": "/cosmic.html",
+      "source": "/cosmic",
       "destination": "/pages/cosmic.html"
     },
     {
-      "source": "/exploits.html",
+      "source": "/exploits",
       "destination": "/pages/exploits.html"
     },
     {
-      "source": "/isaeva.html",
+      "source": "/isaeva",
       "destination": "/pages/isaeva.html"
     },
     {
-      "source": "/kiciahook.html",
+      "source": "/kiciahook",
       "destination": "/pages/kiciahook.html"
     },
     {
-      "source": "/lumen.html",
+      "source": "/lumen",
       "destination": "/pages/lumen.html"
     },
     {
-      "source": "/matcha.html",
+      "source": "/matcha",
       "destination": "/pages/matcha.html"
     },
     {
-      "source": "/matrixhub.html",
+      "source": "/matrixhub",
       "destination": "/pages/matrixhub.html"
     },
     {
-      "source": "/mspaint.html",
+      "source": "/mspaint",
       "destination": "/pages/mspaint.html"
     },
     {
-      "source": "/pottasium.html",
+      "source": "/pottasium",
       "destination": "/pages/pottasium.html"
     },
     {
-      "source": "/privacy-policy.html",
+      "source": "/privacy-policy",
       "destination": "/pages/privacy-policy.html"
     },
     {
-      "source": "/products.html",
+      "source": "/products",
       "destination": "/pages/products.html"
     },
     {
-      "source": "/real.html",
+      "source": "/real",
       "destination": "/pages/real.html"
     },
     {
-      "source": "/refund-policy.html",
+      "source": "/refund-policy",
       "destination": "/pages/refund-policy.html"
     },
     {
-      "source": "/reviews.html",
+      "source": "/reviews",
       "destination": "/pages/reviews.html"
     },
     {
-      "source": "/ronin.html",
+      "source": "/ronin",
       "destination": "/pages/ronin.html"
     },
     {
-      "source": "/serotonin.html",
+      "source": "/serotonin",
       "destination": "/pages/serotonin.html"
     },
     {
-      "source": "/severe.html",
+      "source": "/severe",
       "destination": "/pages/severe.html"
     },
     {
-      "source": "/sirhurt.html",
+      "source": "/sirhurt",
       "destination": "/pages/sirhurt.html"
     },
     {
-      "source": "/synapsez.html",
+      "source": "/synapsez",
       "destination": "/pages/synapsez.html"
     },
     {
-      "source": "/terms-of-service.html",
+      "source": "/terms-of-service",
       "destination": "/pages/terms-of-service.html"
     },
     {
-      "source": "/thumbnail.html",
+      "source": "/thumbnail",
       "destination": "/pages/thumbnail.html"
     },
     {
-      "source": "/volt.html",
+      "source": "/volt",
       "destination": "/pages/volt.html"
     },
     {
-      "source": "/wave.html",
+      "source": "/wave",
       "destination": "/pages/wave.html"
     },
     {
-      "source": "/yabujin.html",
+      "source": "/yabujin",
       "destination": "/pages/yabujin.html"
     }
   ]
