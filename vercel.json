@@ -4,9 +4,20 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/pages/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
       "source": "/",
-      "destination": "/pages/index.html",
-      "permanent": false
+      "destination": "/pages/index.html"
     }
   ],
   "headers": [
