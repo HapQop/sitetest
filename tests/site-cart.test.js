@@ -159,8 +159,10 @@ test("adding a product stores its plan, updates the badge, and leaves the cart c
 test("cart drawer changes quantities, updates the total, and removes items", async () => {
   const page = setupCart({ signedIn: true, detail: true });
   await page.clickAdd();
+  const requestCountBeforeOpening = page.requests.length;
   await page.cartButton.click();
   assert.equal(page.dialog.open, true);
+  assert.equal(page.requests.length, requestCountBeforeOpening, "opening an already authenticated cart does not wait for another session request");
   assert.equal(page.dialog.querySelector("h2").textContent, "Cart");
   assert.equal(page.dialog.querySelector(".cart-dialog__subtitle").textContent, "1 items");
 

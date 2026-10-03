@@ -111,18 +111,28 @@ async function sendCode(email, code, purpose) {
       html: `<p>Your CheatBlox code is <strong style="font-size:22px;letter-spacing:4px">${code}</strong>.</p><p>This code expires in 10 minutes.</p>`,
     }),
   });
-  if (!response.ok) throw new Error("Email provider rejected the message");
+  if (!response.ok) {
+    const error = new Error(`Email provider rejected the message (${response.status || "unknown status"})`);
+    error.code = "EMAIL_DELIVERY_UNAVAILABLE";
+    throw error;
+  }
 }
 
 async function createChallenge(data, challengeId = crypto.randomUUID()) {
   const code = randomCode();
-  await setJson(`auth:challenge:${challengeId}`, {
+  const challengeKey = `auth:challenge:${challengeId}`;
+  await setJson(challengeKey, {
     ...data,
     codeHash: digest(code),
     attempts: 0,
     expiresAt: Date.now() + CHALLENGE_TTL * 1000,
   }, CHALLENGE_TTL);
-  await sendCode(data.email, code, data.type);
+  try {
+    await sendCode(data.email, code, data.type);
+  } catch (error) {
+    await kv(["DEL", challengeKey]).catch(() => {});
+    throw error;
+  }
   return challengeId;
 }
 
@@ -307,8 +317,13 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error("Auth API error", error.message);
     const configurationError = /Missing environment variable/.test(error.message);
-    return json(res, configurationError ? 503 : 500, {
-      error: configurationError ? "Authentication service is not configured yet." : "Authentication service is temporarily unavailable.",
+    const emailDeliveryError = error.code === "EMAIL_DELIVERY_UNAVAILABLE";
+    return json(res, configurationError || emailDeliveryError ? 503 : 500, {
+      error: configurationError
+        ? "Authentication service is not configured yet."
+        : emailDeliveryError
+          ? "Verification email could not be delivered. Please try again later."
+          : "Authentication service is temporarily unavailable.",
     });
   }
 };

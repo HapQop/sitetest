@@ -56,6 +56,7 @@
     .auth-form .password-toggle:hover:not(:disabled),.auth-form .password-toggle:focus-visible { transform:translateY(-50%); border:0; color:var(--orange); background:rgba(255,157,92,.12); outline:none; }
     .auth-form .password-toggle:active { transform:translateY(-50%) scale(.9); }
     .auth-social-choice { display:grid; justify-items:center; gap:12px; padding-top:8px; border-top:1px solid #342924; }
+    .auth-social-choice[hidden] { display:none; }
     .auth-social-choice > p { color:#a89f99; font-size:12px; font-weight:750; text-align:center; }
     .auth-social-options { display:flex; justify-content:center; gap:28px; }
     .auth-login-social { margin-top:22px; padding-top:18px; }
@@ -134,15 +135,6 @@
         <p class="auth-note" data-login-note></p>
         <a class="auth-switch" href="/auth?mode=forgot">Forgot password?</a>
         <a class="auth-switch" href="/auth?mode=register" data-i18n="auth-create-account">New here? Create an account</a>
-        <div class="auth-social-choice auth-login-social" role="group" aria-labelledby="auth-login-social-label">
-          <p id="auth-login-social-label" data-i18n="auth-login-social-label">Or continue with</p>
-          <div class="auth-social-options">
-            <button class="auth-social-button" type="button" data-login-social="telegram"><span class="auth-social-icon auth-social-icon--telegram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.4 3.4 2.9 10.6c-.9.4-.9 1.1-.1 1.4l4.7 1.5 1.8 5.7c.2.7.4.9.8.9.3 0 .5-.1.8-.4l2.6-2.5 4.9 3.6c.9.5 1.5.3 1.7-.9l3.1-14.8c.3-1.4-.5-2-1.8-1.5ZM8.2 13.1l10.8-6.8-8.6 8.3-.3 3.2-1.9-4.7Z"/></svg></span><span>Telegram</span></button>
-            <button class="auth-social-button" type="button" data-login-social="discord"><span class="auth-social-icon" aria-hidden="true"><img src="./assets/discord-logo.png" alt=""></span><span>Discord</span></button>
-            <button class="auth-social-button" type="button" data-login-social="google"><span class="auth-social-icon auth-social-icon--google" aria-hidden="true"><img src="./assets/google-logo.png" alt=""></span><span>Google</span></button>
-          </div>
-          <p class="auth-social-availability" data-i18n="auth-social-coming-soon">Social sign-in is coming soon.</p>
-        </div>
       </div>
 
       <div class="auth-view" data-auth-view="register" hidden>
@@ -192,6 +184,15 @@
       </div>
 
       <p class="auth-status" data-auth-status role="status" aria-live="polite"></p>
+      <div class="auth-social-choice auth-login-social" data-login-social-choice role="group" aria-labelledby="auth-login-social-label">
+        <p id="auth-login-social-label" data-i18n="auth-login-social-label">Or continue with</p>
+        <div class="auth-social-options">
+          <button class="auth-social-button" type="button" data-login-social="telegram"><span class="auth-social-icon auth-social-icon--telegram" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.4 3.4 2.9 10.6c-.9.4-.9 1.1-.1 1.4l4.7 1.5 1.8 5.7c.2.7.4.9.8.9.3 0 .5-.1.8-.4l2.6-2.5 4.9 3.6c.9.5 1.5.3 1.7-.9l3.1-14.8c.3-1.4-.5-2-1.8-1.5ZM8.2 13.1l10.8-6.8-8.6 8.3-.3 3.2-1.9-4.7Z"/></svg></span><span>Telegram</span></button>
+          <button class="auth-social-button" type="button" data-login-social="discord"><span class="auth-social-icon" aria-hidden="true"><img src="./assets/discord-logo.png" alt=""></span><span>Discord</span></button>
+          <button class="auth-social-button" type="button" data-login-social="google"><span class="auth-social-icon auth-social-icon--google" aria-hidden="true"><img src="./assets/google-logo.png" alt=""></span><span>Google</span></button>
+        </div>
+        <p class="auth-social-availability" data-i18n="auth-social-coming-soon">Social sign-in is coming soon.</p>
+      </div>
       </div>
     </section>
   </main>

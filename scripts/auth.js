@@ -25,6 +25,7 @@
   const socialHandleField = document.querySelector("[data-social-handle-field]");
   const socialHandle = document.querySelector("#register-social-handle");
   const socialChoices = [...document.querySelectorAll("[data-social-choice]")];
+  const loginSocialChoice = document.querySelector("[data-login-social-choice]");
 
   function updateAuthTitle(language = document.documentElement.lang) {
     authTitle.textContent = authTitles[currentMode][language === "en" ? "en" : "ru"];
@@ -124,6 +125,7 @@
     views.forEach((view) => {
       view.hidden = view.dataset.authView !== mode;
     });
+    if (loginSocialChoice) loginSocialChoice.hidden = mode !== "login";
     updateAuthTitle();
     showStatus("");
   }

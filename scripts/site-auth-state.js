@@ -1,9 +1,12 @@
 (() => {
   const apiBase = window.AUTH_API_BASE || "/api/auth";
   let sessionPromise;
+  let sessionResolved = false;
+  let sessionUser = null;
   let syncCartForUser = () => {};
 
   function checkSession() {
+    if (sessionResolved) return Promise.resolve(sessionUser);
     if (sessionPromise) return sessionPromise;
     sessionPromise = (async () => {
       try {
@@ -17,7 +20,11 @@
         console.error("[Auth] Session check failed:", error);
         return null;
       }
-    })().finally(() => { sessionPromise = null; });
+    })().then((user) => {
+      sessionUser = user;
+      sessionResolved = true;
+      return user;
+    }).finally(() => { sessionPromise = null; });
     return sessionPromise;
   }
 
